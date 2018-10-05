@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { DrawingPage } from '../pages/drawing/drawing';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -13,6 +14,7 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
   declarations: [
     MyApp,
     HomePage,
+    DrawingPage,
     CanvasDrawComponent
   ],
   imports: [
@@ -22,7 +24,8 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    DrawingPage
   ],
   providers: [
     StatusBar,
