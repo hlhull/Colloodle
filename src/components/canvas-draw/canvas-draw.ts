@@ -55,16 +55,18 @@ ngAfterViewInit(){
 }
 
 handleStart(ev){
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
 
-    this.lastX = ev.touches[0].pageX;
-    this.lastY = ev.touches[0].pageY;
+    this.lastX = ev.touches[0].pageX - canvasPosition.x;
+    this.lastY = ev.touches[0].pageY - canvasPosition.y;
 }
 
 handleMove(ev){
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
 
     let ctx = this.canvasElement.getContext('2d');
-    let currentX = ev.touches[0].pageX;
-    let currentY = ev.touches[0].pageY;
+    let currentX = ev.touches[0].pageX - canvasPosition.x;
+    let currentY = ev.touches[0].pageY - canvasPosition.y;
 
     ctx.beginPath();
     ctx.lineJoin = "round";
