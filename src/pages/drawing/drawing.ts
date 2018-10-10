@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the DrawingPage page.
@@ -16,6 +17,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class DrawingPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  goHome(): void {
+    this.navCtrl.setRoot(HomePage);
   }
 
   ionViewDidLoad() {
