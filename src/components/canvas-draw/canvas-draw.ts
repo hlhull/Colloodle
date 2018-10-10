@@ -59,6 +59,12 @@ handleStart(ev){
 
     this.lastX = ev.touches[0].pageX - canvasPosition.x;
     this.lastY = ev.touches[0].pageY - canvasPosition.y;
+
+    let ctx = this.canvasElement.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(this.lastX, this.lastY, this.brushSize/2, 0, 2 * Math.PI);
+    ctx.fillStyle = this.currentColour;
+    ctx.fill();
 }
 
 handleMove(ev){
