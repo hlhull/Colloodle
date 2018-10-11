@@ -7,6 +7,7 @@
         </button>
     </ion-buttons>
     <ion-buttons right>
+        <button ion-button full (click)="saveCanvasImage()">Save Image</button>
         <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColour('#fff')">
             <ion-icon style="color: #fff;" name="square"></ion-icon>
         </button>
@@ -16,6 +17,7 @@
 <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)"></canvas>
 
 <ion-toolbar id="bottom-toolbar">
+
     <ion-buttons left>
         <button color="dark" ion-button icon-only (click)="clearCanvas()"><ion-icon name="trash"></ion-icon></button>
     </ion-buttons>

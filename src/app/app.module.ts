@@ -10,6 +10,9 @@ import { DrawingPage } from '../pages/drawing/drawing';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
+import { File } from '@ionic-native/file';
+import { IonicStorageModule } from '@ionic/storage';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -19,7 +22,8 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -30,7 +34,8 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    File
   ]
 })
 export class AppModule {}
