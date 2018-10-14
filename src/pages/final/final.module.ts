@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { DrawingPage } from './drawing';
-
-
+import { FinalPage } from './final';
 
 @NgModule({
   declarations: [
-    DrawingPage,
+    FinalPage,
   ],
   imports: [
-    IonicPageModule.forChild(DrawingPage),
+    IonicPageModule.forChild(FinalPage),
   ],
 })
-export class DrawingPageModule {}
+export class FinalPageModule {}

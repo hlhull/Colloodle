@@ -4,6 +4,7 @@ import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
 import { ViewController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
+import { FinalPage } from '../final/final'
 
 /**
  * Generated class for the DrawingPage page.
@@ -36,6 +37,10 @@ export class DrawingPage {
 
   goHome(): void {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  goToFinalPage(): void {
+    this.navCtrl.setRoot(FinalPage);
   }
 
   ionViewDidLoad() {

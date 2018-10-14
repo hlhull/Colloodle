@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
+import { FinalPage } from '../pages/final/final';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -19,6 +20,7 @@ import { PopoverPage } from '../pages/color-popover/color-popover';
     MyApp,
     HomePage,
     DrawingPage,
+    FinalPage,
     CanvasDrawComponent,
     PopoverPage
   ],
@@ -32,7 +34,8 @@ import { PopoverPage } from '../pages/color-popover/color-popover';
     MyApp,
     HomePage,
     DrawingPage,
-    PopoverPage
+    PopoverPage,
+    FinalPage
   ],
   providers: [
     StatusBar,
