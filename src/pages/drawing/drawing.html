@@ -21,17 +21,16 @@
         <ion-title>Drawing tools</ion-title>
         <ion-item menuClose detail-none>Close Menu</ion-item>
          <ion-buttons left>
-             <button *ngFor="let colour of availableColours" icon-only ion-button (click)="changeColour(colour)">
+             <button *ngFor="let color of availableColors" icon-only ion-button (click)="changeColor(color)">
                  <ion-icon [style.color]="colour" name="brush"></ion-icon>
              </button>
          </ion-buttons>
          <ion-buttons right>
-             <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColour('#fff')">
+             <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColor('#fff')">
                  <ion-icon style="color: #fff;" name="square"></ion-icon>
              </button>
          </ion-buttons>
      </p>
-
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -41,5 +40,5 @@
 
 
 <ion-content no-bounce>
-    <canvas-draw></canvas-draw>
+  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)"></canvas>
 </ion-content>
