@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
+import { FinalPage } from '../pages/final/final';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -18,6 +19,7 @@ import { IonicStorageModule } from '@ionic/storage';
     MyApp,
     HomePage,
     DrawingPage,
+    FinalPage,
     CanvasDrawComponent
   ],
   imports: [
@@ -29,7 +31,8 @@ import { IonicStorageModule } from '@ionic/storage';
   entryComponents: [
     MyApp,
     HomePage,
-    DrawingPage
+    DrawingPage,
+    FinalPage
   ],
   providers: [
     StatusBar,
