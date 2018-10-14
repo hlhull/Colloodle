@@ -8,9 +8,35 @@
 
   <ion-navbar>
     <ion-title>Drawing</ion-title>
+    <button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>
   </ion-navbar>
 
 </ion-header>
+
+<ion-menu side="right" type="overlay" [content]="drawMenu">
+  <ion-content>
+    <ion-list>
+      <p>
+        <ion-title>Drawing tools</ion-title>
+        <ion-item menuClose detail-none>Close Menu</ion-item>
+         <ion-buttons left>
+             <button *ngFor="let colour of availableColours" icon-only ion-button (click)="changeColour(colour)">
+                 <ion-icon [style.color]="colour" name="brush"></ion-icon>
+             </button>
+         </ion-buttons>
+         <ion-buttons right>
+             <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColour('#fff')">
+                 <ion-icon style="color: #fff;" name="square"></ion-icon>
+             </button>
+         </ion-buttons>
+     </p>
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #drawMenu [root]="drawing"></ion-nav>
+
 
 
 <ion-content no-bounce>

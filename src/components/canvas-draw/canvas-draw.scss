@@ -4,12 +4,17 @@ canvas-draw {
     width: 100%;
     display: block;
 
-    #top-toolbar{
-        position: absolute;
-        top: 0;
+    #drawMenu{
+      position: static;
+      top: 50;
     }
 
-    #bottom-toolbar {
+   #top-toolbar{
+       position: absolute;
+       top: 0;
+    }
+
+   #bottom-toolbar {
         position: absolute;
         bottom: 0;
     }

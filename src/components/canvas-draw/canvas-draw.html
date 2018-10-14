@@ -1,6 +1,6 @@
 <!-- Generated template for the CanvasDrawComponent component -->
 
-<ion-toolbar id="top-toolbar">
+ <ion-toolbar id="top-toolbar">
     <ion-buttons left>
         <button *ngFor="let colour of availableColours" icon-only ion-button (click)="changeColour(colour)">
             <ion-icon [style.color]="colour" name="brush"></ion-icon>
@@ -13,9 +13,11 @@
     </ion-buttons>
 </ion-toolbar>
 
+
+
 <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)"></canvas>
 
-<ion-toolbar id="bottom-toolbar">
+ <ion-toolbar id="bottom-toolbar">
     <ion-buttons left>
         <button color="dark" ion-button icon-only (click)="clearCanvas()"><ion-icon name="trash"></ion-icon></button>
     </ion-buttons>
