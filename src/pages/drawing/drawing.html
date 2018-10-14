@@ -9,12 +9,15 @@
   <ion-navbar>
     <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
     <ion-title>Drawing</ion-title>
-    <button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>
+    <!--<button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>-->
+    <button ion-button end icon-only (click)="presentPopover($event)">
+      <ion-icon name="brush"></ion-icon>
+    </button>
   </ion-navbar>
 
 </ion-header>
 
-<ion-menu side="right" type="overlay" [content]="drawMenu">
+<!--<ion-menu side="right" type="overlay" [content]="drawMenu">
   <ion-content>
     <ion-list>
       <p>
@@ -33,7 +36,18 @@
      </p>
     </ion-list>
   </ion-content>
-</ion-menu>
+</ion-menu>-->
+
+<script id="my-popover.html" type="text/ng-template">
+  <ion-popover-view>
+    <ion-header-bar>
+      <h1 class="title">My Popover Title</h1>
+    </ion-header-bar>
+    <ion-content>
+      Hello!
+    </ion-content>
+  </ion-popover-view>
+</script>
 
 <ion-nav #drawMenu [root]="drawing"></ion-nav>
 

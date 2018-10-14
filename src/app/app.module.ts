@@ -12,13 +12,15 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
 import { File } from '@ionic-native/file';
 import { IonicStorageModule } from '@ionic/storage';
+import { PopoverPage } from '../pages/color-popover/color-popover';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     DrawingPage,
-    CanvasDrawComponent
+    CanvasDrawComponent,
+    PopoverPage
   ],
   imports: [
     BrowserModule,
@@ -29,7 +31,8 @@ import { IonicStorageModule } from '@ionic/storage';
   entryComponents: [
     MyApp,
     HomePage,
-    DrawingPage
+    DrawingPage,
+    PopoverPage
   ],
   providers: [
     StatusBar,

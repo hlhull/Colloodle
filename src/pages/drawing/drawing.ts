@@ -1,6 +1,9 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
+import { PopoverController } from 'ionic-angular';
+import { ViewController } from 'ionic-angular';
+import { PopoverPage } from '../color-popover/color-popover'
 
 /**
  * Generated class for the DrawingPage page.
@@ -14,6 +17,7 @@ import { HomePage } from '../home/home';
   selector: 'page-drawing',
   templateUrl: 'drawing.html',
 })
+
 export class DrawingPage {
   @ViewChild('myCanvas') canvas: any;
   @ViewChild(Content) content: any;
@@ -27,7 +31,7 @@ export class DrawingPage {
 
   brushSize: number = 10;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
   }
 
   goHome(): void {
@@ -89,6 +93,13 @@ export class DrawingPage {
   clearCanvas(){
     let ctx = this.canvasElement.getContext('2d');
     ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+  }
+
+  presentPopover(myEvent) {
+    let popover = this.popoverCtrl.create(PopoverPage);
+    popover.present({
+      ev: myEvent
+    });
   }
 
 }
