@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
+import { IonicPageModule} from 'ionic-angular';
 import { FinalPage } from './final';
 
 @NgModule({
@@ -10,4 +10,6 @@ import { FinalPage } from './final';
     IonicPageModule.forChild(FinalPage),
   ],
 })
-export class FinalPageModule {}
+export class FinalPageModule {
+
+}

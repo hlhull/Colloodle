@@ -40,7 +40,9 @@ export class DrawingPage {
   }
 
   goToFinalPage(): void {
-    this.navCtrl.setRoot(FinalPage);
+    this.navCtrl.push(FinalPage, {
+      data: this.canvasElement
+    });
   }
 
   ionViewDidLoad() {
