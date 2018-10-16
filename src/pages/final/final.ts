@@ -1,6 +1,6 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
-
+import { HomePage} from '../home/home';
 /**
  * Class for the FinalPage page.
  *
@@ -21,6 +21,10 @@ export class FinalPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
     this.picture = navParams.get('data'); //array of images passed from DrawingPage
+  }
+
+  goHome(): void {
+    this.navCtrl.setRoot(HomePage);
   }
 
   /*

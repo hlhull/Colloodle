@@ -5,7 +5,8 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton>
+    <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
     <ion-title>Completed Drawing</ion-title>
   </ion-navbar>
 </ion-header>
