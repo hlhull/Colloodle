@@ -2,7 +2,6 @@ import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
-import { ViewController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final'
 import { BrushProvider } from '../../providers/brush/brush'
@@ -41,7 +40,6 @@ export class DrawingPage {
 
   goToFinalPage(): void {
     //get the current canvas as an image
-    let ctx = this.canvas.nativeElement.getContext('2d');
     var img = new Image;
     img.src = this.canvasElement.toDataURL();
 
@@ -51,11 +49,13 @@ export class DrawingPage {
 
     this.clearCanvas();
 
+    if(this.numCanvases == 3){
+      this.goToFinalPage();
+    }
+
     //if we have 3 pictures, we're done --> go to final page, passing in the Images
     if(this.numCanvases == 4){
-      this.navCtrl.push(FinalPage, {
-        data: this.storedImages
-      });
+      this.navCtrl.push(FinalPage, {data: this.storedImages}, {animate:false});
     }
 
   }
