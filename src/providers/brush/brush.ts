@@ -25,11 +25,11 @@ export class BrushProvider {
 
   changeColor(color){
       this.color = color;
-      console.log(this.color);
   }
 
-  changeSize(size){
-      this.size = size;
+  changeSize(sliderState){
+      this.size = sliderState.value;
+      console.log(this.size);
   }
 
 

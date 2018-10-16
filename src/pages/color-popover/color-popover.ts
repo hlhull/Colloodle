@@ -10,13 +10,11 @@ import { BrushProvider } from '../../providers/brush/brush'
           <ion-icon [style.color]="color" name="brush"></ion-icon>
       </button>
       <ion-item>
-        <ion-range min="0" max="100" [(ngModel)]="saturation" color="secondary">
-          <ion-label range-left>0</ion-label>
-          <ion-label range-right>100</ion-label>
+        <ion-range min="1" max="100" color="primary" (ionChange)="this.brushService.changeSize($event)">
+          <ion-icon range-left style="font-size: 1em;" name="radio-button-on"></ion-icon>
+          <ion-icon range-right style="font-size: 2em;" name="radio-button-on"></ion-icon>
         </ion-range>
       </ion-item>
-      <button ion-item (click)="close()">Showcase</button>
-      <button ion-item (click)="close()">GitHub Repo</button>
     </ion-list>
   `
 })
