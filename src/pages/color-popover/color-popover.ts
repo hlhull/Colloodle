@@ -6,7 +6,7 @@ import { BrushProvider } from '../../providers/brush/brush'
   template: `
     <ion-list>
       <ion-list-header>Ionic</ion-list-header>
-      <button *ngFor="let color of this.brushService.availableColors" icon-only ion-button (click)="this.brushService.changeColor(color)">
+      <button *ngFor="let color of this.brushService.availableColors" icon-only ion-button color="light" (click)="this.brushService.changeColor(color)">
           <ion-icon [style.color]="color" name="brush"></ion-icon>
       </button>
       <ion-item>
