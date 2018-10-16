@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 /*
-  Generated class for the BrushProvider provider.
+  Class for the BrushProvider provider.
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
+  Handles options for brush, including size and color
 */
 @Injectable()
 export class BrushProvider {
@@ -16,12 +15,11 @@ export class BrushProvider {
       '#3498db',
       '#9b59b6',
       '#e67e22',
-      '#e74c3c'
+      '#e74c3c',
+      '#ffffff'
   ];
 
-  constructor() {
-
-  }
+  constructor() {}
 
   changeColor(color){
       this.color = color;
@@ -29,8 +27,6 @@ export class BrushProvider {
 
   changeSize(sliderState){
       this.size = sliderState.value;
-      console.log(this.size);
   }
-
 
 }
