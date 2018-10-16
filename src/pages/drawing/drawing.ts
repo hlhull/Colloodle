@@ -5,6 +5,8 @@ import { PopoverController } from 'ionic-angular';
 import { ViewController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final'
+import { BrushProvider } from '../../providers/brush/brush'
+
 
 /**
  * Class for the DrawingPage page.
@@ -27,15 +29,10 @@ export class DrawingPage {
   lastX: number;
   lastY: number;
 
-  currentColour: string = '#1abc9c';
-  availableColours: any;
-
-  brushSize: number = 10;
-
   storedImages = [];
   numCanvases = 0;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider) {
   }
 
   goHome(): void {
@@ -44,7 +41,7 @@ export class DrawingPage {
 
   goToFinalPage(): void {
     //get the current canvas as an image
-    let ctx = this.canvas.nativeElement.getContext('2d')
+    let ctx = this.canvas.nativeElement.getContext('2d');
     var img = new Image;
     img.src = this.canvasElement.toDataURL();
 
@@ -67,14 +64,6 @@ export class DrawingPage {
     console.log('ionViewDidLoad DrawingPage');
   }
 
-  changeColour(colour){
-      this.currentColour = colour;
-  }
-
-  changeSize(size){
-      this.brushSize = size;
-  }
-
   ngAfterViewInit(){
       this.canvasElement = this.canvas.nativeElement;
 
@@ -92,8 +81,8 @@ export class DrawingPage {
 
       let ctx = this.canvasElement.getContext('2d');
       ctx.beginPath();
-      ctx.arc(this.lastX, this.lastY, this.brushSize/2, 0, 2 * Math.PI);
-      ctx.fillStyle = this.currentColour;
+      ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
+      ctx.fillStyle = this.brushService.color;
       ctx.fill();
   }
 
@@ -109,8 +98,8 @@ export class DrawingPage {
       ctx.moveTo(this.lastX, this.lastY);
       ctx.lineTo(currentX, currentY);
       ctx.closePath();
-      ctx.strokeStyle = this.currentColour;
-      ctx.lineWidth = this.brushSize;
+      ctx.strokeStyle = this.brushService.color;
+      ctx.lineWidth = this.brushService.size;
       ctx.stroke();
 
       this.lastX = currentX;

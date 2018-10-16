@@ -14,6 +14,7 @@ import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 import { File } from '@ionic-native/file';
 import { IonicStorageModule } from '@ionic/storage';
 import { PopoverPage } from '../pages/color-popover/color-popover';
+import { BrushProvider } from '../providers/brush/brush';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PopoverPage } from '../pages/color-popover/color-popover';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    File
+    File,
+    BrushProvider
   ]
 })
 export class AppModule {}
