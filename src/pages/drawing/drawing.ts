@@ -1,4 +1,4 @@
-import { Component, ViewChild, Renderer } from '@angular/core';
+import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
@@ -7,10 +7,9 @@ import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final'
 
 /**
- * Generated class for the DrawingPage page.
+ * Class for the DrawingPage page.
  *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Where the user draws their piece of the picture
  */
 
 @IonicPage()
@@ -20,8 +19,9 @@ import { FinalPage } from '../final/final'
 })
 
 export class DrawingPage {
-  @ViewChild('myCanvas') canvas: any;
-  @ViewChild(Content) content: any;
+  @ViewChild('myCanvas') canvas: ElementRef;
+  @ViewChild(Content) content: Content;
+  @ViewChild('headerMenu') header: ElementRef;
 
   canvasElement: any;
   lastX: number;
@@ -32,6 +32,9 @@ export class DrawingPage {
 
   brushSize: number = 10;
 
+  storedImages = [];
+  numCanvases = 0;
+
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
   }
 
@@ -40,9 +43,24 @@ export class DrawingPage {
   }
 
   goToFinalPage(): void {
-    this.navCtrl.push(FinalPage, {
-      data: this.canvasElement
-    });
+    //get the current canvas as an image
+    let ctx = this.canvas.nativeElement.getContext('2d')
+    var img = new Image;
+    img.src = this.canvasElement.toDataURL();
+
+    //store image in storedImages
+    this.storedImages[this.numCanvases] = img;
+    this.numCanvases = this.numCanvases + 1;
+
+    this.clearCanvas();
+
+    //if we have 3 pictures, we're done --> go to final page, passing in the Images
+    if(this.numCanvases == 4){
+      this.navCtrl.push(FinalPage, {
+        data: this.storedImages
+      });
+    }
+
   }
 
   ionViewDidLoad() {
@@ -60,8 +78,10 @@ export class DrawingPage {
   ngAfterViewInit(){
       this.canvasElement = this.canvas.nativeElement;
 
+      var offsetHeight = this.header.nativeElement.offsetHeight + 10; //so it doesn't scroll, subtract header height plus a little more
+
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.platform.width() + '');
-      this.renderer.setElementAttribute(this.canvasElement, 'height', this.platform.height() + '');
+      this.renderer.setElementAttribute(this.canvasElement, 'height', this.platform.height() - offsetHeight+ '');
   }
 
   handleStart(ev){

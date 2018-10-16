@@ -1,3 +1,8 @@
 page-final {
-
+  canvas {
+    //removes gap between the 3 stacked canvases
+    display: block;
+    margin-top: -2px;
+    margin-bottom: -2px;
+  }
 }

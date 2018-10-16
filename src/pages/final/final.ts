@@ -2,10 +2,9 @@ import { Component, ViewChild, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 
 /**
- * Generated class for the FinalPage page.
+ * Class for the FinalPage page.
  *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Combines the drawn pictures into 1 final picture
  */
 
 @IonicPage()
@@ -14,27 +13,40 @@ import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
   templateUrl: 'final.html',
 })
 export class FinalPage {
-  @ViewChild('myCanvas') canvas: any;
+  @ViewChild('topCanvas') Tcanvas: any;
+  @ViewChild('middleCanvas') Mcanvas: any;
+  @ViewChild('bottomCanvas') Bcanvas: any;
+
   picture: any;
-  canvasElement: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
-    this.picture = navParams.get('data'); //canvas passed from DrawingPage
+    this.picture = navParams.get('data'); //array of images passed from DrawingPage
+  }
+
+  /*
+  * Takes the 3 pictures from the DrawingPage and draws them each on their own canvas,
+  * scaling them down in the process. The canvases are stacked on one another, so it becomes 1 picture.
+  */
+  drawPictures(){
+    let ctx = this.Tcanvas.nativeElement.getContext('2d')
+    var img = this.picture[0];
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+
+    img = this.picture[1];
+    ctx = this.Mcanvas.nativeElement.getContext('2d')
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+
+    img = this.picture[2];
+    ctx = this.Bcanvas.nativeElement.getContext('2d')
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
   }
 
   ngAfterViewInit(){
-      //set the canvas (myCanvas) width / heigh
-      this.canvasElement = this.canvas.nativeElement;
-      this.renderer.setElementAttribute(this.canvasElement, 'width', this.platform.width() + '');
-      this.renderer.setElementAttribute(this.canvasElement, 'height', this.platform.height() + '');
-
-      //draw on canvas the canvas that was passed from DrawingPage
-      let ctx = this.canvasElement.getContext('2d');
-      ctx.drawImage(this.picture, 0, 0);
+      this.drawPictures();
   }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad FinalPage');
   }
-
 }
