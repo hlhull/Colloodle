@@ -82,7 +82,7 @@ export class DrawingPage {
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
-      var offsetHeight = this.header.nativeElement.offsetHeight + this.overlapHeight + 5; //so it doesn't scroll, subtract header height plus a little more
+      var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
       this.canvasHeight = this.platform.height() - offsetHeight;
       this.canvasWidth = this.platform.width() - 5;
 
