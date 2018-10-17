@@ -13,7 +13,7 @@
   <ion-toolbar>
     <!--<button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>-->
     <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
-    <button ion-button (click)="goToFinalPage()">Finished</button>
+    <button ion-button (click)="nextStep()">Finished</button>
     <button ion-button end icon-only (click)="presentPopover($event)">
       <ion-icon name="brush"></ion-icon>
     </button>
@@ -58,5 +58,6 @@
 
 
 <ion-content no-bounce>
-  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)"></canvas>
+  <canvas #overlap style="border:1px solid #000000;"></canvas>
+  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" style="border:1px solid #000000;"></canvas>
 </ion-content>
