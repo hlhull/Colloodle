@@ -84,7 +84,7 @@ export class DrawingPage {
 
       var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
       this.canvasHeight = this.platform.height() - offsetHeight;
-      this.canvasWidth = this.platform.width() - 5;
+      this.canvasWidth = this.platform.width() - 2;
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
