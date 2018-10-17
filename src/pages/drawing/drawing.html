@@ -7,19 +7,51 @@
 <ion-header #headerMenu>
 
   <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+    </ion-buttons>
     <ion-title>Drawing</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only small (click)="presentPopover($event)">
+        <ion-icon name="brush"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
-  <ion-toolbar>
-    <!--<button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>-->
-    <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
-    <button ion-button (click)="nextStep()">Finished</button>
-    <button ion-button end icon-only (click)="presentPopover($event)">
-      <ion-icon name="brush"></ion-icon>
-    </button>
+<!--  <ion-toolbar>
+    <button ion-button end menuToggle><ion-icon name="brush"></ion-icon></button>
+    <ion-buttons start>
+      <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+    </ion-buttons>
+    <div id="finished">
+      <ion-buttons>
+        <button ion-button outline (click)="nextStep()">Finished</button>
+      </ion-buttons>
+    </div>
+    <ion-buttons end>
+      <button ion-button icon-only small (click)="presentPopover($event)">
+        <ion-icon name="brush"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
+-->
 
 </ion-header>
+
+<ion-toolbar id=bottom-toolbar>
+  <div id="finished">
+    <ion-buttons>
+      <button ion-button outline (click)="nextStep()">Finished</button>
+    </ion-buttons>
+  </div>
+</ion-toolbar>
+
+
+<style>
+ion-toolbar {
+text-align: center;
+}
+</style>
 
 <style>
 ion-title {
