@@ -32,17 +32,19 @@ export class FinalPage {
   * scaling them down in the process. The canvases are stacked on one another, so it becomes 1 picture.
   */
   drawPictures(){
-    let ctx = this.Tcanvas.nativeElement.getContext('2d')
+    let ctx = this.Tcanvas.nativeElement.getContext('2d');
     var img = this.picture[0];
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 
     img = this.picture[1];
-    ctx = this.Mcanvas.nativeElement.getContext('2d')
+    ctx = this.Mcanvas.nativeElement.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 
+    ctx = this.Bcanvas.nativeElement.getContext('2d');
     img = this.picture[2];
-    ctx = this.Bcanvas.nativeElement.getContext('2d')
+    img.onload = function(){ //last picture may not have loaded yet --> make sure it has loaded before we draw it
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    }
   }
 
   ngAfterViewInit(){
