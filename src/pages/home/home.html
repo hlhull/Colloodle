@@ -6,12 +6,26 @@
   </ion-navbar>
 </ion-header>
 
+<style>
+ion-header {
+text-align: center;
+}
+</style>
+
 <ion-content no-bounce>
     <!--canvas-draw></canvas-draw-->
-    <p>
-       <button ion-button (click)="goToDrawingPage()" full large>Draw!</button>
-    </p>
+    <ion-footer>
+      <p>
+       <button ion-button (click)="goToDrawingPage()" color="dark" round outline large>Draw!</button>
+     </p>
+   </ion-footer>
 </ion-content>
+
+<style>
+ion-content {
+text-align: center;
+}
+</style>
 
 <!--ion-content padding>
 
