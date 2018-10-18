@@ -62,8 +62,9 @@ export class DrawingPage {
 
     //get the current canvas as an image, draw it on overlap when loaded
     var img = new Image;
+    var overlap = this.overlapHeight; //could not access that in function below and do not want to hard code
     img.onload = function(){
-      ctx.drawImage(img, 0, img.height - 20, img.width, 20, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }
     img.src = this.canvasElement.toDataURL();
 
