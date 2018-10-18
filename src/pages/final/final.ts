@@ -19,8 +19,11 @@ export class FinalPage {
 
   picture: any;
 
+  landscape = false;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
     this.picture = navParams.get('data'); //array of images passed from DrawingPage
+    this.landscape = navParams.get('landscape');
   }
 
   goHome(): void {
@@ -32,33 +35,33 @@ export class FinalPage {
   * scaling them down in the process. The canvases are stacked on one another, so it becomes 1 picture.
   */
   drawPictures(){
-    let ctx = this.Tcanvas.nativeElement.getContext('2d');
-    var img = this.picture[0];
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    if (this.landscape) { // USING ROTATION!!!
+      let ctx = this.Tcanvas.nativeElement.getContext('2d');
+      var img = this.picture[0];
+      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
 
-    ctx = this.Mcanvas.nativeElement.getContext('2d');
-    img = this.picture[1];
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      ctx = this.Mcanvas.nativeElement.getContext('2d');
+      img = this.picture[1];
+      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
 
-    ctx = this.Bcanvas.nativeElement.getContext('2d');
-    img = this.picture[2];
-    img.onload = function(){ //last picture may not have loaded yet --> make sure it has loaded before we draw it
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      ctx = this.Bcanvas.nativeElement.getContext('2d');
+      img = this.picture[2];
+      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
+    } else { // NOT USING ROTATION, SQUISHING VERTICAL IMAGES
+      let ctx = this.Tcanvas.nativeElement.getContext('2d');
+      var img = this.picture[0];
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+
+      ctx = this.Mcanvas.nativeElement.getContext('2d');
+      img = this.picture[1];
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+
+      ctx = this.Bcanvas.nativeElement.getContext('2d');
+      img = this.picture[2];
+      img.onload = function(){ //last picture may not have loaded yet --> make sure it has loaded before we draw it
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      }
     }
-
-    //COMMENT THE ABOVE AND UNCOMMENT THE BELOW TO USE ROTATION:
-
-    // let ctx = this.Tcanvas.nativeElement.getContext('2d');
-    // var img = this.picture[0];
-    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
-    //
-    // ctx = this.Mcanvas.nativeElement.getContext('2d');
-    // img = this.picture[1];
-    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
-    //
-    // ctx = this.Bcanvas.nativeElement.getContext('2d');
-    // img = this.picture[2];
-    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
   }
 
   /*

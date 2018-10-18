@@ -1,0 +1,62 @@
+<!--TODO: MIGRATE OR DELETE!
+IF MIGRAE: copy and paste to drawing.html, REMOVE ALL INSTANCES OF THE WORD "landscape"
+IF DELETE: delete all drawing-landscape files, the references to this class in home.html and home.ts and app.module.ts-->
+
+<!--
+  Generated template for the DrawingLandscapePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header #headerMenu>
+<!--TODO: CHANGE THE STUFF BELOW SO THE TITLES/BUTTONS LOOK GOOD ON LANDSCAPE SCREEN!-->
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only small (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+    </ion-buttons>
+    <ion-title>Drawing</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only small (click)="handleUndo($event)">
+        <ion-icon name="undo"></ion-icon>
+      </button>
+      <button ion-button icon-only small (click)="handleRedo($event)">
+        <ion-icon name="redo"></ion-icon>
+      </button>
+      <button ion-button icon-only small (click)="presentPopover($event)">
+        <ion-icon name="brush"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-toolbar id=bottom-toolbar>
+  <div id="finished">
+    <ion-buttons>
+      <button ion-button outline (click)="nextStep()">Finished</button>
+    </ion-buttons>
+  </div>
+</ion-toolbar>
+
+
+<style>
+ion-toolbar {
+text-align: center;
+}
+</style>
+
+<style>
+ion-title {
+text-align: center;
+}
+</style>
+
+
+<ion-nav #drawMenu [root]="drawing-landscape"></ion-nav>
+
+
+
+<ion-content no-bounce>
+  <canvas #overlap style="border:1px solid #009691;"></canvas>
+  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
+</ion-content>

@@ -1,3 +1,7 @@
+//TODO: MIGRATE OR DELETE!
+//IF MIGRAE: copy and paste to drawing.ts, REMOVE ALL INSTANCES OF THE WORD "landscape"
+//IF DELETE: delete all drawing-landscape files, the references to this class in home.html and home.ts and app.module.ts
+
 import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
@@ -8,18 +12,18 @@ import { BrushProvider } from '../../providers/brush/brush'
 import { AlertController } from 'ionic-angular';
 
 /**
- * Class for the DrawingPage page.
+ * Class for the DrawingLandscapePage page.
  *
  * Where the user draws their piece of the picture
  */
 
 @IonicPage()
 @Component({
-  selector: 'page-drawing',
-  templateUrl: 'drawing.html',
+  selector: 'page-drawing-landscape',
+  templateUrl: 'drawing-landscape.html',
 })
 
-export class DrawingPage {
+export class DrawingLandscapePage {
   @ViewChild('myCanvas') canvas: ElementRef;
   @ViewChild('overlap') overlapCanvas: ElementRef;
   @ViewChild(Content) content: Content;
@@ -39,6 +43,7 @@ export class DrawingPage {
   storedImages = [];
   numCanvases = 0;
 
+//TODO: The below will have to be width or landscape-oriented height, MUST REFACTOR FOR THAT
   overlapHeight = 20;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
@@ -49,7 +54,7 @@ export class DrawingPage {
   }
 
   /*
-   * saves canvas, resets drawing page, sets overlap, and goes to final page if 3 drawings done
+   * saves canvas, resets drawing-landscape page, sets overlap, and goes to final page if 3 drawings done
    */
   nextStep(): void {
     //clear overlap
@@ -76,14 +81,15 @@ export class DrawingPage {
 
     //if we have 3 pictures, we're done --> go to final page, passing in the Images
     if(this.numCanvases == 3){
-      this.navCtrl.push(FinalPage, {data: this.storedImages, landscape: false}, {animate:false});
+      this.navCtrl.push(FinalPage, {data: this.storedImages, landscape: true}, {animate:false});
     }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DrawingPage');
+    console.log('ionViewDidLoad DrawingLandscapePage');
   }
 
+// TODO: CHANGE THE OVERLAP CANVAS TO BE ON SIDE, SO IT WILL BE ABOVE LANDSCAPE ORIENTED CANVAS
   /*
    * sets the size of the main canvas and overlap canvas
    */

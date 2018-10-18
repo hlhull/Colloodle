@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
+import { DrawingLandscapePage } from '../pages/drawing-landscape/drawing-landscape';
 import { FinalPage } from '../pages/final/final';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
@@ -21,6 +22,7 @@ import { BrushProvider } from '../providers/brush/brush';
     MyApp,
     HomePage,
     DrawingPage,
+    DrawingLandscapePage,
     FinalPage,
     CanvasDrawComponent,
     PopoverPage
@@ -35,6 +37,7 @@ import { BrushProvider } from '../providers/brush/brush';
     MyApp,
     HomePage,
     DrawingPage,
+    DrawingLandscapePage,
     PopoverPage,
     FinalPage
   ],
