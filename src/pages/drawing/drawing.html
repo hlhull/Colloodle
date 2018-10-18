@@ -8,10 +8,16 @@
 
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button (click)="goHome()"><ion-icon name="home"></ion-icon></button>
+      <button ion-button icon-only small (click)="goHome()"><ion-icon name="home"></ion-icon></button>
     </ion-buttons>
     <ion-title>Drawing</ion-title>
     <ion-buttons end>
+      <button ion-button icon-only small (click)="handleUndo($event)">
+        <ion-icon name="undo"></ion-icon>
+      </button>
+      <button ion-button icon-only small (click)="handleRedo($event)">
+        <ion-icon name="redo"></ion-icon>
+      </button>
       <button ion-button icon-only small (click)="presentPopover($event)">
         <ion-icon name="brush"></ion-icon>
       </button>
@@ -80,7 +86,7 @@ text-align: center;
   </ion-content>
 </ion-menu>-->
 
-<script id="my-popover.html" type="text/ng-template">
+<!--<script id="my-popover.html" type="text/ng-template">
   <ion-popover-view>
     <ion-header-bar>
       <h1 class="title">My Popover Title</h1>
@@ -89,7 +95,7 @@ text-align: center;
       Hello!
     </ion-content>
   </ion-popover-view>
-</script>
+</script>-->
 
 <ion-nav #drawMenu [root]="drawing"></ion-nav>
 
@@ -97,5 +103,5 @@ text-align: center;
 
 <ion-content no-bounce>
   <canvas #overlap style="border:1px solid #009691;"></canvas>
-  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" style="border:1px solid #009691;"></canvas>
+  <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
 </ion-content>

@@ -33,6 +33,9 @@ export class DrawingPage {
   canvasHeight: number;
   canvasWidth: number;
 
+  undoStack = [new Image];
+  redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
+
   storedImages = [];
   numCanvases = 0;
 
@@ -52,6 +55,10 @@ export class DrawingPage {
     //clear overlap
     let ctx = this.overlapElement.getContext('2d');
     this.clearCanvas(this.overlapElement);
+
+    //reset undo/redo stacks:
+    this.undoStack = [new Image];
+    this.redoStack = [];
 
     //get the current canvas as an image, draw it on overlap when loaded
     var img = new Image;
@@ -133,11 +140,77 @@ export class DrawingPage {
       this.lastY = currentY;
   }
 
+  /*
+  * Helper function, saves image currently on screen
+  */
+  saveCurrentImage() {
+    //get the current canvas as an image
+    var img = new Image;
+
+    img.src = this.canvasElement.toDataURL();
+
+    return img;
+  }
+
+  /*
+  * Pushes the stroke to the undo stack
+  */
+  handleEndStroke() {
+    var img = this.saveCurrentImage();
+
+    this.undoStack.push(img);
+
+    this.redoStack = []; //can't redo once you've added a new stroke!
+  }
+
+  /*
+  * Handles when undo button is pushed
+  */
+  handleUndo(ev) {
+    if (this.undoStack.length > 1) {
+      this.clearCanvas(this.canvasElement);
+
+      let ctx = this.canvasElement.getContext('2d');
+
+      var img1 = this.undoStack.pop();
+
+      //store image in redoStack in case of redo
+      this.redoStack.push(img1);
+
+      var img2 = this.undoStack.pop();
+      this.undoStack.push(img2); //keeping current img at top of stack seems easiest
+
+      //draw the old image
+      ctx.drawImage(img2, 0, 0, img2.width, img2.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    }
+  }
+
+  /*
+  * Handles when redo button is pushed
+  */
+  handleRedo(ev) {
+    if (this.redoStack.length > 0) {
+      this.clearCanvas(this.canvasElement);
+
+      let ctx = this.canvasElement.getContext('2d');
+
+      var img = this.redoStack.pop();
+
+      this.undoStack.push(img); //keeping current img at top of undo stack
+
+      //draw the old image
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    }
+  }
+
   clearCanvas(canvas){
     let ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  /*
+  *Presents the popover menu with color and brush size
+  */
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverPage);
     popover.present({
@@ -145,6 +218,9 @@ export class DrawingPage {
     });
   }
 
+  /*
+  * Causes an alert/confirmation screen to pop up when home button is pressed
+  */
   presentConfirm() {
   let alert = this.alertCtrl.create({
     title: 'Confirm Action',
