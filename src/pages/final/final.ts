@@ -36,8 +36,8 @@ export class FinalPage {
     var img = this.picture[0];
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 
-    img = this.picture[1];
     ctx = this.Mcanvas.nativeElement.getContext('2d');
+    img = this.picture[1];
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
 
     ctx = this.Bcanvas.nativeElement.getContext('2d');
@@ -45,7 +45,42 @@ export class FinalPage {
     img.onload = function(){ //last picture may not have loaded yet --> make sure it has loaded before we draw it
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }
+
+    //COMMENT THE ABOVE AND UNCOMMENT THE BELOW TO USE ROTATION:
+
+    // let ctx = this.Tcanvas.nativeElement.getContext('2d');
+    // var img = this.picture[0];
+    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
+    //
+    // ctx = this.Mcanvas.nativeElement.getContext('2d');
+    // img = this.picture[1];
+    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
+    //
+    // ctx = this.Bcanvas.nativeElement.getContext('2d');
+    // img = this.picture[2];
+    // this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
   }
+
+  /*
+  * Draws the images rotated, images no longer squished
+  */
+  drawRotatedImage(image, ctx, x, y, angle) {
+    // save the current context
+    ctx.save();
+
+    // move to the middle of where we want to draw our image
+    ctx.translate(ctx.canvas.clientWidth/2, ctx.canvas.clientHeight/2);
+
+    // rotate around that point USING RADIANS
+    ctx.rotate(angle);
+
+    // draw the image on the rotated context
+    ctx.drawImage(image, 0, 0, image.width, image.height, -ctx.canvas.clientHeight/2, -ctx.canvas.clientWidth/2, ctx.canvas.clientHeight, ctx.canvas.clientWidth);
+
+    // resotre old context
+    ctx.restore();
+  }
+
 
   ngAfterViewInit(){
       this.drawPictures();
