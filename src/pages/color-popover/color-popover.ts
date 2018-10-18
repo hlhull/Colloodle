@@ -10,7 +10,12 @@ import { BrushProvider } from '../../providers/brush/brush'
 @Component({
   template: `
     <ion-list>
-      <ion-list-header>Brush Options</ion-list-header>
+      <ion-list-header>
+        Brush Options
+        <button icon-only ion-button (click)="this.close()" style="float: right;" color="dark" clear>
+          <ion-icon name="close" align="right"></ion-icon>
+        </button>
+      </ion-list-header>
       <button *ngFor="let color of this.brushService.availableColors" icon-only ion-button color="light" (click)="this.brushService.changeColor(color)">
           <ion-icon [style.color]="color" name="brush"></ion-icon>
       </button>
