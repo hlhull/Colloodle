@@ -16,6 +16,8 @@ export class BrushProvider {
       '#9b59b6',
       '#e67e22',
       '#e74c3c',
+      '#fffc54',
+      '#000000',
       '#ffffff'
   ];
 
