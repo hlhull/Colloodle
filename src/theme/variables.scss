@@ -45,8 +45,8 @@ $toolbar-text-color: white;
 
 // PLAYING WITH NEW COLORS:
 $colors: (
-  primary:    (base: #ffffff, contrast: #009691),
-  secondary:  #00bab3,
+  primary:    #00bab3,
+  secondary:  (base: #ffffff, contrast: #009691),
   danger:     #f53d3d,
   light:      #f4f4f4,
   dark:       #009691

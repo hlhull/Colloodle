@@ -5,6 +5,7 @@ import { PopoverController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final'
 import { BrushProvider } from '../../providers/brush/brush'
+import { AlertController } from 'ionic-angular';
 
 /**
  * Class for the DrawingPage page.
@@ -37,11 +38,11 @@ export class DrawingPage {
 
   overlapHeight = 20;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
   }
 
   goHome(): void {
-    this.navCtrl.setRoot(HomePage);
+    this.presentConfirm();
   }
 
   /*
@@ -143,5 +144,28 @@ export class DrawingPage {
       ev: myEvent
     });
   }
+
+  presentConfirm() {
+  let alert = this.alertCtrl.create({
+    title: 'Confirm Action',
+    message: 'Are you sure you want to leave your painting and go to the Home page?',
+    buttons: [
+      {
+        text: 'Yes',
+        handler: () => {
+          this.navCtrl.setRoot(HomePage);
+        }
+      },
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          // console.log('Cancel clicked');
+        }
+      }
+    ]
+  });
+  alert.present();
+}
 
 }
