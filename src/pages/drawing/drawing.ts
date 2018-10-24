@@ -2,10 +2,12 @@ import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
-import { PopoverPage } from '../color-popover/color-popover'
-import { FinalPage } from '../final/final'
-import { BrushProvider } from '../../providers/brush/brush'
+import { PopoverPage } from '../color-popover/color-popover';
+import { FinalPage } from '../final/final';
+import { BrushProvider } from '../../providers/brush/brush';
+import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { AlertController } from 'ionic-angular';
+import firebase from 'firebase';
 
 /**
  * Class for the DrawingPage page.
@@ -41,7 +43,7 @@ export class DrawingPage {
 
   overlapHeight = 20;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, public imageStorage: ImageStorageProvider, private alertCtrl: AlertController) {
   }
 
   goHome(): void {
@@ -67,6 +69,9 @@ export class DrawingPage {
       ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
+
+    //store image in firebase storage
+    this.imageStorage.storeImage(img.src, this.numCanvases, 'group#');
 
     //store image in storedImages
     this.storedImages[this.numCanvases] = img;

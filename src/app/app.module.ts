@@ -16,6 +16,7 @@ import { File } from '@ionic-native/file';
 import { IonicStorageModule } from '@ionic/storage';
 import { PopoverPage } from '../pages/color-popover/color-popover';
 import { BrushProvider } from '../providers/brush/brush';
+import { ImageStorageProvider } from '../providers/image-storage/image-storage';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { BrushProvider } from '../providers/brush/brush';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     File,
-    BrushProvider
+    BrushProvider,
+    ImageStorageProvider
   ]
 })
 export class AppModule {}
