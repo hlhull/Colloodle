@@ -18,6 +18,11 @@ import { PopoverPage } from '../pages/color-popover/color-popover';
 import { BrushProvider } from '../providers/brush/brush';
 import { ImageStorageProvider } from '../providers/image-storage/image-storage';
 
+//firebase stuff:
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { config } from '../config';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -31,7 +36,8 @@ import { ImageStorageProvider } from '../providers/image-storage/image-storage';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    AngularFireModule.initializeApp(config) //firebase stuff
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -48,7 +54,8 @@ import { ImageStorageProvider } from '../providers/image-storage/image-storage';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     File,
     BrushProvider,
-    ImageStorageProvider
+    ImageStorageProvider,
+    AngularFireAuth
   ]
 })
 export class AppModule {}
