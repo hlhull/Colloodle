@@ -14,23 +14,35 @@ export class ImageStorageProvider {
   constructor() {
   }
 
-  //store image in Firebase at group/sectionNum.png
+  /*
+   * store image with given dataUrl in Firebase at group/sectionNum.png
+   */
   storeImage(dataUrl, sectionNum, group){
     var blob = this.dataUrlToBlob(dataUrl);
 
     // Create root reference
     var storageRef = firebase.storage().ref();
 
-    // Name the file after the part of the image it is
-    var sectionRef = storageRef.child(sectionNum + '.png');
-
     // Put the image in the correct group folder
     var groupRef = storageRef.child(group + '/' + sectionNum + '.png');
 
     //upload to firebase
-    groupRef.put(blob).then(function(snapshot) {
-      console.log('Uploaded a blob or file!');
-    });
+    return groupRef.put(blob);
+  }
+
+  /*
+   * gets the image urls that are in the specificed group folder in firebase
+   */
+  getImageUrls(group){
+    var storageRef = firebase.storage().ref().child('group#'); //which folder we want to get images from
+
+    var imageRef0 = storageRef.child(0 + '.png'); // references image 0.png
+    var imageRef1 = storageRef.child(1 + '.png'); // references image 1.png
+    var imageRef2 = storageRef.child(2 + '.png'); // references image 2.png
+
+    // return an array of the image urls of all the images in the folder
+    return [imageRef0.getDownloadURL(), imageRef1.getDownloadURL(), imageRef2.getDownloadURL()];
+
   }
 
   // convert base64/URLEncoded data component to raw binary data held in a string
