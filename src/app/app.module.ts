@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
+import { LoginPage } from '../pages/login/login';
+import { SignupPage } from '../pages/signup/signup';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
 import { DrawingLandscapePage } from '../pages/drawing-landscape/drawing-landscape';
@@ -20,12 +22,16 @@ import { ImageStorageProvider } from '../providers/image-storage/image-storage';
 
 //firebase stuff:
 import { AngularFireModule } from 'angularfire2';
+import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { config } from '../config';
+import { NgxErrorsModule } from '@ultimate/ngxerrors';
 
 @NgModule({
   declarations: [
     MyApp,
+    LoginPage,
+    SignupPage,
     HomePage,
     DrawingPage,
     DrawingLandscapePage,
@@ -37,11 +43,14 @@ import { config } from '../config';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    AngularFireModule.initializeApp(config) //firebase stuff
+    AngularFireModule.initializeApp(config), //firebase stuff
+    NgxErrorsModule //also helps with firebase stuff, login page
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    LoginPage,
+    SignupPage,
     HomePage,
     DrawingPage,
     DrawingLandscapePage,
@@ -55,7 +64,8 @@ import { config } from '../config';
     File,
     BrushProvider,
     ImageStorageProvider,
-    AngularFireAuth
+    AngularFireAuth,
+    AuthService
   ]
 })
 export class AppModule {}

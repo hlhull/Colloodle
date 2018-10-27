@@ -1,0 +1,45 @@
+<!--
+  Generated template for the SignupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+
+  Made with help from tutorial:
+  https://medium.com/appseed-io/integrating-firebase-password-and-google-authentication-into-your-ionic-3-app-2421cee32db9
+-->
+
+<ion-header>
+	<ion-navbar>
+		<ion-title>Sign up</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+
+	<form (ngSubmit)="signup()" [formGroup]="form">
+		<ion-list inset>
+
+			<ion-item [ngClass]="{ invalid: emailErrors.hasError('*', ['touched']) }">
+				<ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+			</ion-item>
+
+			<div ngxErrors="email" #emailErrors="ngxErrors">
+				<div [ngxError]="['email', 'required']" [when]="['touched']">It should be a valid email</div>
+			</div>
+
+			<ion-item [ngClass]="{ invalid: passwordErrors.hasError('*', ['touched']) }">
+				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+			</ion-item>
+
+			<div ngxErrors="password" #passwordErrors="ngxErrors">
+				<div [ngxError]="['minlength', 'required']" [when]="['touched']">It should be at least 6 characters</div>
+			</div>
+		</ion-list>
+
+		<div padding-horizontal>
+			<div class="form-error">{{signupError}}</div>
+
+			<button ion-button full type="submit" [disabled]="!form.valid">Sign up</button>
+		</div>
+	</form>
+</ion-content>
