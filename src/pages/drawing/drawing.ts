@@ -71,7 +71,7 @@ export class DrawingPage {
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
     //store image in firebase storage
-    this.imageStorage.storeImage(img.src, this.numCanvases, 'group#');
+    var promise = this.imageStorage.storeImage(img.src, this.numCanvases, 'group#');
 
     //store image in storedImages
     this.storedImages[this.numCanvases] = img;
@@ -81,7 +81,8 @@ export class DrawingPage {
 
     //if we have 3 pictures, we're done --> go to final page, passing in the Images
     if(this.numCanvases == 3){
-      this.navCtrl.push(FinalPage, {data: this.storedImages, landscape: false}, {animate:false});
+      promise.then(() => //only go to next page when images have been uploaded
+        this.navCtrl.push(FinalPage, {data: this.storedImages, landscape: false}, {animate:false}))
     }
   }
 

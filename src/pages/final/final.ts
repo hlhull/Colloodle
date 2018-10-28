@@ -1,6 +1,9 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { HomePage} from '../home/home';
+
+import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
+
 /**
  * Class for the FinalPage page.
  *
@@ -17,12 +20,9 @@ export class FinalPage {
   @ViewChild('middleCanvas') Mcanvas: any;
   @ViewChild('bottomCanvas') Bcanvas: any;
 
-  picture: any;
-
   landscape = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer) {
-    this.picture = navParams.get('data'); //array of images passed from DrawingPage
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider) {
     this.landscape = navParams.get('landscape');
   }
 
@@ -31,35 +31,32 @@ export class FinalPage {
   }
 
   /*
-  * Takes the 3 pictures from the DrawingPage and draws them each on their own canvas,
-  * scaling them down in the process. The canvases are stacked on one another, so it becomes 1 picture.
+  * Takes the 3 picture urls passed in and draws them each on their own canvas,
+  * scaling them down in the process. The canvases are stacked on one another,
+  * so it becomes 1 picture.
   */
-  drawPictures(){
+  drawPictures(pictures){
     if (this.landscape) { // USING ROTATION!!!
       let ctx = this.Tcanvas.nativeElement.getContext('2d');
-      var img = this.picture[0];
+      var img = pictures[0];
       this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
 
       ctx = this.Mcanvas.nativeElement.getContext('2d');
-      img = this.picture[1];
+      img = pictures[1];
       this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
 
       ctx = this.Bcanvas.nativeElement.getContext('2d');
-      img = this.picture[2];
+      img = pictures[2];
       this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
     } else { // NOT USING ROTATION, SQUISHING VERTICAL IMAGES
-      let ctx = this.Tcanvas.nativeElement.getContext('2d');
-      var img = this.picture[0];
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-
-      ctx = this.Mcanvas.nativeElement.getContext('2d');
-      img = this.picture[1];
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-
-      ctx = this.Bcanvas.nativeElement.getContext('2d');
-      img = this.picture[2];
-      img.onload = function(){ //last picture may not have loaded yet --> make sure it has loaded before we draw it
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      var canvases = [this.Tcanvas, this.Mcanvas, this.Bcanvas];
+      for (var i = 0; i < pictures.length; i++) {
+        let ctx = canvases[i].nativeElement.getContext('2d'); // assigns context to appropriate canvas
+        let img = new Image();
+        img = pictures[i]; //assign image to one of the pictures passed into drawPictures
+        img.onload = function() { //once the image loads, then draw it on the canvas
+          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+        }
       }
     }
   }
@@ -84,9 +81,23 @@ export class FinalPage {
     ctx.restore();
   }
 
-
+  /*
+  * Downloads the 3 images from the appropriate group # and calls drawPictures
+  * to draw them on the canvas
+  */
   ngAfterViewInit(){
-      this.drawPictures();
+    var img = new Image();
+    var pictures = [new Image(), new Image(), new Image()];
+
+    // calls ImageStorage to download the image urls; once it gets them back,
+    // then it assigns them to an array to pass to drawPictures
+    Promise.all(this.imageStorage.getImageUrls('group#')).then((value) => {
+      pictures[0].src = value[0];
+      pictures[1].src = value[1];
+      pictures[2].src = value[2];
+      this.drawPictures(pictures);
+    });
+
   }
 
 
