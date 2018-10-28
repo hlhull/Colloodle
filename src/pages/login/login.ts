@@ -8,6 +8,7 @@ import { NavController, IonicPage } from 'ionic-angular';
 import { HomePage } from '../home/home';  //edited, does work
 import { AuthService } from '../../services/auth.service';
 import { SignupPage } from '../signup/signup';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @IonicPage()
 @Component({
@@ -48,8 +49,18 @@ login() {
 			);
 	}
 
-  signup(){
+  signup() {
     this.navCtrl.push(SignupPage);
+  }
+
+  resetPassword() {
+    let data = this.loginForm.value;
+
+		if (!data.email) {
+			return;
+		}
+
+    this.auth.sendPassword(data.email);
   }
 
 }
