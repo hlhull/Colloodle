@@ -97,8 +97,8 @@ export class DrawingLandscapePage {
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
-      var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
-      this.canvasHeight = this.platform.height() - offsetHeight;
+      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
+      this.canvasHeight = this.platform.height() - this.overlapHeight;
       this.canvasWidth = this.platform.width() - 2;
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
