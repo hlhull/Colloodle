@@ -40,4 +40,24 @@ export class AuthService {
     return this.afAuth.auth.signOut();
   }
 
+	sendPassword(email) {
+    this.afAuth.auth.sendPasswordResetEmail(email)
+			// .catch(function(error) {
+			// 	// Handle Errors here.
+			//   var errorCode = error.code;
+			//   var errorMessage = error.message;
+			//
+			// 	if (errorCode == 'auth/invalid-email') {
+    	// 		alert('Wrong password.');
+			// 	} else {
+			// 		alert('errorMessage');
+			// 	}
+			//
+			// 	console.log(error);
+			// })
+	    .then(() => {
+	      console.log('email sent');
+	    });
+  }
+
 }
