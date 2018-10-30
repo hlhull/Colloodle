@@ -27,7 +27,8 @@ text-align: center;
     <!--canvas-draw></canvas-draw-->
     <ion-footer>
       <p>
-       <button ion-button (click)="goToDrawingPage()" color="light" round outline large>Draw!</button>
+       <button ion-button (click)="goToDrawingPage('pass-around')" color="light" round outline large>Pass Around!</button>
+       <button ion-button (click)="goToDrawingPage('random')" color="light" round outline large>Random!</button>
        <button ion-button (click)="goToDrawingLandscapePage()" color="light" round outline large>(TEST)</button><!--this goes to drawing page that uses rotation-->
      </p>
    </ion-footer>

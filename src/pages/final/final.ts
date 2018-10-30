@@ -24,6 +24,7 @@ export class FinalPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider) {
     this.landscape = navParams.get('landscape');
+    this.imageStorage = navParams.get('imageStorage');
   }
 
   goHome(): void {
@@ -91,12 +92,13 @@ export class FinalPage {
 
     // calls ImageStorage to download the image urls; once it gets them back,
     // then it assigns them to an array to pass to drawPictures
-    Promise.all(this.imageStorage.getImageUrls('group#')).then((value) => {
-      pictures[0].src = value[0];
-      pictures[1].src = value[1];
-      pictures[2].src = value[2];
-      this.drawPictures(pictures);
-    });
+    //var value = this.imageStorage.getImageUrls();
+    this.imageStorage.getImageUrls().then((value) => {
+       pictures[0].src = value[0];
+       pictures[1].src = value[1];
+       pictures[2].src = value[2];
+       this.drawPictures(pictures);
+     });
 
   }
 

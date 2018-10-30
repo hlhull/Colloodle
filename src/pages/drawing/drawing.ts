@@ -5,7 +5,8 @@ import { PopoverController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover';
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
-import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
+import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
 import { AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 
@@ -38,12 +39,16 @@ export class DrawingPage {
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
-  storedImages = [];
-  numCanvases = 0;
-
   overlapHeight = 20;
+  imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, public imageStorage: ImageStorageProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
+    if(navParams.get('local')){
+      this.imageStorage = new LocalStorageProvider();
+    } else {
+      this.imageStorage = new NetworkStorageProvider();
+      this.imageStorage.setUp(navParams.get('group'), navParams.get('section'));
+    }
   }
 
   goHome(): void {
@@ -54,35 +59,26 @@ export class DrawingPage {
    * saves canvas, resets drawing page, sets overlap, and goes to final page if 3 drawings done
    */
   nextStep(): void {
-    //clear overlap
-    let ctx = this.overlapElement.getContext('2d');
-    this.clearCanvas(this.overlapElement);
-
-    //reset undo/redo stacks:
-    this.undoStack = [new Image];
-    this.redoStack = [];
-
     //get the current canvas as an image, draw it on overlap when loaded
     var img = new Image;
+    img.src = this.canvasElement.toDataURL(); //saving current image in cavas
+
+    //store image
+    var done = this.imageStorage.storeImage(img.src);
+
+    //if we have 3 pictures, we're done --> go to final page, passing in the Images
+    done.then((proceed) => {
+    if(proceed){
+        this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
+    }});
+
+    this.resetPage();
+
+    //draw overlap
+    let ctx = this.overlapElement.getContext('2d');
     var overlap = this.overlapHeight; //could not access that in function below and do not want to hard code
     img.onload = function(){  //draws in the overlap bar:
       ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-    }
-    img.src = this.canvasElement.toDataURL(); //saving current image in cavas
-
-    //store image in firebase storage
-    var promise = this.imageStorage.storeImage(img.src, this.numCanvases, 'group#');
-
-    //store image in storedImages
-    this.storedImages[this.numCanvases] = img;
-    this.numCanvases = this.numCanvases + 1;
-
-    this.clearCanvas(this.canvasElement);
-
-    //if we have 3 pictures, we're done --> go to final page, passing in the Images
-    if(this.numCanvases == 3){
-      promise.then(() => //only go to next page when images have been uploaded
-        this.navCtrl.push(FinalPage, {data: this.storedImages, landscape: false}, {animate:false}))
     }
   }
 
@@ -106,6 +102,16 @@ export class DrawingPage {
 
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
+  }
+
+  resetPage(){
+    //clear overlap / canvas
+    this.clearCanvas(this.overlapElement);
+    this.clearCanvas(this.canvasElement);
+
+    //reset undo/redo stacks:
+    this.undoStack = [new Image];
+    this.redoStack = [];
   }
 
   /*

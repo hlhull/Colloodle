@@ -11,8 +11,16 @@ import { LoginPage } from '../login/login';
 })
 export class HomePage {
 
-  goToDrawingPage(): void {
-    this.navCtrl.setRoot(DrawingPage);
+  /*
+    goes to drawing page, passing in either 'true' for local if user clicked pass-Around
+    and 'false' for local storage if user clicked random (need to store on network)
+  */
+  goToDrawingPage(type): void {
+    if(type == 'pass-around'){
+      this.navCtrl.push(DrawingPage, {local: true}, {animate:false});
+    } else {
+      this.navCtrl.push(DrawingPage, {local: false, group: 'group#', section: '2'}, {animate:false});
+    }
   }
 
   goToDrawingLandscapePage(): void {

@@ -18,6 +18,8 @@ import { File } from '@ionic-native/file';
 import { IonicStorageModule } from '@ionic/storage';
 import { PopoverPage } from '../pages/color-popover/color-popover';
 import { BrushProvider } from '../providers/brush/brush';
+import { NetworkStorageProvider } from '../providers/image-storage/network-storage';
+import { LocalStorageProvider } from '../providers/image-storage/local-storage';
 import { ImageStorageProvider } from '../providers/image-storage/image-storage';
 
 //firebase stuff:
@@ -64,6 +66,8 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
     File,
     BrushProvider,
     ImageStorageProvider,
+    LocalStorageProvider,
+    NetworkStorageProvider,
     AngularFireAuth,
     AuthService
   ]
