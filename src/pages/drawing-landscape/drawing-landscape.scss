@@ -10,10 +10,48 @@ page-drawing-landscape {
     margin-bottom: -2px;
   }
 
-  #myLayout{
-    height: 100%;
-  }
+// .col{
+//   height: canvasHeight + overlapHeight;
+// }
+#home{
+  position: fixed;
+  top: 0;
+  left: 90%;
+}
+
+#brush{
+  position: fixed;
+  top: 60px;
+  left: 90%;
+}
+
+#undo{
+  position: fixed;
+  top: 120px;
+  left: 90%;
+}
+
+#redo{
+  position: fixed;
+  top: 180px;
+  left: 90%;
+}
+
+#finished{
+  position: fixed;
+  bottom: 0;
+  left: 90%;
+  right: 100%;
+
+}
+
+#myCanvas{
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left:0;
 
 
+}
 
 }

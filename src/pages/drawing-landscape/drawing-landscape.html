@@ -11,53 +11,52 @@ IF DELETE: delete all drawing-landscape files, the references to this class in h
 
 <!--TODO: CHANGE THE STUFF BELOW SO THE TITLES/BUTTONS LOOK GOOD ON LANDSCAPE SCREEN!-->
 
-<ion-grid id="myLayout">
-  <ion-row align-items: stretch justify-content: space-between>
-    <ion-col col-10 align-items: stretch>
+<!--<ion-grid id="myLayout">
+  <ion-row >
+    <ion-col id="main" col-9> -->
       <ion-content no-bounce>
         <canvas #overlap style="border:1px solid #009691;"></canvas>
         <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
-      </ion-content>
-    </ion-col>
-    <ion-col align-items: stretch>
+<!--    </ion-col>
+    <ion-col id="complementary"> -->
 
-        <ion-buttons start>
+        <ion-buttons end id='home'>
           <button ion-button icon-only  large (click)="goHome()">
             <ion-icon name="home"></ion-icon>
           </button>
         </ion-buttons>
 
-        <ion-buttons start>
+        <ion-buttons end id='brush'>
           <button ion-button icon-only  large (click)="presentPopover($event)">
             <ion-icon name="brush"></ion-icon>
           </button>
         </ion-buttons>
 
-        <ion-buttons start>
+        <ion-buttons end id='undo'>
           <button ion-button icon-only large (click)="handleUndo($event)">
             <ion-icon name="undo"></ion-icon>
           </button>
         </ion-buttons>
 
 
-        <ion-buttons start>
+        <ion-buttons end id='redo'>
           <button ion-button icon-only large (click)="handleRedo($event)">
             <ion-icon name="redo"></ion-icon>
           </button>
         </ion-buttons>
 
         <div id="finished">
-          <ion-buttons start>
+          <ion-buttons end>
             <button ion-button large (click)="nextStep()">
               <ion-icon name="checkmark"></ion-icon>
             </button>
           </ion-buttons>
         </div>
+</ion-content>
 
-
-    </ion-col>
+  <!--  </ion-col>
   </ion-row>
-</ion-grid>
+</ion-grid> -->
 
 <!--<ion-content id="myMenu">
 
