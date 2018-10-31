@@ -28,7 +28,7 @@ IF DELETE: delete all drawing-landscape files, the references to this class in h
 
         <ion-buttons end id='brush'>
           <button ion-button icon-only  large (click)="presentPopover($event)">
-            <ion-icon name="brush"></ion-icon>
+            <ion-icon name="brush" [style.color]="this.brushService.color"></ion-icon>
           </button>
         </ion-buttons>
 

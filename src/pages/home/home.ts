@@ -23,9 +23,12 @@ export class HomePage {
     }
   }
 
-  goToDrawingLandscapePage(): void {
-    this.navCtrl.setRoot(DrawingLandscapePage);
-  }
+  goToDrawingLandscapePage(type): void {
+    if(type == 'pass-around'){
+      this.navCtrl.push(DrawingLandscapePage, {local: true}, {animate:false});
+    } else {
+      this.navCtrl.push(DrawingLandscapePage, {local: false, group: 'group#', section: '2'}, {animate:false});
+    }  }
 
   // @ViewChild(Nav) nav: Nav;
 
