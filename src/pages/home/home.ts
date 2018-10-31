@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, Nav } from 'ionic-angular';
 import { DrawingPage } from '../drawing/drawing';
-import { DrawingLandscapePage } from '../drawing-landscape/drawing-landscape';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 
@@ -22,13 +21,6 @@ export class HomePage {
       this.navCtrl.push(DrawingPage, {local: false, group: 'group#', section: '2'}, {animate:false});
     }
   }
-
-  goToDrawingLandscapePage(type): void {
-    if(type == 'pass-around'){
-      this.navCtrl.push(DrawingLandscapePage, {local: true}, {animate:false});
-    } else {
-      this.navCtrl.push(DrawingLandscapePage, {local: false, group: 'group#', section: '2'}, {animate:false});
-    }  }
 
   // @ViewChild(Nav) nav: Nav;
 
