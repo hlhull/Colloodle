@@ -28,11 +28,19 @@ export class HomePage {
 
   }
 
+  /*
+  * sends the user to login page (also signs out if already signed in,
+  * even though you shouldn't be, just in case)
+  */
   login() {
   	this.auth.signOut();
   	this.navCtrl.setRoot(LoginPage);
   }
 
+  /*
+  * signs you out; this automatically removes the logout button and user/email
+  * header, since the html checks if you are logged in or not
+  */
   logout() {
   	this.auth.signOut();
   	// this.navCtrl.setRoot(LoginPage);

@@ -4,8 +4,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NavController, IonicPage } from 'ionic-angular';
-// import { HomePage } from '../home/home.page';  //original, did not work
-import { HomePage } from '../home/home';  //edited, does work
+import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { SignupPage } from '../signup/signup';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -30,7 +29,10 @@ export class LoginPage {
 		});
 	}
 
-
+/*
+* handles the login process, returns if an email is not entered, returns error if
+* the credentials don't work
+*/
 login() {
 		let data = this.loginForm.value;
 
@@ -49,10 +51,18 @@ login() {
 			);
 	}
 
+  /*
+  * sends you to the signup page
+  */
   signup() {
     this.navCtrl.push(SignupPage);
   }
 
+// TODO: figure out how to check if the email is one of our users! if not, return and have an error message of some sort
+
+  /*
+  * if the email entered is an email, reset the password
+  */
   resetPassword() {
     let data = this.loginForm.value;
 
@@ -60,7 +70,7 @@ login() {
 			return;
 		}
 
-    this.auth.sendPassword(data.email);
+    this.auth.resetPassword(data.email);
   }
 
 }

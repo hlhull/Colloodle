@@ -26,6 +26,12 @@ export class SignupPage {
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
   }
+
+	/*
+	* Signs the user up with the given email and password, sending info to firebase
+	*
+	* Then sends the user to the home page
+	*/
   signup() {
 		let data = this.form.value;
 		let credentials = {

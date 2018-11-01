@@ -55,15 +55,4 @@ export class MyApp {
     //   );
   // }
 
-  // login() {
-  //   // this.menu.close();
-  // 	this.auth.signOut();
-  // 	this.nav.setRoot(LoginPage);
-  // }
-  //
-  // logout() {
-  // 	// this.menu.close();
-  // 	this.auth.signOut();
-  // 	this.nav.setRoot(HomePage);
-  // }
 }
