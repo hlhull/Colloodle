@@ -9,7 +9,6 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
-import { DrawingLandscapePage } from '../pages/drawing-landscape/drawing-landscape';
 import { FinalPage } from '../pages/final/final';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
@@ -36,7 +35,6 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
     SignupPage,
     HomePage,
     DrawingPage,
-    DrawingLandscapePage,
     FinalPage,
     CanvasDrawComponent,
     PopoverPage
@@ -55,7 +53,6 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
     SignupPage,
     HomePage,
     DrawingPage,
-    DrawingLandscapePage,
     PopoverPage,
     FinalPage
   ],

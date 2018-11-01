@@ -2,16 +2,15 @@ import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
-import { PopoverPage } from '../color-popover/color-popover';
+import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
 import { AlertController } from 'ionic-angular';
-import firebase from 'firebase';
 
 /**
- * Class for the DrawingPage page.
+ * Class for the DrawingLandscapePage page.
  *
  * Where the user draws their piece of the picture
  */
@@ -26,7 +25,6 @@ export class DrawingPage {
   @ViewChild('myCanvas') canvas: ElementRef;
   @ViewChild('overlap') overlapCanvas: ElementRef;
   @ViewChild(Content) content: Content;
-  @ViewChild('headerMenu') header: ElementRef;
 
   canvasElement: any;
   overlapElement: any;
@@ -56,7 +54,7 @@ export class DrawingPage {
   }
 
   /*
-   * saves canvas, resets drawing page, sets overlap, and goes to final page if 3 drawings done
+   * saves canvas, resets page, sets overlap, and goes to final page if 3 drawings done
    */
   nextStep(): void {
     //get the current canvas as an image, draw it on overlap when loaded
@@ -68,10 +66,10 @@ export class DrawingPage {
 
     //if we have 3 pictures, we're done --> go to final page, passing in the Images
     done.then((proceed) => {
-    if(proceed){
+      if(proceed){
         this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
-    }});
-
+      }
+    });
     this.resetPage();
 
     //draw overlap
@@ -86,6 +84,7 @@ export class DrawingPage {
     console.log('ionViewDidLoad DrawingPage');
   }
 
+// TODO: CHANGE THE OVERLAP CANVAS TO BE ON SIDE, SO IT WILL BE ABOVE LANDSCAPE ORIENTED CANVAS
   /*
    * sets the size of the main canvas and overlap canvas
    */
@@ -93,9 +92,9 @@ export class DrawingPage {
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
-      var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
-      this.canvasHeight = this.platform.height() - offsetHeight;
-      this.canvasWidth = this.platform.width() - 2;
+      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
+      this.canvasHeight = this.platform.height() - this.overlapHeight;
+      this.canvasWidth = this.platform.width() *.9 -4;
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');

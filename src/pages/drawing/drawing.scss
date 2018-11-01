@@ -6,9 +6,41 @@ page-drawing {
     margin-bottom: -2px;
   }
 
-  #bottom-toolbar {
-       position: absolute;
-       bottom: 0;
-   }
+  #home{
+    position: fixed;
+    top: 0;
+    left: 90%;
+  }
 
+  #brush{
+    position: fixed;
+    top: 60px;
+    left: 90%;
+  }
+
+  #undo{
+    position: fixed;
+    top: 120px;
+    left: 90%;
+  }
+
+  #redo{
+    position: fixed;
+    top: 180px;
+    left: 90%;
+  }
+
+  #finished{
+    position: fixed;
+    bottom: 0;
+    left: 90%;
+    right: 100%;
+  }
+
+  #myCanvas{
+    position: fixed;
+    top:0;
+    bottom: 0;
+    left:0;
+  }
 }
