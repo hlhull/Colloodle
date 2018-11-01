@@ -19,8 +19,8 @@ import { config } from '../config';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = LoginPage;
-  // rootPage:any = HomePage;
+  // rootPage:any = LoginPage;
+  rootPage:any = HomePage;
 
   @ViewChild(Nav) nav: Nav;
 
@@ -30,30 +30,30 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      this.initializeApp();
+      // this.initializeApp();
     });
     // firebase.initializeApp(config); //REMOVED AFTER ADDING LOGIN PAGE, CAN'T INITALIZE MORE THAN ONCE
   }
 
-  initializeApp() {
+  // initializeApp() {
     // this.platform.ready().then(() => {
     //   this.statusBar.styleDefault();
     // });
 
-    this.auth.afAuth.authState
-      .subscribe(
-        user => {
-          if (user) {
-            this.rootPage = HomePage;
-          } else {
-            this.rootPage = LoginPage;
-          }
-        },
-        () => {
-          this.rootPage = LoginPage;
-        }
-      );
-  }
+    // this.auth.afAuth.authState
+    //   .subscribe(
+    //     user => {
+    //       if (user) {
+    //         this.rootPage = HomePage;
+    //       } else {
+    //         this.rootPage = LoginPage;
+    //       }
+    //     },
+    //     () => {
+    //       this.rootPage = LoginPage;
+    //     }
+    //   );
+  // }
 
   // login() {
   //   // this.menu.close();
