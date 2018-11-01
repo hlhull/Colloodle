@@ -28,6 +28,7 @@ import { BrushProvider } from '../../providers/brush/brush'
     </ion-list>
   `
 })
+// TODO: RENAME
 export class PopoverPage {
   constructor(public viewCtrl: ViewController, public brushService: BrushProvider) {}
 

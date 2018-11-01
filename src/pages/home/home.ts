@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Nav } from 'ionic-angular';
+import { NavController, Nav, PopoverController } from 'ionic-angular';
 import { DrawingPage } from '../drawing/drawing';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
+import { UserPopoverPage } from '../user-popover/user-popover';
 
 @Component({
   selector: 'page-home',
@@ -24,8 +25,18 @@ export class HomePage {
 
   // @ViewChild(Nav) nav: Nav;
 
-  constructor(public navCtrl: NavController, private auth: AuthService) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController) {
 
+  }
+
+  /*
+  *Presents the popover menu with color and brush size
+  */
+  presentUserPopover(myEvent) {
+    let popover = this.popoverCtrl.create(UserPopoverPage);
+    popover.present({
+      ev: myEvent
+    });
   }
 
   /*

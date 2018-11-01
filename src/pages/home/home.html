@@ -4,11 +4,9 @@
 -->
 
 <ion-header>
-  <ion-navbar>
-    <!--ion-title center>
-      Colloodle
-    </ion-title-->
-    <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
+  <!-- <ion-navbar> -->
+    <!-- original: -->
+    <!-- <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
 
     <ion-item (click)="logout()" *ngIf="auth.authenticated">
     	<ion-icon name="log-out" item-left></ion-icon>
@@ -18,6 +16,22 @@
     <ion-item (click)="login()" *ngIf="!auth.authenticated">
     	<ion-icon name="log-in" item-left></ion-icon>
     	Log in
+    </ion-item> -->
+
+    <!-- trying new hopefully prettier thing: -->
+
+    <!-- <ion-list *ngIf="auth.getEmail()" style="background-color: dark"> -->
+      <ion-item *ngIf="auth.getEmail()" left dark>
+        {{auth.getEmail()}}
+        <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
+      	   <ion-icon name="person" right></ion-icon>
+        </button>
+      </ion-item>
+    <!-- </ion-list> -->
+
+    <ion-item (click)="login()" *ngIf="!auth.authenticated">
+      <ion-icon name="log-in" item-left></ion-icon>
+      Log in
     </ion-item>
 
 
@@ -25,7 +39,7 @@
     	<ion-icon name="log-in" item-left></ion-icon>
     	Log in
     </ion-item> -->
-  </ion-navbar>
+  <!-- </ion-navbar> -->
 </ion-header>
 
 <style>

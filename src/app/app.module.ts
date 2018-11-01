@@ -27,6 +27,7 @@ import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { config } from '../config';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
+import { UserPopoverPage } from '../pages/user-popover/user-popover';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
     DrawingPage,
     FinalPage,
     CanvasDrawComponent,
-    PopoverPage
+    PopoverPage,
+    UserPopoverPage
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
     HomePage,
     DrawingPage,
     PopoverPage,
+    UserPopoverPage,
     FinalPage
   ],
   providers: [
