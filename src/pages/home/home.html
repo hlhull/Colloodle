@@ -1,8 +1,5 @@
 <ion-header>
   <ion-navbar>
-    <!--ion-title center>
-      Colloodle
-    </ion-title-->
     <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
 
     <ion-item (click)="logout()" *ngIf="auth.authenticated">
@@ -23,15 +20,12 @@ text-align: center;
 }
 </style>
 <ion-content  padding class="bg-image">
-<!--ion-content no-bounce-->
-    <!--canvas-draw></canvas-draw-->
     <ion-footer>
       <p>
-       <button ion-button (click)="goToDrawingPage('pass-around')" color="light" round outline large>Pass Around!</button>
-       <button ion-button (click)="goToDrawingPage('random')" color="light" round outline large>Random!</button>
+       <button ion-button (click)="goToDrawingPage(true)" color="light" round outline large>Pass Around!</button>
+       <button ion-button (click)="goToDrawingPage(false)" color="light" round outline large>Random!</button>
      </p>
    </ion-footer>
-<!--/ion-content-->
 </ion-content>
 
 <style>
@@ -39,7 +33,3 @@ ion-content {
 text-align: center;
 }
 </style>
-
-<!--ion-content padding>
-
-</ion-content-->
