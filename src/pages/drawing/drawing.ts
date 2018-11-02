@@ -5,16 +5,13 @@ import { PopoverController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
-import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
 import { AlertController } from 'ionic-angular';
 
 /**
- * Class for the DrawingLandscapePage page.
+ * Class for the DrawingPage page.
  *
  * Where the user draws their piece of the picture
  */
-
 @IonicPage()
 @Component({
   selector: 'page-drawing',
@@ -41,12 +38,7 @@ export class DrawingPage {
   imageStorage;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
-    if(navParams.get('local')){
-      this.imageStorage = new LocalStorageProvider();
-    } else {
-      this.imageStorage = new NetworkStorageProvider();
-      this.imageStorage.setUp(navParams.get('group'), navParams.get('section'));
-    }
+    this.imageStorage = navParams.get('imageStorage');
   }
 
   goHome(): void {
@@ -72,19 +64,28 @@ export class DrawingPage {
     });
     this.resetPage();
 
-    //draw overlap
+    this.drawOverlap(img);
+  }
+
+  drawOverlap(img){
     let ctx = this.overlapElement.getContext('2d');
-    var overlap = this.overlapHeight; //could not access that in function below and do not want to hard code
+    var overlap = this.overlapHeight;
+    if(img == null){
+      var promise = this.imageStorage.getOverlap();
+      img = new Image();
+      promise.then((imgUrl) => img.src = imgUrl);
+    }
+
     img.onload = function(){  //draws in the overlap bar:
       ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DrawingPage');
   }
 
-// TODO: CHANGE THE OVERLAP CANVAS TO BE ON SIDE, SO IT WILL BE ABOVE LANDSCAPE ORIENTED CANVAS
   /*
    * sets the size of the main canvas and overlap canvas
    */

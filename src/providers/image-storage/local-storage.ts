@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class LocalStorageProvider {
-  storedImages = [];
+  storedImageUrls = [];
   numCanvases;
 
   constructor() {
@@ -19,7 +19,7 @@ export class LocalStorageProvider {
    */
   storeImage(imgUrl){
       //store image in storedImages
-      this.storedImages[this.numCanvases] = imgUrl;
+      this.storedImageUrls[this.numCanvases] = imgUrl;
       this.numCanvases = this.numCanvases + 1;
 
       //if we have 3 pictures
@@ -33,8 +33,16 @@ export class LocalStorageProvider {
    * gets the image urls
    */
   getImageUrls(){
-    var pics = this.storedImages;
-    return new Promise(function(resolve, reject) { resolve(pics); });
+    var urls = this.storedImageUrls;
+    return new Promise(function(resolve, reject) { resolve(urls); });
+  }
+
+  getOverlap(){
+    if (this.numCanvases > 0){
+      var overlap =  this.storedImageUrls[this.numCanvases - 1];
+      return new Promise(function(resolve, reject) { resolve(overlap); });
+    }
+    return null;
   }
 
 }
