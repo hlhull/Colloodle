@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Nav } from 'ionic-angular';
+import { NavController, Nav, PopoverController } from 'ionic-angular';
 import { DrawingPage } from '../drawing/drawing';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
+import { UserPopoverPage } from '../user-popover/user-popover';
 
 @Component({
   selector: 'page-home',
@@ -23,20 +24,36 @@ export class HomePage {
 
   // @ViewChild(Nav) nav: Nav;
 
-  constructor(public navCtrl: NavController, private auth: AuthService) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController) {
 
   }
 
-  // login() {
-  //   // this.menu.close();
-  // 	this.auth.signOut();
-  // 	this.navCtrl.setRoot(LoginPage);
-  // }
+  /*
+  *Presents the popover menu with color and brush size
+  */
+  presentUserPopover(myEvent) {
+    let popover = this.popoverCtrl.create(UserPopoverPage);
+    popover.present({
+      ev: myEvent
+    });
+  }
 
-  logout() {
-  	// this.menu.close();
+  /*
+  * sends the user to login page (also signs out if already signed in,
+  * even though you shouldn't be, just in case)
+  */
+  login() {
   	this.auth.signOut();
   	this.navCtrl.setRoot(LoginPage);
+  }
+
+  /*
+  * signs you out; this automatically removes the logout button and user/email
+  * header, since the html checks if you are logged in or not
+  */
+  logout() {
+  	this.auth.signOut();
+  	// this.navCtrl.setRoot(LoginPage);
   }
 
 }

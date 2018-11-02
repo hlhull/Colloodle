@@ -13,8 +13,8 @@ export class NetworkStorageProvider {
   nextListRef = this.databaseRef.child("inProgress").child("next");
 
   constructor() {
-    this.nextListRef.push("1");
-    //this.assignGroup();
+    //this.nextListRef.push("1");
+    this.assignGroup();
   }
 
   /*

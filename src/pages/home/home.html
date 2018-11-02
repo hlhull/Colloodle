@@ -1,17 +1,45 @@
+<!--
+  Made with some help from tutorial:
+  https://medium.com/appseed-io/integrating-firebase-password-and-google-authentication-into-your-ionic-3-app-2421cee32db9
+-->
+
 <ion-header>
-  <ion-navbar>
-    <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
+  <!-- <ion-navbar> -->
+    <!-- original: -->
+    <!-- <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
 
     <ion-item (click)="logout()" *ngIf="auth.authenticated">
     	<ion-icon name="log-out" item-left></ion-icon>
     	Log out
     </ion-item>
 
+    <ion-item (click)="login()" *ngIf="!auth.authenticated">
+    	<ion-icon name="log-in" item-left></ion-icon>
+    	Log in
+    </ion-item> -->
+
+    <!-- trying new hopefully prettier thing: -->
+
+    <!-- <ion-list *ngIf="auth.getEmail()" style="background-color: dark"> -->
+      <ion-item *ngIf="auth.getEmail()" left dark>
+        {{auth.getEmail()}}
+        <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
+      	   <ion-icon name="person" right></ion-icon>
+        </button>
+      </ion-item>
+    <!-- </ion-list> -->
+
+    <ion-item (click)="login()" *ngIf="!auth.authenticated">
+      <ion-icon name="log-in" item-left></ion-icon>
+      Log in
+    </ion-item>
+
+
     <!-- <ion-item (click)="login()" *ngIf="!auth.authenticated">
     	<ion-icon name="log-in" item-left></ion-icon>
     	Log in
     </ion-item> -->
-  </ion-navbar>
+  <!-- </ion-navbar> -->
 </ion-header>
 
 <style>
