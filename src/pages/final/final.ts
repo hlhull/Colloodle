@@ -20,10 +20,8 @@ export class FinalPage {
   @ViewChild('middleCanvas') Mcanvas: any;
   @ViewChild('bottomCanvas') Bcanvas: any;
 
-  landscape = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider) {
-    this.landscape = navParams.get('landscape');
     this.imageStorage = navParams.get('imageStorage');
   }
 
@@ -37,49 +35,15 @@ export class FinalPage {
   * so it becomes 1 picture.
   */
   drawPictures(pictures){
-    if (this.landscape) { // USING ROTATION!!!
-      let ctx = this.Tcanvas.nativeElement.getContext('2d');
-      var img = pictures[0];
-      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
-
-      ctx = this.Mcanvas.nativeElement.getContext('2d');
-      img = pictures[1];
-      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
-
-      ctx = this.Bcanvas.nativeElement.getContext('2d');
-      img = pictures[2];
-      this.drawRotatedImage(img, ctx, ctx.canvas.clientWidth, ctx.canvas.clientHeight, Math.PI/2)
-    } else { // NOT USING ROTATION, SQUISHING VERTICAL IMAGES
-      var canvases = [this.Tcanvas, this.Mcanvas, this.Bcanvas];
-      for (var i = 0; i < pictures.length; i++) {
-        let ctx = canvases[i].nativeElement.getContext('2d'); // assigns context to appropriate canvas
-        let img = new Image();
-        img = pictures[i]; //assign image to one of the pictures passed into drawPictures
-        img.onload = function() { //once the image loads, then draw it on the canvas
-          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-        }
+    var canvases = [this.Tcanvas, this.Mcanvas, this.Bcanvas];
+    for (var i = 0; i < pictures.length; i++) {
+      let ctx = canvases[i].nativeElement.getContext('2d'); // assigns context to appropriate canvas
+      let img = new Image();
+      img = pictures[i]; //assign image to one of the pictures passed into drawPictures
+      img.onload = function() { //once the image loads, then draw it on the canvas
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
       }
     }
-  }
-
-  /*
-  * Draws the images rotated, images no longer squished
-  */
-  drawRotatedImage(image, ctx, x, y, angle) {
-    // save the current context
-    ctx.save();
-
-    // move to the middle of where we want to draw our image
-    ctx.translate(ctx.canvas.clientWidth/2, ctx.canvas.clientHeight/2);
-
-    // rotate around that point USING RADIANS
-    ctx.rotate(angle);
-
-    // draw the image on the rotated context
-    ctx.drawImage(image, 0, 0, image.width, image.height, -ctx.canvas.clientHeight/2, -ctx.canvas.clientWidth/2, ctx.canvas.clientHeight, ctx.canvas.clientWidth);
-
-    // resotre old context
-    ctx.restore();
   }
 
   /*

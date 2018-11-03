@@ -59,13 +59,13 @@ export class DrawingPage {
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
         console.log(proceed)
         if(proceed){
-          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
         }
       }));
     } else {
       var proceed = this.imageStorage.storeImage(img.src);
       if(proceed){
-          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
         }
     }
 
