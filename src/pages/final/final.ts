@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { HomePage} from '../home/home';
 
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 /**
  * Class for the FinalPage page.
@@ -21,8 +22,10 @@ export class FinalPage {
   @ViewChild('bottomCanvas') Bcanvas: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation) {
     this.imageStorage = navParams.get('imageStorage');
+
+    this.screenOrientation.lock('portrait');
   }
 
   goHome(): void {

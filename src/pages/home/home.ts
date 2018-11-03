@@ -6,6 +6,7 @@ import { LoginPage } from '../login/login';
 import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
 import { UserPopoverPage } from '../user-popover/user-popover';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @Component({
   selector: 'page-home',
@@ -24,8 +25,8 @@ export class HomePage {
 
   // @ViewChild(Nav) nav: Nav;
 
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController) {
-
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation) {
+    this.screenOrientation.lock('portrait');
   }
 
   /*

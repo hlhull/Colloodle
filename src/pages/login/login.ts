@@ -8,6 +8,7 @@ import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { SignupPage } from '../signup/signup';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @IonicPage()
 @Component({
@@ -21,12 +22,15 @@ export class LoginPage {
 	constructor(
 		private navCtrl: NavController,
 		private auth: AuthService,
-		fb: FormBuilder
+		fb: FormBuilder,
+    private screenOrientation: ScreenOrientation
 	) {
 		this.loginForm = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
+
+    this.screenOrientation.lock("portrait");
 	}
 
 /*
