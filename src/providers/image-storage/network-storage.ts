@@ -14,9 +14,17 @@ export class NetworkStorageProvider {
 
   constructor() {
     //this.nextListRef.push("1");
+<<<<<<< HEAD
     this.assignGroup();
     // this.groupNumber = null;
     // this.sectionNumber = 0;
+=======
+
+    // this.groupNumber = "group#";     //use these 2 lines for testing, comment out the "assignGroup()" line to make it actually run
+    // this.sectionNumber = 0;
+
+    // this.assignGroup();
+>>>>>>> f58641c7a3b194be55d9270b9f3e38d27165e872
   }
 
   /*

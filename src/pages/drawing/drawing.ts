@@ -82,7 +82,9 @@ export class DrawingPage {
     if(img == null){
       var promise = this.imageStorage.getOverlap();
       img = new Image();
-      promise.then((imgUrl) => img.src = imgUrl);
+      if (promise != null) {
+        promise.then((imgUrl) => img.src = imgUrl);
+      }
     }
 
     img.onload = function(){  //draws in the overlap bar:
@@ -111,6 +113,8 @@ export class DrawingPage {
 
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
+
+      this.drawOverlap(null);
   }
 
   resetPage(){
