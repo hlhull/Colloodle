@@ -54,8 +54,6 @@ export class DrawingPage {
     var img = new Image();
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
-    var done;
-
     //store image
     if(this.imageStorage instanceof NetworkStorageProvider){
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {

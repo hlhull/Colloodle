@@ -14,17 +14,11 @@ export class NetworkStorageProvider {
 
   constructor() {
     //this.nextListRef.push("1");
-<<<<<<< HEAD
-    this.assignGroup();
-    // this.groupNumber = null;
-    // this.sectionNumber = 0;
-=======
 
-    // this.groupNumber = "group#";     //use these 2 lines for testing, comment out the "assignGroup()" line to make it actually run
-    // this.sectionNumber = 0;
+    this.groupNumber = 'group#';     //use these 2 lines for testing, comment out the "assignGroup()" line to make it actually run
+    this.sectionNumber = 2;
 
     // this.assignGroup();
->>>>>>> f58641c7a3b194be55d9270b9f3e38d27165e872
   }
 
   /*
@@ -91,9 +85,14 @@ export class NetworkStorageProvider {
   updateGroup(){
     // if no group has been made yet (this was first drawing) --> push to Firebase,
     // assign groupNumber as the uid of that push
-    console.log(this.groupNumber, this.sectionNumber);
-    var self = this; //self.sectionNumber + 1
-    var promise = this.nextListRef.push(1).then((ref) => self.groupNumber = ref.getKey());
+    var promise;
+    if(this.sectionNumber == 0){
+      console.log(this.groupNumber, this.sectionNumber);
+      var self = this; //self.sectionNumber + 1
+      promise = this.nextListRef.push(1).then((ref) => self.groupNumber = ref.getKey());
+    } else {
+      promise = new Promise(function(resolve, reject){resolve(true)});
+    }
 
 
     // if(this.sectionNumber == 0){ // if this was the first drawing, create group and move to next
