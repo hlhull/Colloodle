@@ -57,21 +57,25 @@ export class DrawingPage {
     //store image
     if(this.imageStorage instanceof NetworkStorageProvider){
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
-        console.log(proceed)
-        if(proceed){
-          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-        }
+          if(this.imageStorage.sectionNumber == 2) {
+            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+          }
+          else {
+            //add popup to tell person that they'll be notified when the drawing is complete
+            this.navCtrl.push(HomePage);
+          }
       }));
     } else {
       var proceed = this.imageStorage.storeImage(img.src);
       if(proceed){
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
         }
+      this.resetPage();
+
+      this.drawOverlap(img);
     }
 
-    this.resetPage();
 
-    this.drawOverlap(img);
   }
 
   drawOverlap(img){
