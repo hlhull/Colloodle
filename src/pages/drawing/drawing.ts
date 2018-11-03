@@ -6,6 +6,7 @@ import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
 
 /**
  * Class for the DrawingPage page.
@@ -50,18 +51,26 @@ export class DrawingPage {
    */
   nextStep(): void {
     //get the current canvas as an image, draw it on overlap when loaded
-    var img = new Image;
+    var img = new Image();
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
-    //store image
-    var done = this.imageStorage.storeImage(img.src);
+    var done;
 
-    //if we have 3 pictures, we're done --> go to final page, passing in the Images
-    done.then((proceed) => {
+    //store image
+    if(this.imageStorage instanceof NetworkStorageProvider){
+      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
+        console.log(proceed)
+        if(proceed){
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
+        }
+      }));
+    } else {
+      var proceed = this.imageStorage.storeImage(img.src);
       if(proceed){
-        this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
-      }
-    });
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
+        }
+    }
+
     this.resetPage();
 
     this.drawOverlap(img);

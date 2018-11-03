@@ -15,6 +15,8 @@ export class NetworkStorageProvider {
   constructor() {
     //this.nextListRef.push("1");
     this.assignGroup();
+    // this.groupNumber = null;
+    // this.sectionNumber = 0;
   }
 
   /*
@@ -39,6 +41,7 @@ export class NetworkStorageProvider {
         this.sectionNumber = snapshot.val();
         this.nextListRef.child(this.groupNumber).remove();
         firebase.database().ref().child("inProgress").child("pending").child(this.groupNumber).set(this.sectionNumber);
+        console.log(this.groupNumber, this.sectionNumber);
       }.bind(this))
   }
 
@@ -58,7 +61,10 @@ export class NetworkStorageProvider {
     store image with given dataUrl in Firebase at group/sectionNum.png
    */
   storeImage(imgUrl){
-      var blob = this.dataUrlToBlob(imgUrl);
+      console.log(this.groupNumber);
+      //var done = this.updateGroup(imgUrl);
+
+       var blob = this.dataUrlToBlob(imgUrl);
 
       // Create root reference
       var storageRef = firebase.storage().ref();
@@ -71,9 +77,37 @@ export class NetworkStorageProvider {
   }
 
   /*
+    removes group from pending, puts group into either next or completed
+    creates group if this was first drawing in group
+  */
+  updateGroup(){
+    // if no group has been made yet (this was first drawing) --> push to Firebase,
+    // assign groupNumber as the uid of that push
+    console.log(this.groupNumber, this.sectionNumber);
+    var self = this; //self.sectionNumber + 1
+    var promise = this.nextListRef.push(1).then((ref) => self.groupNumber = ref.getKey());
+
+
+    // if(this.sectionNumber == 0){ // if this was the first drawing, create group and move to next
+
+    // } else if (this.sectionNumber == 1){ //if this was the 2nd drawing, move back to next queue
+    //   //this.moveGrouptoNext();
+    // } else if (this.sectionNumber == 2){ //if this was the last drawing, group is completed
+    //   //this.moveGrouptoCompleted();
+    // }
+    // return new Promise(function(resolve, reject) {resolve(self.groupNumber)});
+    return promise;
+  }
+
+  createGroup(){
+
+  }
+
+  /*
     gets the image urls that are in the specificed group folder in firebase
    */
   getImageUrls(){
+      console.log(this.groupNumber);
       var storageRef = firebase.storage().ref().child(this.groupNumber); //which folder we want to get images from
 
       var imageRef0 = storageRef.child(0 + '.png'); // references image 0.png
