@@ -7,6 +7,8 @@ import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { StatusBar } from '@ionic-native/status-bar';
 
 /**
  * Class for the DrawingPage page.
@@ -38,8 +40,11 @@ export class DrawingPage {
   overlapHeight = 20;
   imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
     this.imageStorage = navParams.get('imageStorage');
+
+    this.statusBar.hide();
+    this.screenOrientation.lock('landscape');
   }
 
   goHome(): void {
@@ -103,8 +108,8 @@ export class DrawingPage {
       this.overlapElement = this.overlapCanvas.nativeElement;
 
       //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
-      this.canvasHeight = this.platform.height() - this.overlapHeight;
-      this.canvasWidth = this.platform.width() *.9 -4;
+      this.canvasHeight = this.platform.width() - this.overlapHeight;
+      this.canvasWidth = this.platform.height() *.9 -4;
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
