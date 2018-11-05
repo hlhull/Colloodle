@@ -1,7 +1,7 @@
 
       <ion-content no-bounce>
-        <canvas #overlap style="border:1px solid #009691;"></canvas>
-        <canvas #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
+        <canvas id='overlap'#overlap style="border:1px solid #009691;"></canvas>
+        <canvas id='myCanvas'#myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
 
         <ion-buttons end id='home'>
           <button ion-button icon-only  large (click)="goHome()">
