@@ -113,21 +113,19 @@ export class DrawingPage {
 
       //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
       //so it doesn't scroll, subtract header and footer height
-      this.canvasWidth = this.platform.width() - this.overlapHeight;
-      if(this.canvasWidth * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
-        this.canvasHeight = this.canvasWidth * (16/9);
+      this.canvasHeight = this.platform.width() - this.overlapHeight;
+      if(this.canvasHeight * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
+        this.canvasWidth = this.canvasHeight * (16/9);
       } else {
-        this.canvasHeight = this.platform.height() *.9 -4;
-        this.canvasWidth = this.canvasHeight * (9/16);
+        this.canvasWidth = this.platform.height() *.9 -4;
+        this.canvasHeight = this.canvasWidth * (9/16);
       }
-
-
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
 
-      this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
+      this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
       this.drawOverlap(null);
   }
