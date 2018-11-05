@@ -29,6 +29,8 @@ import { config } from '../config';
 import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { UserPopoverPage } from '../pages/user-popover/user-popover';
 
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -69,7 +71,8 @@ import { UserPopoverPage } from '../pages/user-popover/user-popover';
     LocalStorageProvider,
     NetworkStorageProvider,
     AngularFireAuth,
-    AuthService
+    AuthService,
+    ScreenOrientation
   ]
 })
 export class AppModule {}

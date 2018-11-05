@@ -7,6 +7,7 @@ import { NavController } from 'ionic-angular';
 // import { HomePage } from '../home/home.page'; //replaced this with the line below
 import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @Component({
 	selector: 'as-page-signup',
@@ -19,12 +20,15 @@ export class SignupPage {
 	constructor(
 		fb: FormBuilder,
 		private navCtrl: NavController,
-    private auth: AuthService
+    private auth: AuthService,
+		private screenOrientation: ScreenOrientation
 	) {
 		this.form = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
+
+		this.screenOrientation.lock("portrait");
   }
 
 	/*

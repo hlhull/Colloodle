@@ -6,6 +6,9 @@ import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { StatusBar } from '@ionic-native/status-bar';
 
 /**
  * Class for the DrawingPage page.
@@ -37,8 +40,11 @@ export class DrawingPage {
   overlapHeight = 20;
   imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
     this.imageStorage = navParams.get('imageStorage');
+
+    this.statusBar.hide();
+    this.screenOrientation.lock('landscape');
   }
 
   goHome(): void {
@@ -50,21 +56,31 @@ export class DrawingPage {
    */
   nextStep(): void {
     //get the current canvas as an image, draw it on overlap when loaded
-    var img = new Image;
+    var img = new Image();
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
     //store image
-    var done = this.imageStorage.storeImage(img.src);
-
-    //if we have 3 pictures, we're done --> go to final page, passing in the Images
-    done.then((proceed) => {
+    if(this.imageStorage instanceof NetworkStorageProvider){
+      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
+          if(this.imageStorage.sectionNumber == 2) {
+            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+          }
+          else {
+            //add popup to tell person that they'll be notified when the drawing is complete
+            this.navCtrl.push(HomePage);
+          }
+      }));
+    } else {
+      var proceed = this.imageStorage.storeImage(img.src);
       if(proceed){
-        this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage, landscape: false}, {animate:false});
-      }
-    });
-    this.resetPage();
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+        }
+      this.resetPage();
 
-    this.drawOverlap(img);
+      this.drawOverlap(img);
+    }
+
+
   }
 
   drawOverlap(img){
@@ -73,7 +89,9 @@ export class DrawingPage {
     if(img == null){
       var promise = this.imageStorage.getOverlap();
       img = new Image();
-      promise.then((imgUrl) => img.src = imgUrl);
+      if (promise != null) {
+        promise.then((imgUrl) => img.src = imgUrl);
+      }
     }
 
     img.onload = function(){  //draws in the overlap bar:
@@ -93,15 +111,25 @@ export class DrawingPage {
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
-      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight; //so it doesn't scroll, subtract header and footer height
-      this.canvasHeight = this.platform.height() - this.overlapHeight;
-      this.canvasWidth = this.platform.width() *.9 -4;
+      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
+      //so it doesn't scroll, subtract header and footer height
+      this.canvasWidth = this.platform.width() - this.overlapHeight;
+      if(this.canvasWidth * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
+        this.canvasHeight = this.canvasWidth * (16/9);
+      } else {
+        this.canvasHeight = this.platform.height() *.9 -4;
+        this.canvasWidth = this.canvasHeight * (9/16);
+      }
+
+
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
 
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
+
+      this.drawOverlap(null);
   }
 
   resetPage(){

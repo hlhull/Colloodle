@@ -24,9 +24,11 @@ export class LocalStorageProvider {
 
       //if we have 3 pictures
       if(this.numCanvases == 3){
-        return new Promise(function(resolve, reject) { resolve(true) } );
+        return true;
+        //return new Promise(function(resolve, reject) { resolve(true) } );
       }
-      return new Promise(function(resolve, reject) { resolve(false) } );
+      return false;
+      //return new Promise(function(resolve, reject) { resolve(false) } );
   }
 
   /*
