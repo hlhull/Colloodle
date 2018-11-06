@@ -50,9 +50,7 @@ export class DrawingPage {
     // note: I put this in the goHome function as a test, and it worked perfectly.
     // However, if I put this code in the constructor or the ngAfterViewInit, it doesn't
     // actually pop up, and we want this to pop up immediately.
-    if (this.imageStorage instanceof NetworkStorageProvider) {
-      this.alertWhichSection(this.imageStorage.sectionNumber);
-    }
+
   }
 
   /*
@@ -91,8 +89,14 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
-      // last step of visual setup, draw the overlap
-      this.drawOverlap(null);
+      // once group and section #s are assigned, draw the overlap and let user know of section
+      if (this.imageStorage instanceof NetworkStorageProvider) {
+        var self = this;
+        this.imageStorage.assignGroup().then(() => {
+          self.drawOverlap(null);
+          this.alertWhichSection(this.imageStorage.sectionNumber);
+        });
+      }
   }
 
   /*
