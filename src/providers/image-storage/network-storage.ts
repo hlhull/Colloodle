@@ -102,7 +102,7 @@ export class NetworkStorageProvider {
     // if this was the 2nd drawing put group back into next list
     else if (this.sectionNumber == 1) {
       this.nextListRef.child(this.groupNumber).set(2);
-      this.databaseRef.child("users").child(userID).set(this.groupNumber);
+      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(1);
       promise = new Promise(function(resolve, reject) {resolve(true)});
     }
     // if this was the last drawing, update group status that 1 person has seen it
@@ -127,6 +127,15 @@ export class NetworkStorageProvider {
 
       // return an array of the image urls of all the images in the folder
       return Promise.all([imageRef0.getDownloadURL(), imageRef1.getDownloadURL(), imageRef2.getDownloadURL()]);
+  }
+
+  /*
+    if a user leaves the drawing without clicking finish, move the group back to next
+  */
+  cancelDrawing(){
+    if (this.sectionNumber != 0){ //if it's section 0 we haven't created the group yet -> no action needed
+      this.nextListRef.child(this.groupNumber).set(this.sectionNumber);
+    }
   }
 
   /* convert base64/URLEncoded data component to raw binary data held in a string

@@ -351,6 +351,7 @@ export class DrawingPage {
         {
           text: 'Yes',
           handler: () => {
+            this.imageStorage.cancelDrawing(); 
             this.navCtrl.setRoot(HomePage);
           }
         },
