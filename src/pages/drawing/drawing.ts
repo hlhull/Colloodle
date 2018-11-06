@@ -46,10 +46,10 @@ export class DrawingPage {
     this.statusBar.hide();
     this.screenOrientation.lock('landscape');
 
-    // WHERE CAN WE PUT THIS SO THAT THIS EVENT ACTUALLY HAPPENS?
+    // TODO: WHERE CAN WE PUT THIS SO THAT THIS EVENT ACTUALLY HAPPENS?
     // note: I put this in the goHome function as a test, and it worked perfectly.
     // However, if I put this code in the constructor or the ngAfterViewInit, it doesn't
-    // actually pop up, and we want this to pop up immediately
+    // actually pop up, and we want this to pop up immediately.
     if (this.imageStorage instanceof NetworkStorageProvider) {
       this.alertWhichSection(this.imageStorage.sectionNumber);
     }
