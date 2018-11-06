@@ -66,7 +66,7 @@ export class DrawingPage {
             this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
           }
           else {
-            //add popup to tell person that they'll be notified when the drawing is complete
+            this.presentInfo();
             this.navCtrl.push(HomePage);
           }
       }));
@@ -284,6 +284,22 @@ export class DrawingPage {
     popover.present({
       ev: myEvent
     });
+  }
+
+  presentInfo(){
+    let alert = this.alertCtrl.create({
+      title: 'Drawing',
+      message: 'You will be notified when the drawing is complete!',
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   /*
