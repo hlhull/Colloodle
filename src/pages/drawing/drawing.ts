@@ -113,13 +113,28 @@ export class DrawingPage {
 
       //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
       //so it doesn't scroll, subtract header and footer height
-      this.canvasHeight = this.platform.width() - this.overlapHeight;
-      if(this.canvasHeight * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
-        this.canvasWidth = this.canvasHeight * (16/9);
-      } else {
-        this.canvasWidth = this.platform.height() *.9 -4;
-        this.canvasHeight = this.canvasWidth * (9/16);
+      if (this.platform.height() > this.platform.width()) {   // this is how it is on most phones, it takes the vertical height despite being in landscape mode
+        this.canvasHeight = this.platform.width() - this.overlapHeight;
+
+        if(this.canvasHeight * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
+          this.canvasWidth = this.canvasHeight * (16/9);
+        } else {
+          this.canvasWidth = this.platform.height() *.9 -4;
+          this.canvasHeight = this.canvasWidth * (9/16);
+        }
+        
+      } else {    // on ionic serve (and maybe some devices, who knows?) this is how it is, the vertical width is the landscape height and vice versa
+        this.canvasHeight = this.platform.height() - this.overlapHeight;
+
+        if(this.canvasHeight * (16/9)<= (this.platform.width() *.9 -4)){//hard coded ratio
+          this.canvasWidth = this.canvasHeight * (16/9);
+        } else {
+          this.canvasWidth = this.platform.width() *.9 -4;
+          this.canvasHeight = this.canvasWidth * (9/16);
+        }
       }
+
+
 
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
