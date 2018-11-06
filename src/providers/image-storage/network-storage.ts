@@ -8,47 +8,40 @@ import firebase from 'firebase';
 export class NetworkStorageProvider {
   groupNumber: string;
   sectionNumber: number;
-  doneUploading: any;
   databaseRef = firebase.database().ref();
   nextListRef = this.databaseRef.child("inProgress").child("next");
 
-  constructor() {
-    // this.groupNumber = "group#";     //use these 2 lines for testing, comment out the "assignGroup()" line to make it actually run
-    // this.sectionNumber = 2;
-
-    this.assignGroup();
-
-  }
+  constructor() {}
 
   /*
     Assigns group # and section # user will be working on by getting first element
     in the inProgress:next list; if there is none in inProgress:next, work on 0th section
   */
   assignGroup(){
+    // default if no next group is found -- new group
+    this.groupNumber = null;
+    this.sectionNumber = 0;
+
     var self = this;
-    this.databaseRef.child("inProgress").once('value', function(snapshot){
-      if(!snapshot.hasChild("next")){ //if there's no group in next, will make group once user submits pic
-        self.groupNumber = null;
-        self.sectionNumber = 0;
-      } else {
-        var userID = firebase.auth().currentUser.uid;
-        //if there is a next group, check that the user isn't already in it, remove it from next, set group / section number
-        self.nextListRef.once('value', function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-              self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
-                if(!userSnapshot.exists()){
-                  self.groupNumber = childSnapshot.key;
-                  self.sectionNumber = childSnapshot.val();
-                  self.nextListRef.child(self.groupNumber).remove();
-                  return null;
-                }
-            }).then(() => {
-              if(self.groupNumber == undefined){
-                self.groupNumber = null;
-                self.sectionNumber = 0;
-              }
-            });
-        })})}});
+    var promises = [];
+    var userID = firebase.auth().currentUser.uid;
+
+    // loop through next list to find group user hasn't been in yet
+    // return promises that are resolved when group, section variables are set
+    var promise1 = this.nextListRef.once('value');
+    return promise1.then((snapshot) => {
+        snapshot.forEach(function(childSnapshot) {
+          var promise = self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
+            if(!userSnapshot.exists()){
+              self.groupNumber = childSnapshot.key;
+              self.sectionNumber = childSnapshot.val();
+              self.nextListRef.child(self.groupNumber).remove();
+            }
+          })
+          promises.push(promise);
+        });
+        return Promise.all(promises);//.then(() => console.log(self.groupNumber, self.sectionNumber));
+    });
   }
 
   /*
@@ -67,11 +60,7 @@ export class NetworkStorageProvider {
     store image with given dataUrl in Firebase at group/sectionNum.png
    */
   storeImage(imgUrl){
-      //var done = this.updateGroup(imgUrl);
-
        var blob = this.dataUrlToBlob(imgUrl);
-
-      // Create root reference
       var storageRef = firebase.storage().ref();
 
       // Put the image in the correct group folder
@@ -97,7 +86,6 @@ export class NetworkStorageProvider {
         self.databaseRef.child("groups").child(ref.getKey()).set("drawing");
         self.databaseRef.child("users").child(userID).child(ref.getKey()).set(1);
       });
-      //this.databaseRef.child("groups").child()
     }
     // if this was the 2nd drawing put group back into next list
     else if (this.sectionNumber == 1) {
@@ -138,7 +126,8 @@ export class NetworkStorageProvider {
     }
   }
 
-  /* convert base64/URLEncoded data component to raw binary data held in a string
+  /*
+    convert base64/URLEncoded data component to raw binary data held in a string
      from: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata/5100158#5100158
   */
   dataUrlToBlob(dataUrl){
