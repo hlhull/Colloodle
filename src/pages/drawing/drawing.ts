@@ -111,38 +111,52 @@ export class DrawingPage {
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
+      // (removed code)
       //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
       //so it doesn't scroll, subtract header and footer height
-      if (this.platform.height() > this.platform.width()) {   // this is how it is on most phones, it takes the vertical height despite being in landscape mode
-        this.canvasHeight = this.platform.width() - this.overlapHeight;
 
-        if(this.canvasHeight * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
-          this.canvasWidth = this.canvasHeight * (16/9);
-        } else {
-          this.canvasWidth = this.platform.height() *.9 -4;
-          this.canvasHeight = this.canvasWidth * (9/16);
-        }
-        
-      } else {    // on ionic serve (and maybe some devices, who knows?) this is how it is, the vertical width is the landscape height and vice versa
-        this.canvasHeight = this.platform.height() - this.overlapHeight;
+      if (this.platform.height() > this.platform.width()) {
+        // this is how it is on most phones, it takes the vertical height
+        // when you take the platform height (and vice versa for width)
+        // despite being in landscape mode
 
-        if(this.canvasHeight * (16/9)<= (this.platform.width() *.9 -4)){//hard coded ratio
-          this.canvasWidth = this.canvasHeight * (16/9);
-        } else {
-          this.canvasWidth = this.platform.width() *.9 -4;
-          this.canvasHeight = this.canvasWidth * (9/16);
-        }
+        // then our effective landscape width and height are the
+        // platform height and width:
+        this.setCanvasDimensions(this.platform.height(), this.platform.width());
+
+      } else {
+        // on ionic serve (and maybe some devices, who knows?) this is how it is,
+        // the landscape height is seen as the platform height and vice versa
+
+        // then our effective landscape width and height are the
+        // platform height and width:
+        this.setCanvasDimensions(this.platform.width(), this.platform.height());
       }
 
-
-
+      // setting dimensions for the renderer:
       this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
       this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
 
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
+      // last step of visual setup, draw the overlap
       this.drawOverlap(null);
+  }
+
+  /*
+  * Helper function for ngAfterViewInit, this handles setting the canvasHeight
+  * and canvasWidth, taking in the effective landscape width and height
+  */
+  setCanvasDimensions(landscapeWidth, landscapeHeight) {
+    this.canvasHeight = landscapeHeight - this.overlapHeight;
+
+    if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
+      this.canvasWidth = this.canvasHeight * (16/9);
+    } else {
+      this.canvasWidth = landscapeWidth *.9 -4;
+      this.canvasHeight = this.canvasWidth * (9/16);
+    }
   }
 
   resetPage(){
