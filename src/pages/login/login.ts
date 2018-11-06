@@ -77,4 +77,12 @@ login() {
     this.auth.resetPassword(data.email);
   }
 
+
+  /*
+  * sends user back to home page
+  */
+  goHome(): void {
+    this.navCtrl.setRoot(HomePage);
+  }
+
 }
