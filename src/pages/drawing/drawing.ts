@@ -45,63 +45,14 @@ export class DrawingPage {
 
     this.statusBar.hide();
     this.screenOrientation.lock('landscape');
-  }
 
-  goHome(): void {
-    this.presentConfirm();
-  }
-
-  /*
-   * saves canvas, resets page, sets overlap, and goes to final page if 3 drawings done
-   */
-  nextStep(): void {
-    //get the current canvas as an image, draw it on overlap when loaded
-    var img = new Image();
-    img.src = this.canvasElement.toDataURL(); //saving current image in cavas
-
-    //store image
-    if(this.imageStorage instanceof NetworkStorageProvider){
-      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
-          if(this.imageStorage.sectionNumber == 2) {
-            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-          }
-          else {
-            this.presentInfo();
-            this.navCtrl.push(HomePage);
-          }
-      }));
-    } else {
-      var proceed = this.imageStorage.storeImage(img.src);
-      if(proceed){
-          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-        }
-      this.resetPage();
-
-      this.drawOverlap(img);
+    // WHERE CAN WE PUT THIS SO THAT THIS EVENT ACTUALLY HAPPENS?
+    // note: I put this in the goHome function as a test, and it worked perfectly.
+    // However, if I put this code in the constructor or the ngAfterViewInit, it doesn't
+    // actually pop up, and we want this to pop up immediately
+    if (this.imageStorage instanceof NetworkStorageProvider) {
+      this.alertWhichSection(this.imageStorage.sectionNumber);
     }
-
-
-  }
-
-  drawOverlap(img){
-    let ctx = this.overlapElement.getContext('2d');
-    var overlap = this.overlapHeight;
-    if(img == null){
-      var promise = this.imageStorage.getOverlap();
-      img = new Image();
-      if (promise != null) {
-        promise.then((imgUrl) => img.src = imgUrl);
-      }
-    }
-
-    img.onload = function(){  //draws in the overlap bar:
-      ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-    }
-
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DrawingPage');
   }
 
   /*
@@ -157,6 +108,77 @@ export class DrawingPage {
       this.canvasWidth = landscapeWidth *.9 -4;
       this.canvasHeight = this.canvasWidth * (9/16);
     }
+  }
+
+  alertWhichSection(sectionNumber) {
+    if (sectionNumber == 0) {
+      this.presentWhichSection("head");
+    } else {
+      if (sectionNumber == 1) {
+        this.presentWhichSection("torso");
+      } else {
+        if (sectionNumber == 2) {
+          this.presentWhichSection("legs");
+        }
+      }
+    }
+  }
+
+  goHome(): void {
+    this.presentConfirm();
+  }
+
+  /*
+   * saves canvas, resets page, sets overlap, and goes to final page if 3 drawings done
+   */
+  nextStep(): void {
+    //get the current canvas as an image, draw it on overlap when loaded
+    var img = new Image();
+    img.src = this.canvasElement.toDataURL(); //saving current image in cavas
+
+    //store image
+    if (this.imageStorage instanceof NetworkStorageProvider) {
+      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
+          if (this.imageStorage.sectionNumber == 2) {
+            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+          }
+          else {
+            this.presentInfo();
+            this.navCtrl.push(HomePage);
+          }
+      }));
+    } else {
+      var proceed = this.imageStorage.storeImage(img.src);
+      if (proceed) {
+          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+        }
+      this.resetPage();
+
+      this.drawOverlap(img);
+    }
+
+
+  }
+
+  drawOverlap(img){
+    let ctx = this.overlapElement.getContext('2d');
+    var overlap = this.overlapHeight;
+    if (img == null) {
+      var promise = this.imageStorage.getOverlap();
+      img = new Image();
+      if (promise != null) {
+        promise.then((imgUrl) => img.src = imgUrl);
+      }
+    }
+
+    img.onload = function(){  //draws in the overlap bar:
+      ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+    }
+
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad DrawingPage');
   }
 
   resetPage(){
@@ -286,6 +308,22 @@ export class DrawingPage {
     });
   }
 
+  presentWhichSection(section){
+    let alert = this.alertCtrl.create({
+      title: 'Section:',
+      message: 'You are drawing the ' + section,
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   presentInfo(){
     let alert = this.alertCtrl.create({
       title: 'Drawing',
@@ -306,26 +344,26 @@ export class DrawingPage {
   * Causes an alert/confirmation screen to pop up when home button is pressed
   */
   presentConfirm() {
-  let alert = this.alertCtrl.create({
-    title: 'Confirm Action',
-    message: 'Are you sure you want to leave your painting and go to the Home page?',
-    buttons: [
-      {
-        text: 'Yes',
-        handler: () => {
-          this.navCtrl.setRoot(HomePage);
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to leave your painting and go to the Home page?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.navCtrl.setRoot(HomePage);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
         }
-      },
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        handler: () => {
-          // console.log('Cancel clicked');
-        }
-      }
-    ]
-  });
-  alert.present();
-}
+      ]
+    });
+    alert.present();
+  }
 
 }
