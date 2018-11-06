@@ -47,4 +47,8 @@ export class LocalStorageProvider {
     return null;
   }
 
+  cancelDrawing(){
+    return null;
+  }
+
 }

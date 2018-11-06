@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { SignupPage } from '../signup/signup';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { ResetPasswordPage } from '../reset-password/reset-password';
 
 @IonicPage()
 @Component({
@@ -62,19 +63,19 @@ login() {
     this.navCtrl.push(SignupPage);
   }
 
-// TODO: figure out how to check if the email is one of our users! if not, return and have an error message of some sort
+  /*
+  * go to reset password page
+  */
+  goResetPassword() {
+    this.navCtrl.setRoot(ResetPasswordPage);
+  }
+
 
   /*
-  * if the email entered is an email, reset the password
+  * sends user back to home page
   */
-  resetPassword() {
-    let data = this.loginForm.value;
-
-		if (!data.email) {
-			return;
-		}
-
-    this.auth.resetPassword(data.email);
+  goHome(): void {
+    this.navCtrl.setRoot(HomePage);
   }
 
 }

@@ -45,6 +45,87 @@ export class DrawingPage {
 
     this.statusBar.hide();
     this.screenOrientation.lock('landscape');
+
+    // TODO: WHERE CAN WE PUT THIS SO THAT THIS EVENT ACTUALLY HAPPENS?
+    // note: I put this in the goHome function as a test, and it worked perfectly.
+    // However, if I put this code in the constructor or the ngAfterViewInit, it doesn't
+    // actually pop up, and we want this to pop up immediately.
+
+  }
+
+  /*
+   * sets the size of the main canvas and overlap canvas
+   */
+  ngAfterViewInit(){
+      this.canvasElement = this.canvas.nativeElement;
+      this.overlapElement = this.overlapCanvas.nativeElement;
+
+      // (removed code)
+      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
+      //so it doesn't scroll, subtract header and footer height
+
+      if (this.platform.height() > this.platform.width()) {
+        // this is how it is on most phones, it takes the vertical height
+        // when you take the platform height (and vice versa for width)
+        // despite being in landscape mode
+
+        // then our effective landscape width and height are the
+        // platform height and width:
+        this.setCanvasDimensions(this.platform.height(), this.platform.width());
+
+      } else {
+        // on ionic serve (and maybe some devices, who knows?) this is how it is,
+        // the landscape height is seen as the platform height and vice versa
+
+        // then our effective landscape width and height are the
+        // platform height and width:
+        this.setCanvasDimensions(this.platform.width(), this.platform.height());
+      }
+
+      // setting dimensions for the renderer:
+      this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
+      this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
+
+      this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
+      this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
+
+      // once group and section #s are assigned, draw the overlap and let user know of section
+      if (this.imageStorage instanceof NetworkStorageProvider) {
+        var self = this;
+        this.imageStorage.assignGroup().then(() => {
+          self.drawOverlap(null);
+          this.alertWhichSection(this.imageStorage.sectionNumber);
+        });
+      }
+  }
+
+  /*
+  * Helper function for ngAfterViewInit, this handles setting the canvasHeight
+  * and canvasWidth, taking in the effective landscape width and height
+  */
+  setCanvasDimensions(landscapeWidth, landscapeHeight) {
+    this.canvasHeight = landscapeHeight - this.overlapHeight;
+
+    if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
+      this.canvasWidth = this.canvasHeight * (16/9);
+    } else {
+      this.canvasWidth = landscapeWidth *.9 -4;
+      this.canvasHeight = this.canvasWidth * (9/16);
+    }
+  }
+
+  alertWhichSection(sectionNumber) {
+    if (sectionNumber == 0) {
+      this.presentWhichSection("head");
+    } else {
+      if (sectionNumber == 1) {
+        this.presentWhichSection("torso");
+      } else {
+        if (sectionNumber == 2) {
+          this.presentWhichSection("legs");
+        }
+      }
+    }
   }
 
   goHome(): void {
@@ -60,19 +141,19 @@ export class DrawingPage {
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
     //store image
-    if(this.imageStorage instanceof NetworkStorageProvider){
+    if (this.imageStorage instanceof NetworkStorageProvider) {
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
-          if(this.imageStorage.sectionNumber == 2) {
+          if (this.imageStorage.sectionNumber == 2) {
             this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
           }
           else {
-            //add popup to tell person that they'll be notified when the drawing is complete
+            this.presentInfo();
             this.navCtrl.push(HomePage);
           }
       }));
     } else {
       var proceed = this.imageStorage.storeImage(img.src);
-      if(proceed){
+      if (proceed) {
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
         }
       this.resetPage();
@@ -86,7 +167,7 @@ export class DrawingPage {
   drawOverlap(img){
     let ctx = this.overlapElement.getContext('2d');
     var overlap = this.overlapHeight;
-    if(img == null){
+    if (img == null) {
       var promise = this.imageStorage.getOverlap();
       img = new Image();
       if (promise != null) {
@@ -102,34 +183,6 @@ export class DrawingPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DrawingPage');
-  }
-
-  /*
-   * sets the size of the main canvas and overlap canvas
-   */
-  ngAfterViewInit(){
-      this.canvasElement = this.canvas.nativeElement;
-      this.overlapElement = this.overlapCanvas.nativeElement;
-
-      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
-      //so it doesn't scroll, subtract header and footer height
-      this.canvasWidth = this.platform.width() - this.overlapHeight;
-      if(this.canvasWidth * (16/9)<= (this.platform.height() *.9 -4)){//hard coded ratio
-        this.canvasHeight = this.canvasWidth * (16/9);
-      } else {
-        this.canvasHeight = this.platform.height() *.9 -4;
-        this.canvasWidth = this.canvasHeight * (9/16);
-      }
-
-
-
-      this.renderer.setElementAttribute(this.overlapElement, 'width', this.canvasWidth + '');
-      this.renderer.setElementAttribute(this.overlapElement, 'height', this.overlapHeight + '');
-
-      this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
-      this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
-
-      this.drawOverlap(null);
   }
 
   resetPage(){
@@ -259,30 +312,63 @@ export class DrawingPage {
     });
   }
 
+  presentWhichSection(section){
+    let alert = this.alertCtrl.create({
+      title: 'Section:',
+      message: 'You are drawing the ' + section,
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  presentInfo(){
+    let alert = this.alertCtrl.create({
+      title: 'Drawing',
+      message: 'You will be notified when the drawing is complete!',
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   /*
   * Causes an alert/confirmation screen to pop up when home button is pressed
   */
   presentConfirm() {
-  let alert = this.alertCtrl.create({
-    title: 'Confirm Action',
-    message: 'Are you sure you want to leave your painting and go to the Home page?',
-    buttons: [
-      {
-        text: 'Yes',
-        handler: () => {
-          this.navCtrl.setRoot(HomePage);
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to leave your painting and go to the Home page?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.imageStorage.cancelDrawing(); 
+            this.navCtrl.setRoot(HomePage);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            // console.log('Cancel clicked');
+          }
         }
-      },
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        handler: () => {
-          // console.log('Cancel clicked');
-        }
-      }
-    ]
-  });
-  alert.present();
-}
+      ]
+    });
+    alert.present();
+  }
 
 }

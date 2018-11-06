@@ -47,4 +47,12 @@ export class SignupPage {
 			error => this.signupError = error.message
 		);
   }
+
+	/*
+  * sends user back to home page
+  */
+  goHome(): void {
+    this.navCtrl.setRoot(HomePage);
+  }
+
 }

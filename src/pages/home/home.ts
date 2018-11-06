@@ -3,10 +3,13 @@ import { NavController, Nav, PopoverController } from 'ionic-angular';
 import { DrawingPage } from '../drawing/drawing';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
+import { SignupPage } from '../signup/signup';
 import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
 import { UserPopoverPage } from '../user-popover/user-popover';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { AlertController } from 'ionic-angular';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'page-home',
@@ -19,13 +22,18 @@ export class HomePage {
     if user clicked pass-Around and 'false' for network storage if user clicked random
   */
   goToDrawingPage(local){
-    var imageStorage = local ? new LocalStorageProvider() : new NetworkStorageProvider();
-    this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    var userID = firebase.auth().currentUser;
+    if(userID == null && local == false){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+      this.presentError();
+    } else {
+      var imageStorage = local ? new LocalStorageProvider() : new NetworkStorageProvider();
+      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    }
   }
 
   // @ViewChild(Nav) nav: Nav;
 
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
     this.screenOrientation.lock('portrait');
   }
 
@@ -56,5 +64,31 @@ export class HomePage {
   	this.auth.signOut();
   	// this.navCtrl.setRoot(LoginPage);
   }
+
+  /*
+  * Causes an alert to popup asking the user to cancel, signup, or login
+  */
+  presentError() {
+  let alert = this.alertCtrl.create({
+    title: 'Error',
+    message: 'You must be signed in to enter Random mode',
+    buttons: [
+      { text: 'Login',
+        handler: () => {
+          this.navCtrl.setRoot(LoginPage);
+        }
+      },
+      { text: 'Sign Up',
+        handler: () => {
+          this.navCtrl.setRoot(SignupPage);
+        }
+      },
+      { text: 'Cancel',
+        role: 'cancel',
+        handler: () => {}
+      }
+    ]});
+  alert.present();
+}
 
 }
