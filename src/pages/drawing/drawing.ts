@@ -31,13 +31,15 @@ export class DrawingPage {
   lastX: number;
   lastY: number;
 
+  combinedCanvasHeight: number; // overlap canvas + drawing canvas heights!
+  overlapHeight: number;
   canvasHeight: number;
   canvasWidth: number;
 
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
-  overlapHeight = 20;
+  // overlapHeight = 20;
   imageStorage;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
@@ -102,14 +104,31 @@ export class DrawingPage {
   * and canvasWidth, taking in the effective landscape width and height
   */
   setCanvasDimensions(landscapeWidth, landscapeHeight) {
-    this.canvasHeight = landscapeHeight - this.overlapHeight;
 
-    if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
-      this.canvasWidth = this.canvasHeight * (16/9);
+    // original, from when overlap was 20 pixels:
+
+    // this.canvasHeight = landscapeHeight - this.overlapHeight;
+    //
+    // if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
+    //   this.canvasWidth = this.canvasHeight * (16/9);
+    // } else {
+    //   this.canvasWidth = landscapeWidth *.9 -4;
+    //   this.canvasHeight = this.canvasWidth * (9/16);
+    // }
+
+    // // new, overlap = 10% canvas height:
+
+    this.combinedCanvasHeight = landscapeHeight;
+
+    if(this.combinedCanvasHeight * (16/10)<= (landscapeWidth *.9 -4)){//hard coded ratio
+      this.canvasWidth = this.combinedCanvasHeight * (16/10);
     } else {
       this.canvasWidth = landscapeWidth *.9 -4;
-      this.canvasHeight = this.canvasWidth * (9/16);
+      this.combinedCanvasHeight = this.canvasWidth * (10/16);
     }
+
+    this.overlapHeight = this.combinedCanvasHeight * (1/10);
+    this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
   alertWhichSection(sectionNumber) {
