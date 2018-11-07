@@ -30,6 +30,7 @@ import { NgxErrorsModule } from '@ultimate/ngxerrors';
 import { UserPopoverPage } from '../pages/user-popover/user-popover';
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { GroupManagerProvider } from '../providers/group-manager/group-manager';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
     NetworkStorageProvider,
     AngularFireAuth,
     AuthService,
-    ScreenOrientation
+    ScreenOrientation,
+    GroupManagerProvider
   ]
 })
 export class AppModule {}
