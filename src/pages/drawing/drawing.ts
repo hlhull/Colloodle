@@ -46,11 +46,7 @@ export class DrawingPage {
     this.statusBar.hide();
     this.screenOrientation.lock('landscape');
 
-    // TODO: WHERE CAN WE PUT THIS SO THAT THIS EVENT ACTUALLY HAPPENS?
-    // note: I put this in the goHome function as a test, and it worked perfectly.
-    // However, if I put this code in the constructor or the ngAfterViewInit, it doesn't
-    // actually pop up, and we want this to pop up immediately.
-
+    platform.registerBackButtonAction(() => {},1);
   }
 
   /*
