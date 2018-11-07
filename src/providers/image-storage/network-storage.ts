@@ -9,16 +9,17 @@ export class NetworkStorageProvider {
   groupNumber: string;
   sectionNumber: number;
   databaseRef = firebase.database().ref();
+  storageRef = firebase.storage().ref();
   nextListRef = this.databaseRef.child("inProgress").child("next");
 
   constructor() {}
 
   /*
-    Assigns group # and section # user will be working on by getting first element
-    in the inProgress:next list; if there is none in inProgress:next, work on 0th section
+    Assigns group # and section # user will be working on; returns a Promise
+    that completes when assignment is complete
   */
   assignGroup(){
-    // default if no next group is found -- new group
+    // default if no next group is found (start new group)
     this.groupNumber = null;
     this.sectionNumber = 0;
 
@@ -28,8 +29,8 @@ export class NetworkStorageProvider {
 
     // loop through next list to find group user hasn't been in yet
     // return promises that are resolved when group, section variables are set
-    var promise1 = this.nextListRef.once('value');
-    return promise1.then((snapshot) => {
+    var nextListLoaded = this.nextListRef.once('value');
+    return nextListLoaded.then((snapshot) => {
         snapshot.forEach(function(childSnapshot) {
           var promise = self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
             if(!userSnapshot.exists()){
@@ -40,7 +41,7 @@ export class NetworkStorageProvider {
           })
           promises.push(promise);
         });
-        return Promise.all(promises);//.then(() => console.log(self.groupNumber, self.sectionNumber));
+        return Promise.all(promises);
     });
   }
 
@@ -49,7 +50,7 @@ export class NetworkStorageProvider {
   */
   getOverlap(){
     if(this.sectionNumber > 0){
-      var storageRef = firebase.storage().ref().child(this.groupNumber); //which folder we want to get images from
+      var storageRef = firebase.storage().ref().child(this.groupNumber); // folder we want to get images from
       var imageRef = storageRef.child(this.sectionNumber - 1 + '.png'); // references previous image
       return imageRef.getDownloadURL();
     }
@@ -58,21 +59,22 @@ export class NetworkStorageProvider {
 
   /*
     store image with given dataUrl in Firebase at group/sectionNum.png
+    returns promise for when upload is complete
    */
   storeImage(imgUrl){
-       var blob = this.dataUrlToBlob(imgUrl);
-      var storageRef = firebase.storage().ref();
+      var blob = this.dataUrlToBlob(imgUrl);
 
       // Put the image in the correct group folder
-      var groupRef = storageRef.child(this.groupNumber + '/' + this.sectionNumber + '.png');
+      var groupRef = this.storageRef.child(this.groupNumber + '/' + this.sectionNumber + '.png');
 
       //upload to firebase
       return groupRef.put(blob);
   }
 
   /*
-    removes group from pending, puts group into either next or completed
-    creates group if this was first drawing in group
+    after user's drawing is complete, updates group accordingly:
+    creates group, puts group in next list, or updates group status as done
+    returns promise for when new group has been created / updateGroup() is done
   */
   updateGroup(){
     var promise;
@@ -98,13 +100,11 @@ export class NetworkStorageProvider {
       this.databaseRef.child("groups").child(this.groupNumber).set(1);
       promise = new Promise(function(resolve, reject){resolve(true)});
     }
-
-
     return promise;
   }
 
   /*
-    gets the image urls that are in the specificed group folder in firebase
+    returns the image urls that are in the specificed group folder in firebase
    */
   getImageUrls(){
       var storageRef = firebase.storage().ref().child(this.groupNumber); //which folder we want to get images from
@@ -113,7 +113,7 @@ export class NetworkStorageProvider {
       var imageRef1 = storageRef.child(1 + '.png'); // references image 1.png
       var imageRef2 = storageRef.child(2 + '.png'); // references image 2.png
 
-      // return an array of the image urls of all the images in the folder
+      // return an array of promises of the image urls of all the images in the folder
       return Promise.all([imageRef0.getDownloadURL(), imageRef1.getDownloadURL(), imageRef2.getDownloadURL()]);
   }
 
