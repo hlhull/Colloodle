@@ -137,20 +137,6 @@ export class DrawingPage {
     this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
-  alertWhichSection(sectionNumber) {
-    if (sectionNumber == 0) {
-      this.presentWhichSection("head");
-    } else {
-      if (sectionNumber == 1) {
-        this.presentWhichSection("torso");
-      } else {
-        if (sectionNumber == 2) {
-          this.presentWhichSection("legs");
-        }
-      }
-    }
-  }
-
   goHome(): void {
     this.presentConfirm();
   }
@@ -329,6 +315,34 @@ export class DrawingPage {
   }
 
   /*
+  * presents helpful info if user is lost
+  */
+  help() {
+    if (this.imageStorage instanceof NetworkStorageProvider) {
+      this.alertWhichSection(this.imageStorage.sectionNumber);
+    } else {
+      this.alertWhichSection(this.imageStorage.numCanvases);
+    }
+  }
+
+  /*
+  * Figures out which section to alert for based on the section number
+  */
+  alertWhichSection(sectionNumber) {
+    if (sectionNumber == 0) {
+      this.presentWhichSection("head");
+    } else {
+      if (sectionNumber == 1) {
+        this.presentWhichSection("torso");
+      } else {
+        if (sectionNumber == 2) {
+          this.presentWhichSection("legs");
+        }
+      }
+    }
+  }
+
+  /*
   *Presents the popover menu with color and brush size
   */
   presentPopover(myEvent) {
@@ -340,8 +354,8 @@ export class DrawingPage {
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
-      title: 'Section:',
-      message: 'You are drawing the ' + section,
+      title: 'Instructions:',
+      message: 'You are drawing the ' + section + ". Make sure to draw all the way to the bottom edge!",
       buttons: [
         {
           text: 'OK',
