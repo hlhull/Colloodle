@@ -9,6 +9,7 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { HomePage } from '../pages/home/home';
+import { InfoPage } from '../pages/info/info';
 import { DrawingPage } from '../pages/drawing/drawing';
 import { FinalPage } from '../pages/final/final';
 
@@ -40,6 +41,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     SignupPage,
     ResetPasswordPage,
     HomePage,
+    InfoPage,
     DrawingPage,
     FinalPage,
     CanvasDrawComponent,
@@ -60,6 +62,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     SignupPage,
     ResetPasswordPage,
     HomePage,
+    InfoPage,
     DrawingPage,
     PopoverPage,
     UserPopoverPage,
