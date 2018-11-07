@@ -92,6 +92,8 @@ export class DrawingPage {
           self.drawOverlap(null);
           this.alertWhichSection(this.imageStorage.sectionNumber);
         });
+      } else {
+        this.alertWhichSection(0);
       }
   }
 
@@ -151,10 +153,13 @@ export class DrawingPage {
       var proceed = this.imageStorage.storeImage(img.src);
       if (proceed) {
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-        }
-      this.resetPage();
+      } else {
+        this.resetPage();
 
-      this.drawOverlap(img);
+        this.drawOverlap(img);
+
+        this.alertWhichSection(this.imageStorage.numCanvases);
+      }
     }
 
 
@@ -351,7 +356,7 @@ export class DrawingPage {
         {
           text: 'Yes',
           handler: () => {
-            this.imageStorage.cancelDrawing(); 
+            this.imageStorage.cancelDrawing();
             this.navCtrl.setRoot(HomePage);
           }
         },

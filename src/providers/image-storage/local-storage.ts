@@ -12,12 +12,12 @@ export class LocalStorageProvider {
     this.numCanvases = 0;
   }
 
-  setUp(group, section){}
+  setUp(group, section) {}
 
   /*
    * store image with given image url in the array
    */
-  storeImage(imgUrl){
+  storeImage(imgUrl) {
       //store image in storedImages
       this.storedImageUrls[this.numCanvases] = imgUrl;
       this.numCanvases = this.numCanvases + 1;
@@ -34,12 +34,12 @@ export class LocalStorageProvider {
   /*
    * gets the image urls
    */
-  getImageUrls(){
+  getImageUrls() {
     var urls = this.storedImageUrls;
     return new Promise(function(resolve, reject) { resolve(urls); });
   }
 
-  getOverlap(){
+  getOverlap() {
     if (this.numCanvases > 0){
       var overlap =  this.storedImageUrls[this.numCanvases - 1];
       return new Promise(function(resolve, reject) { resolve(overlap); });
@@ -47,7 +47,7 @@ export class LocalStorageProvider {
     return null;
   }
 
-  cancelDrawing(){
+  cancelDrawing() {
     return null;
   }
 
