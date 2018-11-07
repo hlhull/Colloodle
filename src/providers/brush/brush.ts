@@ -22,14 +22,20 @@ export class BrushProvider {
       '#000000'
   ];
 
-  constructor() {}
+  constructor() {
+  }
 
-  changeColor(color){
+  changeColor(color) {
       this.color = color;
   }
 
-  changeSize(sliderState){
+  changeSize(sliderState) {
       this.size = sliderState.value;
+  }
+
+  reset() {
+    this.color = '#1abc9c';
+    this.size = 10;
   }
 
 }

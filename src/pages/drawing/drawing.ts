@@ -50,6 +50,8 @@ export class DrawingPage {
     this.screenOrientation.lock('landscape');
 
     platform.registerBackButtonAction(() => {},1);
+
+    this.brushService.reset();
   }
 
   /*
