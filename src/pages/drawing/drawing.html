@@ -1,35 +1,35 @@
-
-<ion-content no-bounce>
+<!-- TODO: how to set background of entire page to be "primary" from variables.scss in theme folder? this just wasn't working -->
+<ion-content no-bounce style="background-color: #009691">
   <canvas id='overlap' #overlap style="border:1px solid #009691;"></canvas>
   <canvas id='myCanvas' #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
 
   <ion-buttons end id='home'>
-    <button ion-button icon-only  large (click)="goHome()">
+    <button ion-button icon-only large clear color=secondary (click)="goHome()">
       <ion-icon name="home"></ion-icon>
     </button>
   </ion-buttons>
 
   <ion-buttons end id='brush'>
-    <button ion-button icon-only  large (click)="presentPopover($event)">
+    <button ion-button icon-only large clear color=secondary (click)="presentPopover($event)">
       <ion-icon name="brush" [style.color]="this.brushService.color"></ion-icon>
     </button>
   </ion-buttons>
 
   <ion-buttons end id='undo'>
-    <button ion-button icon-only large (click)="handleUndo($event)">
+    <button ion-button icon-only large clear color=secondary (click)="handleUndo($event)">
       <ion-icon name="undo"></ion-icon>
     </button>
   </ion-buttons>
 
   <ion-buttons end id='redo'>
-    <button ion-button icon-only large (click)="handleRedo($event)">
+    <button ion-button icon-only large clear color=secondary (click)="handleRedo($event)">
       <ion-icon name="redo"></ion-icon>
     </button>
   </ion-buttons>
 
   <div id="finished">
     <ion-buttons end>
-      <button ion-button large (click)="nextStep()">
+      <button ion-button icon-only large clear color=secondary (click)="nextStep()">
         <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
