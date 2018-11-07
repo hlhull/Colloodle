@@ -1,38 +1,37 @@
 
-      <ion-content no-bounce>
-        <canvas id='overlap' #overlap style="border:1px solid #009691;"></canvas>
-        <canvas id='myCanvas' #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
+<ion-content no-bounce>
+  <canvas id='overlap' #overlap style="border:1px solid #009691;"></canvas>
+  <canvas id='myCanvas' #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
 
-        <ion-buttons end id='home'>
-          <button ion-button icon-only  large (click)="goHome()">
-            <ion-icon name="home"></ion-icon>
-          </button>
-        </ion-buttons>
+  <ion-buttons end id='home'>
+    <button ion-button icon-only  large (click)="goHome()">
+      <ion-icon name="home"></ion-icon>
+    </button>
+  </ion-buttons>
 
-        <ion-buttons end id='brush'>
-          <button ion-button icon-only  large (click)="presentPopover($event)">
-            <ion-icon name="brush" [style.color]="this.brushService.color"></ion-icon>
-          </button>
-        </ion-buttons>
+  <ion-buttons end id='brush'>
+    <button ion-button icon-only  large (click)="presentPopover($event)">
+      <ion-icon name="brush" [style.color]="this.brushService.color"></ion-icon>
+    </button>
+  </ion-buttons>
 
-        <ion-buttons end id='undo'>
-          <button ion-button icon-only large (click)="handleUndo($event)">
-            <ion-icon name="undo"></ion-icon>
-          </button>
-        </ion-buttons>
+  <ion-buttons end id='undo'>
+    <button ion-button icon-only large (click)="handleUndo($event)">
+      <ion-icon name="undo"></ion-icon>
+    </button>
+  </ion-buttons>
 
+  <ion-buttons end id='redo'>
+    <button ion-button icon-only large (click)="handleRedo($event)">
+      <ion-icon name="redo"></ion-icon>
+    </button>
+  </ion-buttons>
 
-        <ion-buttons end id='redo'>
-          <button ion-button icon-only large (click)="handleRedo($event)">
-            <ion-icon name="redo"></ion-icon>
-          </button>
-        </ion-buttons>
-
-        <div id="finished">
-          <ion-buttons end>
-            <button ion-button large (click)="nextStep()">
-              <ion-icon name="checkmark"></ion-icon>
-            </button>
-          </ion-buttons>
-        </div>
+  <div id="finished">
+    <ion-buttons end>
+      <button ion-button large (click)="nextStep()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
+  </div>
 </ion-content>
