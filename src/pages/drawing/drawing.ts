@@ -35,6 +35,7 @@ export class DrawingPage {
   overlapHeight: number;
   canvasHeight: number;
   canvasWidth: number;
+  canvasLeft: number;
 
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
@@ -87,6 +88,8 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
+      // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
+
       // once group and section #s are assigned, draw the overlap and let user know of section
       if (this.imageStorage instanceof NetworkStorageProvider) {
         var self = this;
@@ -120,13 +123,16 @@ export class DrawingPage {
 
     this.combinedCanvasHeight = landscapeHeight;
 
-    if(this.combinedCanvasHeight * (16/10)<= (landscapeWidth *.9 -4)){//hard coded ratio
+    var usableWidth = landscapeWidth *.9 - 4;
+
+    if(this.combinedCanvasHeight * (16/10)<= (usableWidth)){//hard coded ratio
       this.canvasWidth = this.combinedCanvasHeight * (16/10);
     } else {
-      this.canvasWidth = landscapeWidth *.9 -4;
+      this.canvasWidth = usableWidth;
       this.combinedCanvasHeight = this.canvasWidth * (10/16);
     }
 
+    // this.canvasLeft = (landscapeWidth - this.canvasWidth)/2;   // could not get this to actually be set in ngAfterViewInit
     this.overlapHeight = this.combinedCanvasHeight * (1/10);
     this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }

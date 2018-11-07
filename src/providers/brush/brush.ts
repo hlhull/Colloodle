@@ -10,6 +10,8 @@ export class BrushProvider {
   color: string = '#1abc9c';
   size: number = 10;
 
+  eraseColor: string = '#ffffff';
+
   availableColors = [
       '#1abc9c',
       '#3498db',
@@ -17,8 +19,7 @@ export class BrushProvider {
       '#e67e22',
       '#e74c3c',
       '#fffc54',
-      '#000000',
-      '#ffffff'
+      '#000000'
   ];
 
   constructor() {}
