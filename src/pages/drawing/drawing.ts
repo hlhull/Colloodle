@@ -351,7 +351,7 @@ export class DrawingPage {
   presentConfirm() {
     let alert = this.alertCtrl.create({
       title: 'Confirm Action',
-      message: 'Are you sure you want to leave your painting and go to the Home page?',
+      message: 'Are you sure you want to leave and go to the Home page? Your painting will be lost.',
       buttons: [
         {
           text: 'Yes',
