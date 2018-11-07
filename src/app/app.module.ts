@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
+import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { HomePage } from '../pages/home/home';
 import { DrawingPage } from '../pages/drawing/drawing';
 import { FinalPage } from '../pages/final/final';
@@ -37,6 +38,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     MyApp,
     LoginPage,
     SignupPage,
+    ResetPasswordPage,
     HomePage,
     DrawingPage,
     FinalPage,
@@ -56,6 +58,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     MyApp,
     LoginPage,
     SignupPage,
+    ResetPasswordPage,
     HomePage,
     DrawingPage,
     PopoverPage,
