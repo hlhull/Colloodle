@@ -141,7 +141,7 @@ export class DrawingPage {
   }
 
   goHome(): void {
-    this.presentConfirm();
+    this.presentConfirmGoHome();
   }
 
   /*
@@ -420,7 +420,7 @@ export class DrawingPage {
   /*
   * Causes an alert/confirmation screen to pop up when home button is pressed
   */
-  presentConfirm() {
+  presentConfirmGoHome() {
     let alert = this.alertCtrl.create({
       title: 'Confirm Action',
       message: 'Are you sure you want to leave and go to the Home page? Your painting will be lost.',
@@ -436,7 +436,33 @@ export class DrawingPage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            // console.log('Cancel clicked');
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /*
+  * Causes an alert/confirmation screen to pop up when home button is pressed
+  */
+  presentConfirmNextStep() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you are finished with your section? Once you move on, you cannot come back to edit this drawing.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.nextStep();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
           }
         }
       ]
