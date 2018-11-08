@@ -31,13 +31,16 @@ export class DrawingPage {
   lastX: number;
   lastY: number;
 
+  combinedCanvasHeight: number; // overlap canvas + drawing canvas heights!
+  overlapHeight: number;
   canvasHeight: number;
   canvasWidth: number;
+  canvasLeft: number;
 
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
-  overlapHeight = 20;
+  // overlapHeight = 20;
   imageStorage;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
@@ -47,6 +50,8 @@ export class DrawingPage {
     this.screenOrientation.lock('landscape');
 
     platform.registerBackButtonAction(() => {},1);
+
+    this.brushService.reset();
   }
 
   /*
@@ -85,6 +90,8 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
+      // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
+
       // once group and section #s are assigned, draw the overlap and let user know of section
       if (this.imageStorage instanceof NetworkStorageProvider) {
         var self = this;
@@ -102,28 +109,34 @@ export class DrawingPage {
   * and canvasWidth, taking in the effective landscape width and height
   */
   setCanvasDimensions(landscapeWidth, landscapeHeight) {
-    this.canvasHeight = landscapeHeight - this.overlapHeight;
 
-    if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
-      this.canvasWidth = this.canvasHeight * (16/9);
-    } else {
-      this.canvasWidth = landscapeWidth *.9 -4;
-      this.canvasHeight = this.canvasWidth * (9/16);
-    }
-  }
+    // original, from when overlap was 20 pixels:
 
-  alertWhichSection(sectionNumber) {
-    if (sectionNumber == 0) {
-      this.presentWhichSection("head");
+    // this.canvasHeight = landscapeHeight - this.overlapHeight;
+    //
+    // if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
+    //   this.canvasWidth = this.canvasHeight * (16/9);
+    // } else {
+    //   this.canvasWidth = landscapeWidth *.9 -4;
+    //   this.canvasHeight = this.canvasWidth * (9/16);
+    // }
+
+    // // new, overlap = 10% canvas height:
+
+    this.combinedCanvasHeight = landscapeHeight;
+
+    var usableWidth = landscapeWidth *.9 - 4;
+
+    if(this.combinedCanvasHeight * (16/10)<= (usableWidth)){//hard coded ratio
+      this.canvasWidth = this.combinedCanvasHeight * (16/10);
     } else {
-      if (sectionNumber == 1) {
-        this.presentWhichSection("torso");
-      } else {
-        if (sectionNumber == 2) {
-          this.presentWhichSection("legs");
-        }
-      }
+      this.canvasWidth = usableWidth;
+      this.combinedCanvasHeight = this.canvasWidth * (10/16);
     }
+
+    // this.canvasLeft = (landscapeWidth - this.canvasWidth)/2;   // could not get this to actually be set in ngAfterViewInit
+    this.overlapHeight = this.combinedCanvasHeight * (1/10);
+    this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
   goHome(): void {
@@ -304,6 +317,34 @@ export class DrawingPage {
   }
 
   /*
+  * presents helpful info if user is lost
+  */
+  help() {
+    if (this.imageStorage instanceof NetworkStorageProvider) {
+      this.alertWhichSection(this.imageStorage.sectionNumber);
+    } else {
+      this.alertWhichSection(this.imageStorage.numCanvases);
+    }
+  }
+
+  /*
+  * Figures out which section to alert for based on the section number
+  */
+  alertWhichSection(sectionNumber) {
+    if (sectionNumber == 0) {
+      this.presentWhichSection("head");
+    } else {
+      if (sectionNumber == 1) {
+        this.presentWhichSection("torso");
+      } else {
+        if (sectionNumber == 2) {
+          this.presentWhichSection("legs");
+        }
+      }
+    }
+  }
+
+  /*
   *Presents the popover menu with color and brush size
   */
   presentPopover(myEvent) {
@@ -315,8 +356,8 @@ export class DrawingPage {
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
-      title: 'Section:',
-      message: 'You are drawing the ' + section,
+      title: 'Instructions:',
+      message: 'You are drawing the ' + section + ". Make sure to draw all the way to the bottom edge!",
       buttons: [
         {
           text: 'OK',
