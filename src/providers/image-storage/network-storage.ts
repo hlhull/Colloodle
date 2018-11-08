@@ -14,6 +14,10 @@ export class NetworkStorageProvider {
 
   constructor() {}
 
+  setGroupNum(groupNum){
+    this.groupNumber = groupNum;
+  }
+
   /*
     Assigns group # and section # user will be working on; returns a Promise
     that completes when assignment is complete

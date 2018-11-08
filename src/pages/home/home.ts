@@ -11,6 +11,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AlertController } from 'ionic-angular';
 import * as firebase from 'firebase';
 import { InfoPage } from '../info/info';
+import { GroupsPage } from '../groups/groups';
 
 @Component({
   selector: 'page-home',
@@ -34,6 +35,10 @@ export class HomePage {
 
   goToInfoPage(){
     this.navCtrl.push(InfoPage);
+  }
+
+  goToGroupsPage(){
+    this.navCtrl.push(GroupsPage);
   }
 
   // @ViewChild(Nav) nav: Nav;

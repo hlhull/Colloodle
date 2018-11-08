@@ -12,6 +12,7 @@ import { HomePage } from '../pages/home/home';
 import { InfoPage } from '../pages/info/info';
 import { DrawingPage } from '../pages/drawing/drawing';
 import { FinalPage } from '../pages/final/final';
+import { GroupsPage } from '../pages/groups/groups';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -44,6 +45,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     InfoPage,
     DrawingPage,
     FinalPage,
+    GroupsPage,
     CanvasDrawComponent,
     PopoverPage,
     UserPopoverPage
@@ -64,6 +66,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     HomePage,
     InfoPage,
     DrawingPage,
+    GroupsPage,
     PopoverPage,
     UserPopoverPage,
     FinalPage

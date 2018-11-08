@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NetworkStorageProvider } from '../image-storage/network-storage';
 import firebase from 'firebase';
 
 /*
@@ -12,10 +13,13 @@ export class GroupManagerProvider {
   userRef = this.databaseRef.child("users").child(this.userID);
   //groups: any;
   completed: any;
+  list: any;
 
   constructor() {
     this.getGroups();
-
+    this.list = [["Header - complete", "header"], ["Torso - incomplete", "torso"]];
+    //this.completed = [[section - incomplete / complete, groupUID], [], []]
+    console.log(this.list);
   }
 
   /*
@@ -40,6 +44,16 @@ export class GroupManagerProvider {
         self.completed.push(childSnapshot.key);
       })
     });
+  }
+
+  /*
+    gets image urls for the group from firebase and put in LocalStorageProvider
+  */
+  getGroupImages(groupNum){
+    var imageStorage = new NetworkStorageProvider();
+    imageStorage.setGroupNum(groupNum);
+    console.log("hey", groupNum);
+    return imageStorage;
   }
 
   /*
