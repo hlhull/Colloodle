@@ -30,6 +30,7 @@ export class DrawingPage {
   overlapElement: any;
   lastX: number;
   lastY: number;
+  drawingFromOverlap: boolean = false;
 
   combinedCanvasHeight: number; // overlap canvas + drawing canvas heights!
   overlapHeight: number;
@@ -269,6 +270,36 @@ export class DrawingPage {
     this.undoStack.push(img);
 
     this.redoStack = []; //can't redo once you've added a new stroke!
+  }
+
+  overlapStart(ev){
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
+
+    this.lastX = ev.touches[0].pageX - canvasPosition.x;
+    this.lastY = ev.touches[0].pageY - canvasPosition.y;
+  }
+
+  overlapMove(ev){
+    if(this.drawingFromOverlap){
+        this.handleMove(ev);
+    }
+    else if(this.overlapHeight <= ev.touches[0].pageY){
+        this.handleMove(ev);
+        this.drawingFromOverlap = true;
+    }
+    else {
+      var canvasPosition = this.canvasElement.getBoundingClientRect();
+
+      this.lastX = ev.touches[0].pageX - canvasPosition.x;
+      this.lastY = ev.touches[0].pageY - canvasPosition.y;
+    }
+  }
+
+  overlapEnd(){
+    if(this.drawingFromOverlap){
+      this.handleEndStroke();
+      this.drawingFromOverlap = false;
+    }
   }
 
   /*

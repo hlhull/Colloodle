@@ -1,6 +1,6 @@
 <!-- TODO: how to set background of entire page to be "primary" from variables.scss in theme folder? this just wasn't working -->
 <ion-content no-bounce style="background-color: #009691">
-  <canvas id='overlap' #overlap style="border:1px solid #009691;"></canvas>
+  <canvas id='overlap' #overlap (touchstart)="overlapStart($event)"(touchmove)="overlapMove($event)" (touchend)="overlapEnd($event)" style="border:1px solid #009691;"></canvas>
   <canvas id='myCanvas' #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas>
 
   <ion-buttons end id='home'>
