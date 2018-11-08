@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class BrushProvider {
   color: string = '#1abc9c';
+  styleColor: string = '#1abc9c';
   size: number = 10;
 
   eraserColor: string = '#ffffff';
@@ -27,6 +28,11 @@ export class BrushProvider {
 
   changeColor(color) {
       this.color = color;
+      if (this.color == "#ffffff") {
+        this.styleColor = "black";
+      } else {
+        this.styleColor = color;
+      }
   }
 
   changeSize(sliderState) {
