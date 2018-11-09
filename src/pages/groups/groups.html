@@ -16,12 +16,28 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item *ngFor="let group of this.groupManager.list">
+    <ion-list-header>
+      Completed
+    </ion-list-header>
+    <ion-item *ngFor="let group of this.groupManager.completed">
        <!--<ion-thumbnail item-start>
-         <img src="img/thumbnail-totoro.png">
+         <img src={{group[1]}}>
       </ion-thumbnail> -->
-      <h2>{{group[0]}}</h2>
+      <!-- <h2>{{this.getSectionName(group[1], group[0])}}</h2> -->
       <button ion-button clear item-end (click)="this.seeGroup(group[1])">View</button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>
+      In Progress
+    </ion-list-header>
+    <ion-item *ngFor="let group of this.groupManager.inProgress">
+       <ion-thumbnail item-start>
+         <canvas id="{{this.setCanvasID(group['group'])}}" width="50" height="50"></canvas>
+      </ion-thumbnail>
+      <h2>{{group[1]}}</h2>
+      <!-- <h2>{{this.getSectionName(group[1], group[0])}}</h2> -->
     </ion-item>
   </ion-list>
 
