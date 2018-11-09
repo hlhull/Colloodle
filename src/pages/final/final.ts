@@ -38,6 +38,10 @@ export class FinalPage {
   * so it becomes 1 picture.
   */
   drawPictures(pictures){
+    //was hoping to change this so it set the canvases to the following width and heights
+    //var setWidth =this.platform.width();
+    //var setHeight = this.platform.width()*9/16;
+
     var canvases = [this.Tcanvas, this.Mcanvas, this.Bcanvas];
     for (var i = 0; i < pictures.length; i++) {
       let ctx = canvases[i].nativeElement.getContext('2d'); // assigns context to appropriate canvas
