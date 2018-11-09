@@ -10,6 +10,8 @@ import { UserPopoverPage } from '../user-popover/user-popover';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AlertController } from 'ionic-angular';
 import * as firebase from 'firebase';
+import { InfoPage } from '../info/info';
+import { GroupsPage } from '../groups/groups';
 
 @Component({
   selector: 'page-home',
@@ -29,6 +31,14 @@ export class HomePage {
       var imageStorage = local ? new LocalStorageProvider() : new NetworkStorageProvider();
       this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
     }
+  }
+
+  goToInfoPage(){
+    this.navCtrl.push(InfoPage);
+  }
+
+  goToGroupsPage(){
+    this.navCtrl.push(GroupsPage);
   }
 
   // @ViewChild(Nav) nav: Nav;
@@ -53,7 +63,7 @@ export class HomePage {
   */
   login() {
   	this.auth.signOut();
-  	this.navCtrl.setRoot(LoginPage);
+  	this.navCtrl.push(LoginPage);
   }
 
   /*
@@ -62,7 +72,7 @@ export class HomePage {
   */
   logout() {
   	this.auth.signOut();
-  	// this.navCtrl.setRoot(LoginPage);
+  	// this.navCtrl.push(LoginPage);
   }
 
   /*
@@ -75,12 +85,12 @@ export class HomePage {
     buttons: [
       { text: 'Login',
         handler: () => {
-          this.navCtrl.setRoot(LoginPage);
+          this.navCtrl.push(LoginPage);
         }
       },
       { text: 'Sign Up',
         handler: () => {
-          this.navCtrl.setRoot(SignupPage);
+          this.navCtrl.push(SignupPage);
         }
       },
       { text: 'Cancel',

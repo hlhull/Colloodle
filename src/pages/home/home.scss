@@ -6,4 +6,24 @@ page-home {
           background-size: cover;
           z-index: -1;
   }
+  #passAround{
+    position: fixed;
+    left: 30%;
+    bottom:150px;
+  }
+  #random{
+    position:fixed;
+      left: 30%;
+    bottom:90px;
+  }
+  #myGroups{
+    position: fixed;
+    left: 30%;
+    bottom:30px;
+  }
+  #info{
+    position: fixed;
+    right: 1%;
+    top: 10%;
+  }
 }

@@ -30,14 +30,18 @@ export class DrawingPage {
   overlapElement: any;
   lastX: number;
   lastY: number;
+  drawingFromOverlap: boolean = false;
 
+  combinedCanvasHeight: number; // overlap canvas + drawing canvas heights!
+  overlapHeight: number;
   canvasHeight: number;
   canvasWidth: number;
+  canvasLeft: number;
 
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
-  overlapHeight = 20;
+  // overlapHeight = 20;
   imageStorage;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
@@ -47,6 +51,8 @@ export class DrawingPage {
     this.screenOrientation.lock('landscape');
 
     platform.registerBackButtonAction(() => {},1);
+
+    this.brushService.reset();
   }
 
   /*
@@ -85,6 +91,8 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
+      // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
+
       // once group and section #s are assigned, draw the overlap and let user know of section
       if (this.imageStorage instanceof NetworkStorageProvider) {
         var self = this;
@@ -92,6 +100,8 @@ export class DrawingPage {
           self.drawOverlap(null);
           this.alertWhichSection(this.imageStorage.sectionNumber);
         });
+      } else {
+        this.alertWhichSection(0);
       }
   }
 
@@ -100,32 +110,38 @@ export class DrawingPage {
   * and canvasWidth, taking in the effective landscape width and height
   */
   setCanvasDimensions(landscapeWidth, landscapeHeight) {
-    this.canvasHeight = landscapeHeight - this.overlapHeight;
 
-    if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
-      this.canvasWidth = this.canvasHeight * (16/9);
-    } else {
-      this.canvasWidth = landscapeWidth *.9 -4;
-      this.canvasHeight = this.canvasWidth * (9/16);
-    }
-  }
+    // original, from when overlap was 20 pixels:
 
-  alertWhichSection(sectionNumber) {
-    if (sectionNumber == 0) {
-      this.presentWhichSection("head");
+    // this.canvasHeight = landscapeHeight - this.overlapHeight;
+    //
+    // if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
+    //   this.canvasWidth = this.canvasHeight * (16/9);
+    // } else {
+    //   this.canvasWidth = landscapeWidth *.9 -4;
+    //   this.canvasHeight = this.canvasWidth * (9/16);
+    // }
+
+    // // new, overlap = 10% canvas height:
+
+    this.combinedCanvasHeight = landscapeHeight;
+
+    var usableWidth = landscapeWidth *.9 - 4;
+
+    if(this.combinedCanvasHeight * (16/10)<= (usableWidth)){//hard coded ratio
+      this.canvasWidth = this.combinedCanvasHeight * (16/10);
     } else {
-      if (sectionNumber == 1) {
-        this.presentWhichSection("torso");
-      } else {
-        if (sectionNumber == 2) {
-          this.presentWhichSection("legs");
-        }
-      }
+      this.canvasWidth = usableWidth;
+      this.combinedCanvasHeight = this.canvasWidth * (10/16);
     }
+
+    // this.canvasLeft = (landscapeWidth - this.canvasWidth)/2;   // could not get this to actually be set in ngAfterViewInit
+    this.overlapHeight = this.combinedCanvasHeight * (1/10);
+    this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
   goHome(): void {
-    this.presentConfirm();
+    this.presentConfirmGoHome();
   }
 
   /*
@@ -151,10 +167,13 @@ export class DrawingPage {
       var proceed = this.imageStorage.storeImage(img.src);
       if (proceed) {
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-        }
-      this.resetPage();
+      } else {
+        this.resetPage();
 
-      this.drawOverlap(img);
+        this.drawOverlap(img);
+
+        this.alertWhichSection(this.imageStorage.numCanvases);
+      }
     }
 
 
@@ -253,6 +272,36 @@ export class DrawingPage {
     this.redoStack = []; //can't redo once you've added a new stroke!
   }
 
+  overlapStart(ev){
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
+
+    this.lastX = ev.touches[0].pageX - canvasPosition.x;
+    this.lastY = ev.touches[0].pageY - canvasPosition.y;
+  }
+
+  overlapMove(ev){
+    if(this.drawingFromOverlap){
+        this.handleMove(ev);
+    }
+    else if(this.overlapHeight <= ev.touches[0].pageY){
+        this.handleMove(ev);
+        this.drawingFromOverlap = true;
+    }
+    else {
+      var canvasPosition = this.canvasElement.getBoundingClientRect();
+
+      this.lastX = ev.touches[0].pageX - canvasPosition.x;
+      this.lastY = ev.touches[0].pageY - canvasPosition.y;
+    }
+  }
+
+  overlapEnd(){
+    if(this.drawingFromOverlap){
+      this.handleEndStroke();
+      this.drawingFromOverlap = false;
+    }
+  }
+
   /*
   * Handles when undo button is pushed
   */
@@ -299,6 +348,34 @@ export class DrawingPage {
   }
 
   /*
+  * presents helpful info if user is lost
+  */
+  help() {
+    if (this.imageStorage instanceof NetworkStorageProvider) {
+      this.alertWhichSection(this.imageStorage.sectionNumber);
+    } else {
+      this.alertWhichSection(this.imageStorage.numCanvases);
+    }
+  }
+
+  /*
+  * Figures out which section to alert for based on the section number
+  */
+  alertWhichSection(sectionNumber) {
+    if (sectionNumber == 0) {
+      this.presentWhichSection("head");
+    } else {
+      if (sectionNumber == 1) {
+        this.presentWhichSection("torso");
+      } else {
+        if (sectionNumber == 2) {
+          this.presentWhichSection("legs");
+        }
+      }
+    }
+  }
+
+  /*
   *Presents the popover menu with color and brush size
   */
   presentPopover(myEvent) {
@@ -310,8 +387,8 @@ export class DrawingPage {
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
-      title: 'Section:',
-      message: 'You are drawing the ' + section,
+      title: 'Instructions:',
+      message: 'You are drawing the ' + section + ". Make sure to draw all the way to the bottom edge!",
       buttons: [
         {
           text: 'OK',
@@ -343,15 +420,15 @@ export class DrawingPage {
   /*
   * Causes an alert/confirmation screen to pop up when home button is pressed
   */
-  presentConfirm() {
+  presentConfirmGoHome() {
     let alert = this.alertCtrl.create({
       title: 'Confirm Action',
-      message: 'Are you sure you want to leave your painting and go to the Home page?',
+      message: 'Are you sure you want to leave and go to the Home page? Your painting will be lost.',
       buttons: [
         {
           text: 'Yes',
           handler: () => {
-            this.imageStorage.cancelDrawing(); 
+            this.imageStorage.cancelDrawing();
             this.navCtrl.setRoot(HomePage);
           }
         },
@@ -359,7 +436,33 @@ export class DrawingPage {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            // console.log('Cancel clicked');
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /*
+  * Causes an alert/confirmation screen to pop up when home button is pressed
+  */
+  presentConfirmNextStep() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you are finished with your section? Once you move on, you cannot come back to edit this drawing.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.nextStep();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
           }
         }
       ]
