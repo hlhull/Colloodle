@@ -178,7 +178,7 @@ export class DrawingPage {
 
         this.drawOverlap(img);
 
-        this.alertWhichSection(this.imageStorage.numCanvases);
+        this.alertWhichSection(this.imageStorage.sectionNumber);
       }
     }
 
@@ -379,7 +379,7 @@ export class DrawingPage {
     if (this.imageStorage instanceof NetworkStorageProvider) {
       this.alertWhichSection(this.imageStorage.sectionNumber);
     } else {
-      this.alertWhichSection(this.imageStorage.numCanvases);
+      this.alertWhichSection(this.imageStorage.sectionNumber);
     }
   }
 
