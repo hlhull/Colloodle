@@ -13,18 +13,10 @@ export class GroupManagerProvider {
   userRef = this.databaseRef.child("users").child(this.userID);
   completed = [];
   inProgress = [];
-
-  list: any;
+  done : any;
 
   constructor() {
-    console.log("under construction");
-    //this.getGroups();
-    //this.completed = [[section#, imgSrc, groupUID], [], []]
-    console.log(this.list);
-  }
-
-  idk(){
-    return "udk";
+    this.done = this.getGroups();
   }
 
   /*
@@ -34,7 +26,8 @@ export class GroupManagerProvider {
     var self = this;
     var promises = [];
 
-    // add all groups user is currently in to groups[]; listen for change
+    // add all groups user is currently in to inProgress or completed in form
+    // [{"section": x, "group": y}, {...}, ...]
     var userInfo = this.userRef.once('value');
     return userInfo.then((snapshot) => {
       snapshot.forEach(function(userGroupSnapshot) {
@@ -61,18 +54,6 @@ export class GroupManagerProvider {
     // });
   }
 
-
-
-  /*
-    gets image urls for the group from firebase and put in LocalStorageProvider
-  */
-  getGroupImages(groupNum){
-    var imageStorage = new NetworkStorageProvider();
-    imageStorage.setGroupNum(groupNum);
-    console.log("hey", groupNum);
-    return imageStorage;
-  }
-
   /*
     once everyone has seen the drawing, remove it from Firebase storage and database
   */
@@ -80,8 +61,6 @@ export class GroupManagerProvider {
     for (var i = 0; i < 3; i++) {
       this.storageRef.child(groupNum).child(i + ".png").delete();
     }
-
     this.databaseRef.child("groups").child(groupNum).remove();
   }
-
 }

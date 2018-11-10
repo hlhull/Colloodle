@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FinalPage } from '../final/final';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
 import firebase from 'firebase';
 
 
@@ -22,37 +23,25 @@ export class GroupsPage {
   canvases = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
-    this.groupManager.getGroups().then(() => {
-      console.log("in groups constructor");
-      this.setCanvases();
+    this.groupManager.done.then(() => { //once the user's groups have been assigned
+      this.setThumnails(); // set the thumbnails
     });
   }
 
-  setCanvases(){
-    console.log('setting');
-    var array = this.groupManager.inProgress;
-    console.log(array.length);
-    console.log(this.groupManager.inProgress);
-    // for (var info of array){
-    //   console.log(info);
-    //   console.log("klas;jdf");
-    // }
-    var self= this;
-    //this.groupManager.inProgress.forEach(function(value) {
-    //  console.log(value["section"], value["group"])
-      this.getImageSrc();//(value["section"], value["group"]);
-    //});
+  /*
+    When user clicks 'view', go to final page and show that group's drawing
+  */
+  viewGroupDrawing(groupName){
+    var imageStorage = new NetworkStorageProvider();
+    imageStorage.setGroupNum(groupName);
+    this.navCtrl.push(FinalPage, {imageStorage: imageStorage}, {animate:false});
   }
 
-  seeGroup(groupName){
-    console.log("got it");
-    var imgStorage = this.groupManager.getGroupImages(groupName);
-    this.navCtrl.push(FinalPage, {imageStorage: imgStorage}, {animate:false});
-  }
-
-  getSectionName(group, num){
-    //this.getImageSrc(group, num);
-    switch(num){
+  /*
+    Get the section name to show on screen from the section number
+  */
+  getSectionName(sectionNum){
+    switch(sectionNum){
       case 0:
         return "Head";
       case 1:
@@ -60,37 +49,32 @@ export class GroupsPage {
       case 2:
         return "Legs";
     }
-
   }
 
-  ngAfterViewInit(){
+  /*
+    Loops through the group lists to set the thumnail for every group the user's in
+  */
+  setThumnails(){
+    this.groupManager.inProgress.forEach((info) => {
+      this.assignSrc(info);
+    });
 
+    this.groupManager.completed.forEach((info) => {
+      this.assignSrc(info);
+    });
   }
 
-  setCanvasID(group){
-    //console.log("settingID", group);
-    this.canvases.push(group);
-    return group;
-  }
-
-  getImageSrc(){
-    console.log("herio");
-    var canvas: any;
-    this.canvases.forEach((id) => {
-      console.log(id);
-      canvas = document.getElementById(id);
-      console.log("canvas:" , canvas);
-      var ctx = canvas.getContext("2d");
-      let img = new Image();
-      this.storageRef.child(id).child(0 + '.png').getDownloadURL().then((imgUrl) => function() {
-        console.log(imgUrl);
-        img.src = imgUrl;
-        img.onload = function() { //once the image loads, then draw it on the canvas
-          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-      }
-    }); });
-
-
+  /*
+    Assigns the src url of the thumbnail images to the user's drawing
+  */
+  assignSrc(info){
+    var group = info['group'];
+    this.storageRef.child(group).child(info['section']+'.png').getDownloadURL().then(function(url) {
+      var img: HTMLElement  = document.getElementById(group);
+      img.setAttribute("src", url);
+    }).catch(function(error) {
+      console.log("error", error);
+    });
   }
 
   ionViewDidLoad() {

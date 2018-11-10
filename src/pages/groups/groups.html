@@ -20,11 +20,11 @@
       Completed
     </ion-list-header>
     <ion-item *ngFor="let group of this.groupManager.completed">
-       <!--<ion-thumbnail item-start>
-         <img src={{group[1]}}>
-      </ion-thumbnail> -->
-      <!-- <h2>{{this.getSectionName(group[1], group[0])}}</h2> -->
-      <button ion-button clear item-end (click)="this.seeGroup(group[1])">View</button>
+       <ion-thumbnail item-start>
+         <img id="{{group['group']}}" style="border:1px solid #009691">
+      </ion-thumbnail>
+      <h2>{{this.getSectionName(group['section'])}}</h2>
+      <button ion-button clear item-end (click)="this.viewGroupDrawing(group['group'])">View</button>
     </ion-item>
   </ion-list>
 
@@ -34,10 +34,9 @@
     </ion-list-header>
     <ion-item *ngFor="let group of this.groupManager.inProgress">
        <ion-thumbnail item-start>
-         <canvas id="{{this.setCanvasID(group['group'])}}" width="50" height="50"></canvas>
+         <img id="{{group['group']}}" style="border:1px solid #009691">
       </ion-thumbnail>
-      <h2>{{group[1]}}</h2>
-      <!-- <h2>{{this.getSectionName(group[1], group[0])}}</h2> -->
+      <h2>{{this.getSectionName(group['section'])}}</h2>
     </ion-item>
   </ion-list>
 
