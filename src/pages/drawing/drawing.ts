@@ -38,6 +38,11 @@ export class DrawingPage {
   canvasWidth: number;
   canvasLeft: number;
 
+  distFromEdges: number = 10;
+  distFromBottom: number;
+  toTop: boolean = false;
+  toBottom: boolean = false;
+
   undoStack = [new Image];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
@@ -92,6 +97,7 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
       // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
+      this.distFromBottom = this.canvasElement.height - this.distFromEdges;
 
       // once group and section #s are assigned, draw the overlap and let user know of section
       if (this.imageStorage instanceof NetworkStorageProvider) {
@@ -208,6 +214,10 @@ export class DrawingPage {
     //reset undo/redo stacks:
     this.undoStack = [new Image];
     this.redoStack = [];
+
+    //reset top / bottom edge checkers
+    this.toTop = false;
+    this.toBottom = false;
   }
 
   /*
@@ -224,6 +234,8 @@ export class DrawingPage {
       ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
       ctx.fillStyle = this.brushService.color;
       ctx.fill();
+
+      this.checkTopAndBottom(this.lastY);
   }
 
   /*
@@ -247,6 +259,19 @@ export class DrawingPage {
 
       this.lastX = currentX;
       this.lastY = currentY;
+
+      this.checkTopAndBottom(this.lastY);
+  }
+
+  /*
+    if the user is drawing on the top / bottom edge, set toTop / toBottom to true
+  */
+  checkTopAndBottom(y){
+    if(!this.toTop && y < this.distFromEdges && !this.brushService.eraserOn){
+      this.toTop = true;
+    } else if (!this.toBottom && y> this.distFromBottom && !this.brushService.eraserOn){
+      this.toBottom = true;
+    }
   }
 
   /*
@@ -440,6 +465,34 @@ export class DrawingPage {
           }
         }
       ]
+    });
+    alert.present();
+  }
+
+  presentConfirmOrError(){
+    var section = this.imageStorage.sectionNumber;
+    if(!this.toBottom && (section == 0 || section == 1)){
+      this.presentError('bottom');
+    }
+    else if (!this.toTop && (section == 1 || section == 2)){
+      this.presentError('top')
+    }
+    else {
+      this.presentConfirmNextStep();
+    }
+  }
+
+  presentError(whichEdge){
+    var message = 'Be sure to draw to the very ' + whichEdge + ' edge of the screen'
+    let alert = this.alertCtrl.create({
+      title: 'Hold on!',
+      message: message,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+          }
+        }]
     });
     alert.present();
   }
