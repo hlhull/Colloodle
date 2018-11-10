@@ -156,7 +156,7 @@ export class DrawingPage {
   // this helps with grabbing the color data for the pixels; if this is not
   // set, then all pixels start as r=0 g=0 b=0 (even though they look white)
   setCanvasToWhite() {
-    
+
     var ctx = this.canvasElement.getContext("2d");
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
@@ -474,6 +474,13 @@ export class DrawingPage {
       ev: myEvent
     });
   }
+
+  //TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+  // condense the code below, ideally we should have a single (main, not including
+  // the helpers in count) function that takes in the section and then causes the
+  // help popup to be displayed and include the body part and the edge/BOTH THE EDGES
+  // (both edges=torso section) so the user gets all the info at once, rather than
+  // being told to draw to the bottom, then later oh you didn't draw to the top, etc 
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
