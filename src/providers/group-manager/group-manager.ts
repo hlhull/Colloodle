@@ -14,9 +14,11 @@ export class GroupManagerProvider {
   completed = [];
   inProgress = [];
   done : any;
+  lastTime: any;
 
   constructor() {
     this.done = this.getGroups();
+    this.done.then(() => this.listenForAddedGroups());
   }
 
   /*
@@ -28,30 +30,46 @@ export class GroupManagerProvider {
 
     // add all groups user is currently in to inProgress or completed in form
     // [{"section": x, "group": y}, {...}, ...]
-    var userInfo = this.userRef.once('value');
+    var userInfo = this.userRef.orderByKey().once('value');
     return userInfo.then((snapshot) => {
       snapshot.forEach(function(userGroupSnapshot) {
-        var promise = self.databaseRef.child("groups").child(userGroupSnapshot.key).once('value', function(groupSnapshot){
-            var info = {"section" : userGroupSnapshot.val(), "group": groupSnapshot.key};
-            if(groupSnapshot.val() == "drawing"){
-              console.log("inProgress");
-              self.inProgress.push(info);
-            } else {
-              console.log("completed");
-              self.completed.push(info);
-            }
-        });
+        self.lastTime= userGroupSnapshot.key;
+        var promise = self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
         promises.push(promise);
       });
       return Promise.all(promises);
     });
+  }
 
-    // when the user is added to a group, add it to groups[]
-    // this.userRef.limitToLast(1).on('child_added', function (childSnapshot) {
-    //   self.databaseRef.child("groups").child(childSnapshot.key).once('child_changed', function(snapshot){
-    //     self.completed.push(childSnapshot.key);
-    //   })
-    // });
+  /*
+    When a user joins a new group, adds it to inProgress or Completed
+  */
+  listenForAddedGroups(){
+    // increment the last timestamp so we can start listening at the next possible timestamp
+    length = this.lastTime.length;
+    var char = String.fromCharCode(this.lastTime[length-1].charCodeAt(0) + 1);
+    this.lastTime = this.lastTime.substring(0,length-1) + char;
+
+    var self = this;
+    this.userRef.orderByKey().startAt(self.lastTime).on('child_added', userGroupSnapshot => {
+        self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
+    });
+  }
+
+  /*
+    Takes a group a user is in and adds it to either inProgress or Completed
+  */
+  addGroup(group, section){
+    var self = this;
+    var promise = self.databaseRef.child("groups").child(group).once('value', function(groupSnapshot){
+        var info = {"section" : section, "group": groupSnapshot.key};
+        if(groupSnapshot.val() == "drawing"){
+          self.inProgress.push(info);
+        } else {
+          self.completed.push(info);
+        }
+      });
+    return promise;
   }
 
   /*
