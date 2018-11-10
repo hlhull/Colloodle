@@ -18,7 +18,10 @@ export class GroupManagerProvider {
 
   constructor() {
     this.done = this.getGroups();
-    this.done.then(() => this.listenForAddedGroups());
+    this.done.then(() => {
+      this.listenForAddedGroups();
+      this.listenForCompletedGroups(this.inProgress);
+    });
   }
 
   /*
@@ -53,6 +56,27 @@ export class GroupManagerProvider {
     var self = this;
     this.userRef.orderByKey().startAt(self.lastTime).on('child_added', userGroupSnapshot => {
         self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
+    });
+  }
+
+  /*
+    Once an inProgress group finishes, move to completed list and remove from inProgress
+  */
+  listenForCompletedGroups(groups){
+    var self = this;
+
+    //fires every time a group in "groups" changes
+    this.databaseRef.child("groups").on('child_changed', changedSnapshot => {
+      // loop over inProgress and if the changed group matches, move to completed
+      var length = this.inProgress.length;
+      for (var i = 0; i < length; i++) {
+          var entry = self.inProgress[i];
+          if(entry['group'] == changedSnapshot.key){
+            var info = entry;
+            self.inProgress.splice(i, 1);
+            self.completed.push(info);
+          }
+      }
     });
   }
 
