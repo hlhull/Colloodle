@@ -101,7 +101,7 @@ export class NetworkStorageProvider {
     }
     // if this was the last drawing, update group status that 1 person has seen it
     else if (this.sectionNumber == 2) {
-      this.databaseRef.child("groups").child(this.groupNumber).set(1);
+      this.databaseRef.child("groups").child(this.groupNumber).set(0);
       this.databaseRef.child("users").child(userID).child(this.groupNumber).set(this.sectionNumber);
       promise = new Promise(function(resolve, reject){resolve(true)});
     }

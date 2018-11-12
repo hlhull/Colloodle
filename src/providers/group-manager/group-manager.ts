@@ -68,14 +68,16 @@ export class GroupManagerProvider {
     //fires every time a group in "groups" changes
     this.databaseRef.child("groups").on('child_changed', changedSnapshot => {
       // loop over inProgress and if the changed group matches, move to completed
+      if(changedSnapshot.val() == 0){
       var length = this.inProgress.length;
-      for (var i = 0; i < length; i++) {
-          var entry = self.inProgress[i];
-          if(entry['group'] == changedSnapshot.key){
-            var info = entry;
-            self.inProgress.splice(i, 1);
-            self.completed.push(info);
-          }
+        for (var i = 0; i < length; i++) {
+            var entry = self.inProgress[i];
+            if(entry['group'] == changedSnapshot.key){
+              var info = entry;
+              self.inProgress.splice(i, 1);
+              self.completed.push(info);
+            }
+        }
       }
     });
   }
@@ -97,9 +99,43 @@ export class GroupManagerProvider {
   }
 
   /*
+    Remove group from user's list of groups and from completed list
+  */
+  deleteGroup(group){
+    var indexToDelete = null;
+    var length = this.completed.length;
+    for (var i = 0; i < length; i++) {
+        if(this.completed[i]['group'] == group){
+          indexToDelete = i;
+        }
+    }
+    if(indexToDelete != null){
+      this.completed.splice(indexToDelete, 1);
+    }
+
+    this.deleteFromUserFB(group);
+  }
+
+  /*
+    remove group from user's list on FB; also increment # of users who have
+    deleted the drawing in total
+  */
+  deleteFromUserFB(groupNum){
+    var self = this;
+    this.userRef.child(groupNum).remove();
+    this.databaseRef.child("groups").child(groupNum).once('value', function(snapshot) {
+      if(snapshot.val() >= 2){
+        self.deleteGroupFromStorage(groupNum);
+      } else {
+        self.databaseRef.child("groups").child(groupNum).set(snapshot.val() + 1);
+      }
+    });
+  }
+
+  /*
     once everyone has seen the drawing, remove it from Firebase storage and database
   */
-  deleteGroup(groupNum){
+  deleteGroupFromStorage(groupNum){
     for (var i = 0; i < 3; i++) {
       this.storageRef.child(groupNum).child(i + ".png").delete();
     }
