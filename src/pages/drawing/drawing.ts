@@ -38,16 +38,9 @@ export class DrawingPage {
   canvasWidth: number;
   canvasLeft: number;
 
-  // distFromEdges: number = 10;
-  // distFromBottom: number;
-  // toTop: boolean = false;
-  // toBottom: boolean = false;
-
-  // undoStack = [new Image];
   undoStack = [];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
-  // overlapHeight = 20;
   imageStorage;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
@@ -67,10 +60,6 @@ export class DrawingPage {
   ngAfterViewInit(){
       this.canvasElement = this.canvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
-
-      // (removed code)
-      //var offsetHeight = this.header.nativeElement.offsetHeight + document.getElementById("bottom-toolbar").offsetHeight + this.overlapHeight;
-      //so it doesn't scroll, subtract header and footer height
 
       if (this.platform.height() > this.platform.width()) {
         // this is how it is on most phones, it takes the vertical height
@@ -97,9 +86,6 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
-      // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
-      // this.distFromBottom = this.canvasElement.height - this.distFromEdges;
-
       this.setCanvasToWhite();
 
       // push current image to undoStack
@@ -125,19 +111,7 @@ export class DrawingPage {
   * and canvasWidth, taking in the effective landscape width and height
   */
   setCanvasDimensions(landscapeWidth, landscapeHeight) {
-
-    // original, from when overlap was 20 pixels:
-
-    // this.canvasHeight = landscapeHeight - this.overlapHeight;
-    //
-    // if(this.canvasHeight * (16/9)<= (landscapeWidth *.9 -4)){//hard coded ratio
-    //   this.canvasWidth = this.canvasHeight * (16/9);
-    // } else {
-    //   this.canvasWidth = landscapeWidth *.9 -4;
-    //   this.canvasHeight = this.canvasWidth * (9/16);
-    // }
-
-    // // new, overlap = 10% canvas height:
+    // new, overlap = 10% canvas height:
 
     this.combinedCanvasHeight = landscapeHeight;
 
@@ -155,18 +129,18 @@ export class DrawingPage {
     this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
-  // this helps with grabbing the color data for the pixels; if this is not
-  // set, then all pixels start as r=0 g=0 b=0 (even though they look white)
+  /*
+    this helps with grabbing the color data for the pixels; if this is not
+    set, then all pixels start as r=0 g=0 b=0 (even though they look white)
+  */
   setCanvasToWhite() {
-
     var ctx = this.canvasElement.getContext("2d");
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-
   }
 
   /*
-    fills overlap with background color if this is the head
+    fills overlap with background color if this is the head (removing overlap)
   */
   removeOverlapIfHead(){
     if(this.imageStorage.sectionNumber == 0){
@@ -200,20 +174,16 @@ export class DrawingPage {
             this.navCtrl.push(HomePage);
           }
       }));
-    } else {
+    } else { //for local storage
       var proceed = this.imageStorage.storeImage(img.src);
       if (proceed) {
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
       } else {
         this.resetPage();
-
         this.drawOverlap(img);
-
         this.alertWhichSection(this.imageStorage.sectionNumber);
       }
     }
-
-
   }
 
   drawOverlap(img){
@@ -230,7 +200,6 @@ export class DrawingPage {
     img.onload = function(){  //draws in the overlap bar:
       ctx.drawImage(img, 0, img.height - overlap, img.width, overlap, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight); //img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
     }
-
   }
 
   ionViewDidLoad() {
@@ -246,15 +215,10 @@ export class DrawingPage {
     this.setCanvasToWhite();
 
     //reset undo/redo stacks:
-    // this.undoStack = [new Image];
     // push current image to undoStack
     var img = this.saveCurrentImage();
     this.undoStack = [img];
     this.redoStack = [];
-
-    // //reset top / bottom edge checkers
-    // this.toTop = false;
-    // this.toBottom = false;
   }
 
   /*
@@ -271,8 +235,6 @@ export class DrawingPage {
       ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
       ctx.fillStyle = this.brushService.color;
       ctx.fill();
-
-      // this.checkTopAndBottom(this.lastY);
   }
 
   /*
@@ -296,62 +258,31 @@ export class DrawingPage {
 
       this.lastX = currentX;
       this.lastY = currentY;
-
-      // this.checkTopAndBottom(this.lastY);
   }
 
   /*
-    if the user is drawing on the top / bottom edge, set toTop / toBottom to true
+    returns boolean of whether user drew to the specified edge of the canvas
   */
-  // checkTopAndBottom(y){
-  //   if(!this.toTop && y < this.distFromEdges && !this.brushService.eraserOn){
-  //     this.toTop = true;
-  //   } else if (!this.toBottom && y> this.distFromBottom && !this.brushService.eraserOn){
-  //     this.toBottom = true;
-  //   }
-  // }
-
-  checkTop() {
-    var toTop = false;
-
+  checkEdgeOfCanvas(edge){
+    var drewToEdge = false;
     let ctx = this.canvasElement.getContext('2d');
 
-    var imgDataTop = ctx.getImageData(0, 2, this.canvasElement.width, 1);
-    var top = imgDataTop.data;
+    if (edge == "top"){
+      var imgDataEdge = ctx.getImageData(0, 2, this.canvasElement.width, 1);
+    } else {
+      var imgDataEdge = ctx.getImageData(0, this.canvasElement.height-3, this.canvasElement.width, 1);
+    }
+    var edge = imgDataEdge.data;
 
     var pix;
-
-    for (pix = 0; (pix + 3) < top.length; pix += 4) {
-      if (top[pix] != 255 || top[pix+1] != 255 || top[pix+2] != 255) {
-        toTop = true;
-        // this.presentConfirmGoHome();   // test
+    for (pix = 0; (pix + 3) < edge.length; pix += 4) {
+      if (edge[pix] != 255 || edge[pix+1] != 255 || edge[pix+2] != 255) {
+        drewToEdge = true;
         break;
       }
     }
 
-    return toTop;
-  }
-
-  checkBottom() {
-    var toBottom = false;
-
-    let ctx = this.canvasElement.getContext('2d');
-
-    var imgDataBottom = ctx.getImageData(0, this.canvasElement.height-3, this.canvasElement.width, 1);
-    var bottom = imgDataBottom.data;
-
-    var pix;
-
-    for (pix = 0; (pix + 3) < bottom.length; pix += 4) {
-      if (bottom[pix] != 255 || bottom[pix+1] != 255 || bottom[pix+2] != 255) {
-        console.log(bottom[pix+1]);
-        toBottom = true;
-        // this.presentConfirmGoHome();   // test
-        break;
-      }
-    }
-
-    return toBottom;
+    return drewToEdge;
   }
 
   /*
@@ -504,9 +435,7 @@ export class DrawingPage {
       buttons: [
         {
           text: 'OK',
-          handler: () => {
-            // console.log('Cancel clicked');
-          }
+          handler: () => {}
         }
       ]
     });
@@ -520,9 +449,7 @@ export class DrawingPage {
       buttons: [
         {
           text: 'OK',
-          handler: () => {
-            // console.log('Cancel clicked');
-          }
+          handler: () => {}
         }
       ]
     });
@@ -558,20 +485,11 @@ export class DrawingPage {
 
   presentConfirmOrError(){
     var section = this.imageStorage.sectionNumber;
-    // if(!this.toBottom && (section == 0 || section == 1)){
-    //   this.presentError('bottom');
-    // }
-    // else if (!this.toTop && (section == 1 || section == 2)){
-    //   this.presentError('top')
-    // }
-    // else {
-    //   this.presentConfirmNextStep();
-    // }
 
-    if(!this.checkBottom() && (section == 0 || section == 1)){
+    if(!this.checkEdgeOfCanvas("bottom") && (section == 0 || section == 1)){
       this.presentError('bottom');
     }
-    else if (!this.checkTop() && (section == 1 || section == 2)){
+    else if (!this.checkEdgeOfCanvas("top") && (section == 1 || section == 2)){
       this.presentError('top')
     }
     else {
