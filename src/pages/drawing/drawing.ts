@@ -116,6 +116,8 @@ export class DrawingPage {
       } else {
         this.alertWhichSection(0);
       }
+
+      this.removeOverlapIfHead();
   }
 
   /*
@@ -162,6 +164,19 @@ export class DrawingPage {
     ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
   }
+
+  /*
+    fills overlap with background color if this is the head
+  */
+  removeOverlapIfHead(){
+    if(this.imageStorage.sectionNumber == 0){
+      var ctx = this.overlapElement.getContext('2d');
+      ctx.rect(0, 0, this.overlapElement.width, this.overlapElement.height);
+      ctx.fillStyle = '#009691';
+      ctx.fill();
+    }
+  }
+
   goHome(): void {
     this.presentConfirmGoHome();
   }
@@ -480,7 +495,7 @@ export class DrawingPage {
   // the helpers in count) function that takes in the section and then causes the
   // help popup to be displayed and include the body part and the edge/BOTH THE EDGES
   // (both edges=torso section) so the user gets all the info at once, rather than
-  // being told to draw to the bottom, then later oh you didn't draw to the top, etc 
+  // being told to draw to the bottom, then later oh you didn't draw to the top, etc
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
