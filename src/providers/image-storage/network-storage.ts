@@ -30,6 +30,7 @@ export class NetworkStorageProvider {
     var self = this;
     var promises = [];
     var userID = firebase.auth().currentUser.uid;
+    var set = false;
 
     // loop through next list to find group user hasn't been in yet
     // return promises that are resolved when group, section variables are set
@@ -37,10 +38,11 @@ export class NetworkStorageProvider {
     return nextListLoaded.then((snapshot) => {
         snapshot.forEach(function(childSnapshot) {
           var promise = self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
-            if(!userSnapshot.exists()){
+            if(!userSnapshot.exists() && !set){
               self.groupNumber = childSnapshot.key;
               self.sectionNumber = childSnapshot.val();
               self.nextListRef.child(self.groupNumber).remove();
+              set = true;
             }
           })
           promises.push(promise);

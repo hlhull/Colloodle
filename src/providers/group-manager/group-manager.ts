@@ -49,9 +49,13 @@ export class GroupManagerProvider {
   */
   listenForAddedGroups(){
     // increment the last timestamp so we can start listening at the next possible timestamp
-    length = this.lastTime.length;
-    var char = String.fromCharCode(this.lastTime[length-1].charCodeAt(0) + 1);
-    this.lastTime = this.lastTime.substring(0,length-1) + char;
+    if(this.lastTime == undefined){
+      this.lastTime = 'a';
+    } else {
+      length = this.lastTime.length;
+      var char = String.fromCharCode(this.lastTime[length-1].charCodeAt(0) + 1);
+      this.lastTime = this.lastTime.substring(0,length-1) + char;
+    }
 
     var self = this;
     this.userRef.orderByKey().startAt(self.lastTime).on('child_added', userGroupSnapshot => {
@@ -64,16 +68,19 @@ export class GroupManagerProvider {
   */
   listenForCompletedGroups(groups){
     var self = this;
+    var found = false;
 
     //fires every time a group in "groups" changes
     this.databaseRef.child("groups").on('child_changed', changedSnapshot => {
       // loop over inProgress and if the changed group matches, move to completed
+      found = false;
       if(changedSnapshot.val() == 0){
-      var length = this.inProgress.length;
+        var length = this.inProgress.length;
         for (var i = 0; i < length; i++) {
             var entry = self.inProgress[i];
-            if(entry['group'] == changedSnapshot.key){
+            if(entry['group'] == changedSnapshot.key && !found){
               var info = entry;
+              var found = true;
               self.inProgress.splice(i, 1);
               self.completed.push(info);
             }
