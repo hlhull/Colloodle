@@ -12,7 +12,6 @@ export class BrushProvider {
   size: number = 10;
 
   eraserColor: string = '#ffffff';
-  eraserOn: boolean = false;
 
   availableColors = [
       '#1abc9c',
@@ -31,10 +30,8 @@ export class BrushProvider {
       this.color = color;
       if (this.color == "#ffffff") {
         this.styleColor = "black";
-        this.eraserOn = true;
       } else {
         this.styleColor = color;
-        this.eraserOn = false;
       }
   }
 
@@ -45,10 +42,7 @@ export class BrushProvider {
   reset() {
     this.color = '#1abc9c';
     this.size = 10;
-  }
-
-  eraser() {
-    this.changeColor(this.eraserColor);
+    this.styleColor = '#1abc9c';
   }
 
 }
