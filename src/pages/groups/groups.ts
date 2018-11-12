@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FinalPage } from '../final/final';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
+import firebase from 'firebase';
 
 
 /**
@@ -17,14 +19,62 @@ import { FinalPage } from '../final/final';
   templateUrl: 'groups.html',
 })
 export class GroupsPage {
+  storageRef = firebase.storage().ref();
+  canvases = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
+    this.groupManager.done.then(() => { //once the user's groups have been assigned
+      this.setThumnails(); // set the thumbnails
+    });
   }
 
-  seeGroup(groupName){
-    console.log("got it");
-    var imgStorage = this.groupManager.getGroupImages(groupName);
-    this.navCtrl.push(FinalPage, {imageStorage: imgStorage}, {animate:false});
+  /*
+    When user clicks 'view', go to final page and show that group's drawing
+  */
+  viewGroupDrawing(groupName){
+    var imageStorage = new NetworkStorageProvider();
+    imageStorage.setGroupNum(groupName);
+    this.navCtrl.push(FinalPage, {imageStorage: imageStorage}, {animate:false});
+  }
+
+  /*
+    Get the section name to show on screen from the section number
+  */
+  getSectionName(sectionNum){
+    switch(sectionNum){
+      case 0:
+        return "Head";
+      case 1:
+        return "Torso";
+      case 2:
+        return "Legs";
+    }
+  }
+
+  /*
+    Loops through the group lists to set the thumnail for every group the user's in
+  */
+  setThumnails(){
+    this.groupManager.inProgress.forEach((info) => {
+      this.assignSrc(info);
+    });
+
+    this.groupManager.completed.forEach((info) => {
+      this.assignSrc(info);
+    });
+  }
+
+  /*
+    Assigns the src url of the thumbnail images to the user's drawing
+  */
+  assignSrc(info){
+    var group = info['group'];
+    this.storageRef.child(group).child(info['section']+'.png').getDownloadURL().then(function(url) {
+      var img: HTMLElement  = document.getElementById(group);
+      img.setAttribute("src", url);
+    }).catch(function(error) {
+      console.log("error", error);
+    });
   }
 
   ionViewDidLoad() {

@@ -16,12 +16,30 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item *ngFor="let group of this.groupManager.list">
-       <!--<ion-thumbnail item-start>
-         <img src="img/thumbnail-totoro.png">
-      </ion-thumbnail> -->
-      <h2>{{group[0]}}</h2>
-      <button ion-button clear item-end (click)="this.seeGroup(group[1])">View</button>
+    <ion-list-header>
+      Completed
+    </ion-list-header>
+    <ion-item *ngFor="let group of this.groupManager.completed">
+       <ion-thumbnail item-start>
+         <img id="{{group['group']}}" style="border:1px solid #009691">
+      </ion-thumbnail>
+      <h2>{{this.getSectionName(group['section'])}}</h2>
+        <button ion-button clear item-end (click)="this.viewGroupDrawing(group['group'])">View</button>
+        <button ion-button icon-only clear item-end (click)="this.groupManager.deleteGroup(group['group'])">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>
+      In Progress
+    </ion-list-header>
+    <ion-item *ngFor="let group of this.groupManager.inProgress">
+       <ion-thumbnail item-start>
+         <img id="{{group['group']}}" style="border:1px solid #009691">
+      </ion-thumbnail>
+      <h2>{{this.getSectionName(group['section'])}}</h2>
     </ion-item>
   </ion-list>
 

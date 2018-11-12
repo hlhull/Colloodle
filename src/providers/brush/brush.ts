@@ -42,10 +42,12 @@ export class BrushProvider {
   reset() {
     this.color = '#1abc9c';
     this.size = 10;
+    this.styleColor = '#1abc9c';
   }
 
   eraser() {
     this.changeColor(this.eraserColor);
+    this.styleColor = '#1abc9c';
   }
 
 }

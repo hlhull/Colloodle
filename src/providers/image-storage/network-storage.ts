@@ -30,6 +30,7 @@ export class NetworkStorageProvider {
     var self = this;
     var promises = [];
     var userID = firebase.auth().currentUser.uid;
+    var set = false;
 
     // loop through next list to find group user hasn't been in yet
     // return promises that are resolved when group, section variables are set
@@ -37,10 +38,11 @@ export class NetworkStorageProvider {
     return nextListLoaded.then((snapshot) => {
         snapshot.forEach(function(childSnapshot) {
           var promise = self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
-            if(!userSnapshot.exists()){
+            if(!userSnapshot.exists() && !set){
               self.groupNumber = childSnapshot.key;
               self.sectionNumber = childSnapshot.val();
               self.nextListRef.child(self.groupNumber).remove();
+              set = true;
             }
           })
           promises.push(promise);
@@ -87,21 +89,22 @@ export class NetworkStorageProvider {
     // assign groupNumber as the uid of that push
     if(this.sectionNumber == 0) {
       var self = this;
-      promise = this.nextListRef.push(1).then((ref) => {
+      promise = this.nextListRef.push(this.sectionNumber + 1).then((ref) => {
         self.groupNumber = ref.getKey();
         self.databaseRef.child("groups").child(ref.getKey()).set("drawing");
-        self.databaseRef.child("users").child(userID).child(ref.getKey()).set(1);
+        self.databaseRef.child("users").child(userID).child(ref.getKey()).set(this.sectionNumber);
       });
     }
     // if this was the 2nd drawing put group back into next list
     else if (this.sectionNumber == 1) {
-      this.nextListRef.child(this.groupNumber).set(2);
-      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(1);
+      this.nextListRef.child(this.groupNumber).set(this.sectionNumber + 1);
+      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(this.sectionNumber);
       promise = new Promise(function(resolve, reject) {resolve(true)});
     }
     // if this was the last drawing, update group status that 1 person has seen it
     else if (this.sectionNumber == 2) {
-      this.databaseRef.child("groups").child(this.groupNumber).set(1);
+      this.databaseRef.child("groups").child(this.groupNumber).set(0);
+      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(this.sectionNumber);
       promise = new Promise(function(resolve, reject){resolve(true)});
     }
     return promise;

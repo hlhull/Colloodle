@@ -38,7 +38,13 @@ export class DrawingPage {
   canvasWidth: number;
   canvasLeft: number;
 
-  undoStack = [new Image];
+  // distFromEdges: number = 10;
+  // distFromBottom: number;
+  // toTop: boolean = false;
+  // toBottom: boolean = false;
+
+  // undoStack = [new Image];
+  undoStack = [];
   redoStack = []; //TypeScript [] appears to have push/pop stack functionality? Yay!
 
   // overlapHeight = 20;
@@ -92,6 +98,13 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
       // this.renderer.setElementAttribute(this.canvasElement, 'left', this.canvasLeft + '');   // could not get this to work, was trying to center the canvas
+      // this.distFromBottom = this.canvasElement.height - this.distFromEdges;
+
+      this.setCanvasToWhite();
+
+      // push current image to undoStack
+      var img = this.saveCurrentImage();
+      this.undoStack.push(img);
 
       // once group and section #s are assigned, draw the overlap and let user know of section
       if (this.imageStorage instanceof NetworkStorageProvider) {
@@ -103,6 +116,8 @@ export class DrawingPage {
       } else {
         this.alertWhichSection(0);
       }
+
+      this.removeOverlapIfHead();
   }
 
   /*
@@ -140,6 +155,28 @@ export class DrawingPage {
     this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
 
+  // this helps with grabbing the color data for the pixels; if this is not
+  // set, then all pixels start as r=0 g=0 b=0 (even though they look white)
+  setCanvasToWhite() {
+
+    var ctx = this.canvasElement.getContext("2d");
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+
+  }
+
+  /*
+    fills overlap with background color if this is the head
+  */
+  removeOverlapIfHead(){
+    if(this.imageStorage.sectionNumber == 0){
+      var ctx = this.overlapElement.getContext('2d');
+      ctx.rect(0, 0, this.overlapElement.width, this.overlapElement.height);
+      ctx.fillStyle = '#009691';
+      ctx.fill();
+    }
+  }
+
   goHome(): void {
     this.presentConfirmGoHome();
   }
@@ -172,7 +209,7 @@ export class DrawingPage {
 
         this.drawOverlap(img);
 
-        this.alertWhichSection(this.imageStorage.numCanvases);
+        this.alertWhichSection(this.imageStorage.sectionNumber);
       }
     }
 
@@ -205,9 +242,19 @@ export class DrawingPage {
     this.clearCanvas(this.overlapElement);
     this.clearCanvas(this.canvasElement);
 
+    // fill it with white
+    this.setCanvasToWhite();
+
     //reset undo/redo stacks:
-    this.undoStack = [new Image];
+    // this.undoStack = [new Image];
+    // push current image to undoStack
+    var img = this.saveCurrentImage();
+    this.undoStack = [img];
     this.redoStack = [];
+
+    // //reset top / bottom edge checkers
+    // this.toTop = false;
+    // this.toBottom = false;
   }
 
   /*
@@ -224,6 +271,8 @@ export class DrawingPage {
       ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
       ctx.fillStyle = this.brushService.color;
       ctx.fill();
+
+      // this.checkTopAndBottom(this.lastY);
   }
 
   /*
@@ -247,6 +296,62 @@ export class DrawingPage {
 
       this.lastX = currentX;
       this.lastY = currentY;
+
+      // this.checkTopAndBottom(this.lastY);
+  }
+
+  /*
+    if the user is drawing on the top / bottom edge, set toTop / toBottom to true
+  */
+  // checkTopAndBottom(y){
+  //   if(!this.toTop && y < this.distFromEdges && !this.brushService.eraserOn){
+  //     this.toTop = true;
+  //   } else if (!this.toBottom && y> this.distFromBottom && !this.brushService.eraserOn){
+  //     this.toBottom = true;
+  //   }
+  // }
+
+  checkTop() {
+    var toTop = false;
+
+    let ctx = this.canvasElement.getContext('2d');
+
+    var imgDataTop = ctx.getImageData(0, 2, this.canvasElement.width, 1);
+    var top = imgDataTop.data;
+
+    var pix;
+
+    for (pix = 0; (pix + 3) < top.length; pix += 4) {
+      if (top[pix] != 255 || top[pix+1] != 255 || top[pix+2] != 255) {
+        toTop = true;
+        // this.presentConfirmGoHome();   // test
+        break;
+      }
+    }
+
+    return toTop;
+  }
+
+  checkBottom() {
+    var toBottom = false;
+
+    let ctx = this.canvasElement.getContext('2d');
+
+    var imgDataBottom = ctx.getImageData(0, this.canvasElement.height-3, this.canvasElement.width, 1);
+    var bottom = imgDataBottom.data;
+
+    var pix;
+
+    for (pix = 0; (pix + 3) < bottom.length; pix += 4) {
+      if (bottom[pix] != 255 || bottom[pix+1] != 255 || bottom[pix+2] != 255) {
+        console.log(bottom[pix+1]);
+        toBottom = true;
+        // this.presentConfirmGoHome();   // test
+        break;
+      }
+    }
+
+    return toBottom;
   }
 
   /*
@@ -320,7 +425,7 @@ export class DrawingPage {
       this.undoStack.push(img2); //keeping current img at top of stack seems easiest
 
       //draw the old image
-      ctx.drawImage(img2, 0, 0, img2.width, img2.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      ctx.drawImage(img2, 0, 0);
     }
   }
 
@@ -338,7 +443,7 @@ export class DrawingPage {
       this.undoStack.push(img); //keeping current img at top of undo stack
 
       //draw the old image
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      ctx.drawImage(img, 0, 0);
     }
   }
 
@@ -354,7 +459,7 @@ export class DrawingPage {
     if (this.imageStorage instanceof NetworkStorageProvider) {
       this.alertWhichSection(this.imageStorage.sectionNumber);
     } else {
-      this.alertWhichSection(this.imageStorage.numCanvases);
+      this.alertWhichSection(this.imageStorage.sectionNumber);
     }
   }
 
@@ -384,6 +489,13 @@ export class DrawingPage {
       ev: myEvent
     });
   }
+
+  //TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+  // condense the code below, ideally we should have a single (main, not including
+  // the helpers in count) function that takes in the section and then causes the
+  // help popup to be displayed and include the body part and the edge/BOTH THE EDGES
+  // (both edges=torso section) so the user gets all the info at once, rather than
+  // being told to draw to the bottom, then later oh you didn't draw to the top, etc
 
   presentWhichSection(section){
     let alert = this.alertCtrl.create({
@@ -440,6 +552,44 @@ export class DrawingPage {
           }
         }
       ]
+    });
+    alert.present();
+  }
+
+  presentConfirmOrError(){
+    var section = this.imageStorage.sectionNumber;
+    // if(!this.toBottom && (section == 0 || section == 1)){
+    //   this.presentError('bottom');
+    // }
+    // else if (!this.toTop && (section == 1 || section == 2)){
+    //   this.presentError('top')
+    // }
+    // else {
+    //   this.presentConfirmNextStep();
+    // }
+
+    if(!this.checkBottom() && (section == 0 || section == 1)){
+      this.presentError('bottom');
+    }
+    else if (!this.checkTop() && (section == 1 || section == 2)){
+      this.presentError('top')
+    }
+    else {
+      this.presentConfirmNextStep();
+    }
+  }
+
+  presentError(whichEdge){
+    var message = 'Be sure to draw to the very ' + whichEdge + ' edge of the screen'
+    let alert = this.alertCtrl.create({
+      title: 'Hold on!',
+      message: message,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+          }
+        }]
     });
     alert.present();
   }

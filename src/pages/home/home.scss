@@ -5,25 +5,30 @@ page-home {
           background-position: center;
           background-size: cover;
           z-index: -1;
+
   }
+
   #passAround{
-    position: fixed;
-    left: 30%;
+    position:fixed;
+    width: 60%;
+    left: 20%;
     bottom:150px;
   }
   #random{
     position:fixed;
-      left: 30%;
+    width: 60%;
+    left: 20%;
     bottom:90px;
   }
   #myGroups{
     position: fixed;
-    left: 30%;
+    width: 60%;
+    left: 20%;
     bottom:30px;
   }
   #info{
     position: fixed;
-    right: 1%;
+    right: 0%;
     top: 10%;
   }
 }
