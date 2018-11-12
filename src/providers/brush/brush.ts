@@ -45,4 +45,9 @@ export class BrushProvider {
     this.styleColor = '#1abc9c';
   }
 
+  eraser() {
+    this.changeColor(this.eraserColor);
+    this.styleColor = '#1abc9c';
+  }
+
 }
