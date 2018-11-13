@@ -92,15 +92,15 @@ export class DrawingPage {
       var img = this.saveCurrentImage();
       this.undoStack.push(img);
 
-      // once group and section #s are assigned, draw the overlap and let user know of section
+      // once group and section #s are assigned, draw the overlap
       if (this.imageStorage instanceof NetworkStorageProvider) {
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
-          this.alertWhichSection(this.imageStorage.sectionNumber);
+          this.presentWhichSection(this.imageStorage.sectionNumber);
         });
       } else {
-        this.alertWhichSection(0);
+        this.presentWhichSection(this.imageStorage.sectionNumber);
       }
 
       this.removeOverlapIfHead();
@@ -181,7 +181,7 @@ export class DrawingPage {
       } else {
         this.resetPage();
         this.drawOverlap(img);
-        this.alertWhichSection(this.imageStorage.sectionNumber);
+        this.presentWhichSection(this.imageStorage.sectionNumber);
       }
     }
   }
@@ -387,28 +387,7 @@ export class DrawingPage {
   * presents helpful info if user is lost
   */
   help() {
-    if (this.imageStorage instanceof NetworkStorageProvider) {
-      this.alertWhichSection(this.imageStorage.sectionNumber);
-    } else {
-      this.alertWhichSection(this.imageStorage.sectionNumber);
-    }
-  }
-
-  /*
-  * Figures out which section to alert for based on the section number
-  */
-  alertWhichSection(sectionNumber) {
-    if (sectionNumber == 0) {
-      this.presentWhichSection("head");
-    } else {
-      if (sectionNumber == 1) {
-        this.presentWhichSection("torso");
-      } else {
-        if (sectionNumber == 2) {
-          this.presentWhichSection("legs");
-        }
-      }
-    }
+    this.presentWhichSection(this.imageStorage.sectionNumber);
   }
 
   /*
@@ -429,9 +408,11 @@ export class DrawingPage {
   // being told to draw to the bottom, then later oh you didn't draw to the top, etc
 
   presentWhichSection(section){
+    var bodyPart = ["head", "torso", "legs"];
+    var edges = ["bottom edge", "top and bottom edges", "top edge"];
     let alert = this.alertCtrl.create({
       title: 'Instructions:',
-      message: 'You are drawing the ' + section + ". Make sure to draw all the way to the bottom edge!",
+      message: 'You are drawing the ' + bodyPart[section] + ". Make sure to draw all the way to the " + edges[section] + "!",
       buttons: [
         {
           text: 'OK',
@@ -474,9 +455,7 @@ export class DrawingPage {
         {
           text: 'Cancel',
           role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
+          handler: () => {}
         }
       ]
     });
@@ -529,9 +508,7 @@ export class DrawingPage {
         {
           text: 'Cancel',
           role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
+          handler: () => {}
         }
       ]
     });
