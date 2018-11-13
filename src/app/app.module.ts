@@ -52,7 +52,7 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {swipeBackEnabled: false}), //disable swipeback
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(config), //firebase stuff
     NgxErrorsModule //also helps with firebase stuff, login page
