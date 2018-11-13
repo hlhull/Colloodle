@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NetworkStorageProvider } from '../image-storage/network-storage';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import firebase from 'firebase';
 
 /*
@@ -16,7 +17,7 @@ export class GroupManagerProvider {
   done : any;
   lastTime: any;
 
-  constructor() {
+  constructor(private localNotifications: LocalNotifications) {
     this.done = this.getGroups();
     this.done.then(() => {
       this.listenForAddedGroups();
@@ -83,9 +84,18 @@ export class GroupManagerProvider {
               var found = true;
               self.inProgress.splice(i, 1);
               self.completed.push(entry);
+              self.sendNotification();
             }
         }
       }
+    });
+  }
+
+  sendNotification(){
+    this.localNotifications.schedule({
+        title: 'A drawing is complete!',
+        text: 'Go to the drawings page to see the finished creation',
+        sound: null
     });
   }
 
