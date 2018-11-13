@@ -26,7 +26,7 @@ export class HomePage {
   goToDrawingPage(local){
     var userID = firebase.auth().currentUser;
     if(userID == null && local == false){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-      this.presentError();
+      this.presentError(" enter Random mode");
     } else {
       var imageStorage = local ? new LocalStorageProvider() : new NetworkStorageProvider();
       this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
@@ -38,7 +38,12 @@ export class HomePage {
   }
 
   goToGroupsPage(){
-    this.navCtrl.push(GroupsPage);
+    var userID = firebase.auth().currentUser;
+    if (userID == null){
+      this.presentError(" see your drawings.");
+    } else {
+      this.navCtrl.push(GroupsPage);
+    }
   }
 
   // @ViewChild(Nav) nav: Nav;
@@ -78,10 +83,10 @@ export class HomePage {
   /*
   * Causes an alert to popup asking the user to cancel, signup, or login
   */
-  presentError() {
+  presentError(actionString) {
   let alert = this.alertCtrl.create({
     title: 'Error',
-    message: 'You must be signed in to enter Random mode',
+    message: 'You must be signed in to '+ actionString,
     buttons: [
       { text: 'Login',
         handler: () => {

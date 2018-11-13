@@ -20,7 +20,7 @@ export class GroupManagerProvider {
     this.done = this.getGroups();
     this.done.then(() => {
       this.listenForAddedGroups();
-      this.listenForCompletedGroups(this.inProgress);
+      this.listenForCompletedGroups();
     });
   }
 
@@ -58,6 +58,7 @@ export class GroupManagerProvider {
     }
 
     var self = this;
+    //var user = this.userID;
     this.userRef.orderByKey().startAt(self.lastTime).on('child_added', userGroupSnapshot => {
         self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
     });
@@ -66,7 +67,7 @@ export class GroupManagerProvider {
   /*
     Once an inProgress group finishes, move to completed list and remove from inProgress
   */
-  listenForCompletedGroups(groups){
+  listenForCompletedGroups(){
     var self = this;
     var found = false;
 
@@ -79,10 +80,9 @@ export class GroupManagerProvider {
         for (var i = 0; i < length; i++) {
             var entry = self.inProgress[i];
             if(entry['group'] == changedSnapshot.key && !found){
-              var info = entry;
               var found = true;
               self.inProgress.splice(i, 1);
-              self.completed.push(info);
+              self.completed.push(entry);
             }
         }
       }
@@ -147,5 +147,23 @@ export class GroupManagerProvider {
       this.storageRef.child(groupNum).child(i + ".png").delete();
     }
     this.databaseRef.child("groups").child(groupNum).remove();
+  }
+
+  /*
+    reset the provider by emptying the lists, setting variables to new user, and
+    assigning new groups
+  */
+  reset(){
+    this.completed = [];
+    this.inProgress = [];
+    this.userID = firebase.auth().currentUser.uid;
+    this.userRef = this.databaseRef.child("users").child(this.userID);
+
+    this.done = this.getGroups();
+    this.done.then(() => {
+      this.listenForAddedGroups()
+      this.listenForCompletedGroups()
+    });
+    return this.done;
   }
 }
