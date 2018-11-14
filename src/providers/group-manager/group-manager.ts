@@ -10,19 +10,28 @@ import firebase from 'firebase';
 export class GroupManagerProvider {
   storageRef = firebase.storage().ref();
   databaseRef = firebase.database().ref();
-  userID = firebase.auth().currentUser.uid;
-  userRef = this.databaseRef.child("users").child(this.userID);
+  userID: string = null;
+  userRef: firebase.database.Reference;
   completed = [];
   inProgress = [];
   done : any;
   lastTime: any;
 
-  constructor(private localNotifications: LocalNotifications) {
-    this.done = this.getGroups();
-    this.done.then(() => {
-      this.listenForAddedGroups();
-      this.listenForCompletedGroups();
-    });
+  constructor(private localNotifications: LocalNotifications) {}
+
+  /*
+    sets up manager for a new user, getting their groups and listening for changes
+  */
+  setUpManager(){
+    if(firebase.auth().currentUser != null){
+        this.userID = firebase.auth().currentUser.uid;
+        this.userRef = this.databaseRef.child("users").child(this.userID);
+        this.done = this.getGroups();
+        this.done.then(() => {
+          this.listenForAddedGroups();
+          this.listenForCompletedGroups();
+        });
+    }
   }
 
   /*
@@ -160,20 +169,18 @@ export class GroupManagerProvider {
   }
 
   /*
-    reset the provider by emptying the lists, setting variables to new user, and
-    assigning new groups
+    reset the provider by emptying the lists and turning off listeners
   */
   reset(){
     this.completed = [];
     this.inProgress = [];
-    this.userID = firebase.auth().currentUser.uid;
-    this.userRef = this.databaseRef.child("users").child(this.userID);
 
-    this.done = this.getGroups();
-    this.done.then(() => {
-      this.listenForAddedGroups()
-      this.listenForCompletedGroups()
-    });
-    return this.done;
+    if(this.userID != null){
+      this.databaseRef.child("groups").off();
+      this.userRef.orderByKey().startAt(this.lastTime).off();
+    }
+
+    this.userID = null;
+    this.userRef = null;
   }
 }

@@ -22,9 +22,7 @@ export class GroupsPage {
   storageRef = firebase.storage().ref();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
-    this.groupManager.done.then(() => { //once the user's groups have been assigned
       this.setThumnails(); // set the thumbnails
-    });
   }
 
   /*
@@ -74,18 +72,6 @@ export class GroupsPage {
     }).catch(function(error) {
       console.log("error", error);
     });
-  }
-
-  /*
-    if the user has changed, reset the groupManager and redraw thumnails
-  */
-  ngOnInit(){
-    if(this.groupManager.userID != firebase.auth().currentUser.uid) {
-      this.groupManager.reset();
-      this.groupManager.done.then(() => { //once the new user's groups have been assigned
-        this.setThumnails(); // set the thumbnails
-      });
-    }
   }
 
   ionViewDidLoad() {
