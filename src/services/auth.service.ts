@@ -11,6 +11,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { GroupManagerProvider } from '../providers/group-manager/group-manager';
 import * as firebase from 'firebase/app';
 // import firebase from '../firebase';
 import AuthProvider = firebase.auth.AuthProvider;
@@ -19,9 +20,10 @@ import AuthProvider = firebase.auth.AuthProvider;
 export class AuthService {
 	private user: firebase.User;
 
-	constructor(public afAuth: AngularFireAuth) {
+	constructor(public afAuth: AngularFireAuth, public groupManager: GroupManagerProvider) {
 		afAuth.authState.subscribe(user => {
 			this.user = user;
+			this.groupManager.setUpManager(); //set up groupManager for the new user
 		});
 	}
 
@@ -38,6 +40,7 @@ export class AuthService {
 	* Sign out
 	*/
 	signOut(): Promise<void> {
+		this.groupManager.reset();
     return this.afAuth.auth.signOut();
   }
 
