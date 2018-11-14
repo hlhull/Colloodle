@@ -3,16 +3,39 @@
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
+
+  code from ionic-preview-app
 -->
 <ion-header>
 
   <ion-navbar>
-    <ion-title>info</ion-title>
+    <ion-title>How To Play</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content class="page-info" padding>
+  <ion-slides pager>
+      <ion-slide *ngFor="let slide of slides">
+        <ion-toolbar>
+          <ion-buttons end>
+            <button ion-button color="primary">Skip</button>
+          </ion-buttons>
+        </ion-toolbar>
+        <img [src]="slide.image" class="slide-image"/>
+        <h2 class="slide-title" [innerHTML]="slide.title"></h2>
+        <p [innerHTML]="slide.description"></p>
+      </ion-slide>
+      <ion-slide>
+        <ion-toolbar>
+        </ion-toolbar>
+        <img src="assets/img/info-slide-5.png" class="slide-image"/>
+        <h2 class="slide-title">Ready? Set? Draw!</h2>
+        <button ion-button large clear icon-end color="primary">
+          Create a Masterpiece
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </ion-slide>
+    </ion-slides>
 </ion-content>
