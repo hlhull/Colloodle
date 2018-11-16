@@ -4,6 +4,8 @@ import { HomePage} from '../home/home';
 
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
+import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
 
 /**
  * Class for the FinalPage page.
@@ -22,7 +24,7 @@ export class FinalPage {
   @ViewChild('bottomCanvas') Bcanvas: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.screenOrientation.lock('portrait');
@@ -71,6 +73,13 @@ export class FinalPage {
        this.drawPictures(pictures);
      });
 
+  }
+
+  deleteGroup(){
+    if(this.imageStorage instanceof NetworkStorageProvider){
+      this.groupManager.deleteGroup(this.imageStorage.groupNumber);
+    }
+    this.goHome();
   }
 
 

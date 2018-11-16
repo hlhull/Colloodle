@@ -7,7 +7,7 @@ import firebase from 'firebase';
 */
 @Injectable()
 export class ImageStorageProvider {
-
+  groupNumber: string;
   constructor() {}
 
   /*
