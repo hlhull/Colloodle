@@ -177,7 +177,7 @@ export class GroupManagerProvider {
 
     if(this.userID != null){
       this.databaseRef.child("groups").off();
-      this.userRef.orderByKey().startAt(this.lastTime).off();
+      //this.userRef.orderByKey().startAt(this.lastTime).off();
     }
 
     this.userID = null;

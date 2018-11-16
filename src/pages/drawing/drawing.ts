@@ -9,7 +9,6 @@ import { AlertController } from 'ionic-angular';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { StatusBar } from '@ionic-native/status-bar';
 
 /**
@@ -45,7 +44,7 @@ export class DrawingPage {
 
   imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar, private localNotifications: LocalNotifications, private androidPerm: AndroidPermissions) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar, private localNotifications: LocalNotifications) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.statusBar.hide();
