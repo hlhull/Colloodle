@@ -8,6 +8,8 @@ import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
 import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { StatusBar } from '@ionic-native/status-bar';
 
 /**
@@ -43,7 +45,7 @@ export class DrawingPage {
 
   imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar, private localNotifications: LocalNotifications, private androidPerm: AndroidPermissions) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.statusBar.hide();
@@ -424,7 +426,7 @@ export class DrawingPage {
   }
 
   presentInfo(){
-    let alert = this.alertCtrl.create({
+    let alertNotified = this.alertCtrl.create({
       title: 'Drawing',
       message: 'You will be notified when the drawing is complete!',
       buttons: [
@@ -434,7 +436,32 @@ export class DrawingPage {
         }
       ]
     });
-    alert.present();
+
+    let alertNoNotifications = this.alertCtrl.create({
+      title: 'Drawing',
+      message: 'You can see the full drawing in the Drawings page when the drawing is complete!',
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {}
+        }
+      ]
+    });
+
+    this.localNotifications.hasPermission().then((permission) => {
+      console.log("local notuific permission", permission);
+      if(!permission){
+        this.localNotifications.requestPermission().then((permission) => {
+          if(permission) {
+            alertNotified.present()
+          } else {
+            alertNoNotifications.present();
+          }
+        });
+      } else {
+        alertNotified.present();
+      }
+    });
   }
 
   /*
