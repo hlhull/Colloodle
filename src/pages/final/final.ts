@@ -5,7 +5,7 @@ import { HomePage} from '../home/home';
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
+import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 
 /**
  * Class for the FinalPage page.
@@ -76,9 +76,7 @@ export class FinalPage {
   }
 
   deleteGroup(){
-    if(this.imageStorage instanceof NetworkStorageProvider){
-      this.groupManager.deleteGroup(this.imageStorage.groupNumber);
-    }
+    this.groupManager.deleteGroup(this.imageStorage.groupNumber);
     this.goHome();
   }
 

@@ -6,7 +6,7 @@ import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
+import { RandomStorageProvider } from '../../providers/image-storage/random-storage'
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -94,7 +94,7 @@ export class DrawingPage {
       this.undoStack.push(img);
 
       // once group and section #s are assigned, draw the overlap
-      if (this.imageStorage instanceof NetworkStorageProvider) {
+      if (this.imageStorage instanceof RandomStorageProvider) {
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
@@ -165,7 +165,7 @@ export class DrawingPage {
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
     //store image
-    if (this.imageStorage instanceof NetworkStorageProvider) {
+    if (this.imageStorage instanceof RandomStorageProvider) {
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
           if (this.imageStorage.sectionNumber == 2) {
             this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});

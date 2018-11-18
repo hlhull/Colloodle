@@ -4,8 +4,8 @@ import { DrawingPage } from '../drawing/drawing';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 import { SignupPage } from '../signup/signup';
-import { LocalStorageProvider } from '../../providers/image-storage/local-storage';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage'
+import { PassAroundStorageProvider } from '../../providers/image-storage/pass-around-storage';
+import { RandomStorageProvider } from '../../providers/image-storage/random-storage'
 import { UserPopoverPage } from '../user-popover/user-popover';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AlertController } from 'ionic-angular';
@@ -28,7 +28,7 @@ export class HomePage {
     if(userID == null && local == false){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
       this.presentError(" enter Random mode");
     } else {
-      var imageStorage = local ? new LocalStorageProvider() : new NetworkStorageProvider();
+      var imageStorage = local ? new PassAroundStorageProvider() : new RandomStorageProvider();
       this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
     }
   }

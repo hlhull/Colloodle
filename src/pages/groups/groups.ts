@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FinalPage } from '../final/final';
-import { NetworkStorageProvider } from '../../providers/image-storage/network-storage';
+import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import firebase from 'firebase';
 
 
@@ -29,7 +29,7 @@ export class GroupsPage {
     When user clicks 'view', go to final page and show that group's drawing
   */
   viewGroupDrawing(groupName){
-    var imageStorage = new NetworkStorageProvider();
+    var imageStorage = new RandomStorageProvider();
     imageStorage.setGroupNum(groupName);
     this.navCtrl.push(FinalPage, {imageStorage: imageStorage}, {animate:false});
   }

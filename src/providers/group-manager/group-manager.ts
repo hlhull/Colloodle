@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NetworkStorageProvider } from '../image-storage/network-storage';
+//import { RandomStorageProvider } from '../image-storage/random-storage';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import firebase from 'firebase';
 
@@ -137,9 +137,8 @@ export class GroupManagerProvider {
     }
     if(indexToDelete != null){
       this.completed.splice(indexToDelete, 1);
+      this.deleteFromUserFB(group);
     }
-
-    this.deleteFromUserFB(group);
   }
 
   /*
