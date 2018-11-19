@@ -17,16 +17,12 @@ import { GroupsPage } from '../groups/groups';
 })
 export class HomePage {
 
-
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
+    this.screenOrientation.lock('portrait');
+  }
 
   goToInfoPage(){
     this.navCtrl.push(InfoPage);
-  }
-
-  // @ViewChild(Nav) nav: Nav;
-
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
-    this.screenOrientation.lock('portrait');
   }
 
   goToGallery(){
@@ -43,7 +39,7 @@ export class HomePage {
   }
 
   /*
-  *Presents the popover menu with color and brush size
+  *Presents the login menu with logout / reset password
   */
   presentUserPopover(myEvent) {
     let popover = this.popoverCtrl.create(UserPopoverPage);
@@ -67,7 +63,6 @@ export class HomePage {
   */
   logout() {
   	this.auth.signOut();
-  	// this.navCtrl.push(LoginPage);
   }
 
   /*

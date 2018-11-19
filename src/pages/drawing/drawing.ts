@@ -438,7 +438,7 @@ export class DrawingPage {
 
     let alertNoNotifications = this.alertCtrl.create({
       title: 'Drawing',
-      message: 'You can see the full drawing in the Drawings page when the drawing is complete!',
+      message: 'You can see the full drawing in the Gallery when the drawing is complete!',
       buttons: [
         {
           text: 'OK',
@@ -448,7 +448,6 @@ export class DrawingPage {
     });
 
     this.localNotifications.hasPermission().then((permission) => {
-      console.log("local notuific permission", permission);
       if(!permission){
         this.localNotifications.requestPermission().then((permission) => {
           if(permission) {
@@ -469,7 +468,7 @@ export class DrawingPage {
   presentConfirmGoHome() {
     let alert = this.alertCtrl.create({
       title: 'Confirm Action',
-      message: 'Are you sure you want to leave and go to the Home page? Your painting will be lost.',
+      message: 'Are you sure you want to leave and go to the Home page? Your drawing will be lost.',
       buttons: [
         {
           text: 'Yes',

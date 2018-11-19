@@ -12,12 +12,18 @@
         <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
       	   <ion-icon name="person" right></ion-icon>
         </button>
+        <button ion-button icon-only clear style="float: right;" (click)="goToHome()">
+           <ion-icon name="home" right></ion-icon>
+        </button>
       </ion-item>
 
-    <ion-item (click)="login()" *ngIf="!auth.authenticated">
-      <ion-icon name="log-in" item-left></ion-icon>
-      Log in
-    </ion-item>
+      <ion-item (click)="login()" *ngIf="!auth.authenticated">
+        <ion-icon name="log-in" item-left></ion-icon>
+        Log in
+        <button ion-button icon-only clear style="float: right;" (click)="goToHome();$event.stopPropagation();">
+          <ion-icon name="home" right></ion-icon>
+        </button>
+      </ion-item>
 
 </ion-header>
 
@@ -26,12 +32,39 @@ ion-header {
 text-align: center;
 }
 </style>
-<ion-content  padding>
+<ion-content  padding style="background-color: #009691">
 
+  <ion-card (click)="goToPassAround()">
+    <ion-card-header>
+      Pass Around
+    </ion-card-header>
 
-       <button id='passAround' ion-button (click)="goToDrawingPage(true)" color="light" round outline large>Pass Around</button>
-       <button id='random' ion-button (click)="goToDrawingPage(false)" color="light" round outline large>Connect Mode</button>
-       <button id='myGroups' ion-button (click)="goToGroupsPage()" color="light" round outline large>My Groups</button>
-       <button id='info' ion-button (click)="goToInfoPage()" color="light" round clear icon-only>How To Play<ion-icon name="information-circle"></ion-icon></button>
+    <ion-card-content>
+      <p>Draw the head, then torso, then legs, all on your own phone! Pass your phone
+        around so friends can draw a section, or draw it all by yourself!</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card (click)="goToRandom()">
+    <ion-card-header>
+      Random
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Draw one piece of the drawing and other Colloodlers will draw the rest!
+      You must be logged in and connected to the internet to use this mode.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card (click)="goToFriends()">
+    <ion-card-header>
+      Friends
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Draw one piece of the drawing and invite friends to draw the rest!
+      You must be logged in and connected to the internet to use this mode.</p>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
