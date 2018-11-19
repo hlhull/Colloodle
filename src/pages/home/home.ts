@@ -1,11 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, Nav, PopoverController } from 'ionic-angular';
-import { DrawingPage } from '../drawing/drawing';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 import { SignupPage } from '../signup/signup';
-import { PassAroundStorageProvider } from '../../providers/image-storage/pass-around-storage';
-import { RandomStorageProvider } from '../../providers/image-storage/random-storage'
+import { DrawingModesPage } from '../drawing-modes/drawing-modes';
 import { UserPopoverPage } from '../user-popover/user-popover';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AlertController } from 'ionic-angular';
@@ -19,25 +17,19 @@ import { GroupsPage } from '../groups/groups';
 })
 export class HomePage {
 
-  /*
-    goes to drawing page, passing correct storage provider type: 'true' for local
-    if user clicked pass-Around and 'false' for network storage if user clicked random
-  */
-  goToDrawingPage(local){
-    var userID = firebase.auth().currentUser;
-    if(userID == null && local == false){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-      this.presentError(" enter Random mode");
-    } else {
-      var imageStorage = local ? new PassAroundStorageProvider() : new RandomStorageProvider();
-      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
-    }
-  }
+
 
   goToInfoPage(){
     this.navCtrl.push(InfoPage);
   }
 
-  goToGroupsPage(){
+  // @ViewChild(Nav) nav: Nav;
+
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
+    this.screenOrientation.lock('portrait');
+  }
+
+  goToGallery(){
     var userID = firebase.auth().currentUser;
     if (userID == null){
       this.presentError(" see your drawings.");
@@ -46,10 +38,8 @@ export class HomePage {
     }
   }
 
-  // @ViewChild(Nav) nav: Nav;
-
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
-    this.screenOrientation.lock('portrait');
+  goToDrawingModesPage(){
+    this.navCtrl.push(DrawingModesPage);
   }
 
   /*

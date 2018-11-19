@@ -1,0 +1,37 @@
+<!--
+  Generated template for the DrawingModesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header>
+
+      <ion-item *ngIf="auth.getEmail()" left dark>
+        {{auth.getEmail()}}
+        <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
+      	   <ion-icon name="person" right></ion-icon>
+        </button>
+      </ion-item>
+
+    <ion-item (click)="login()" *ngIf="!auth.authenticated">
+      <ion-icon name="log-in" item-left></ion-icon>
+      Log in
+    </ion-item>
+
+</ion-header>
+
+<style>
+ion-header {
+text-align: center;
+}
+</style>
+<ion-content  padding>
+
+
+       <button id='passAround' ion-button (click)="goToDrawingPage(true)" color="light" round outline large>Pass Around</button>
+       <button id='random' ion-button (click)="goToDrawingPage(false)" color="light" round outline large>Connect Mode</button>
+       <button id='myGroups' ion-button (click)="goToGroupsPage()" color="light" round outline large>My Groups</button>
+       <button id='info' ion-button (click)="goToInfoPage()" color="light" round clear icon-only>How To Play<ion-icon name="information-circle"></ion-icon></button>
+
+</ion-content>

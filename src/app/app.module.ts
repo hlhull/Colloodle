@@ -14,6 +14,7 @@ import { InfoPage } from '../pages/info/info';
 import { DrawingPage } from '../pages/drawing/drawing';
 import { FinalPage } from '../pages/final/final';
 import { GroupsPage } from '../pages/groups/groups';
+import { DrawingModesPage } from '../pages/drawing-modes/drawing-modes';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -49,7 +50,8 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     GroupsPage,
     CanvasDrawComponent,
     PopoverPage,
-    UserPopoverPage
+    UserPopoverPage,
+    DrawingModesPage
   ],
   imports: [
     BrowserModule,
@@ -70,7 +72,8 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     GroupsPage,
     PopoverPage,
     UserPopoverPage,
-    FinalPage
+    FinalPage,
+    DrawingModesPage
   ],
   providers: [
     StatusBar,
