@@ -11,7 +11,7 @@ export class RandomStorageProvider {
   sectionNumber: number;
   databaseRef = firebase.database().ref();
   storageRef = firebase.storage().ref();
-  nextListRef = this.databaseRef.child("inProgress").child("next");
+  nextListRef = this.databaseRef.child("next");
 
   constructor() {}
 
@@ -38,7 +38,7 @@ export class RandomStorageProvider {
     var nextListLoaded = this.nextListRef.once('value');
     return nextListLoaded.then((snapshot) => {
         snapshot.forEach(function(childSnapshot) {
-          var promise = self.databaseRef.child("users").child(userID).child(childSnapshot.key).once('value', function(userSnapshot){
+          var promise = self.databaseRef.child("users").child(userID).child("completed").child(childSnapshot.key).once('value', function(userSnapshot){
             if(!userSnapshot.exists() && !set){
               self.groupNumber = childSnapshot.key;
               self.sectionNumber = childSnapshot.val();
@@ -92,20 +92,20 @@ export class RandomStorageProvider {
       var self = this;
       promise = this.nextListRef.push(this.sectionNumber + 1).then((ref) => {
         self.groupNumber = ref.getKey();
-        self.databaseRef.child("groups").child(ref.getKey()).set("drawing");
-        self.databaseRef.child("users").child(userID).child(ref.getKey()).set(this.sectionNumber);
+        self.databaseRef.child("groups").child(ref.getKey()).set("inProgress");
+        self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
       });
     }
     // if this was the 2nd drawing put group back into next list
     else if (this.sectionNumber == 1) {
       this.nextListRef.child(this.groupNumber).set(this.sectionNumber + 1);
-      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(this.sectionNumber);
+      this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
       promise = new Promise(function(resolve, reject) {resolve(true)});
     }
     // if this was the last drawing, update group status that 1 person has seen it
     else if (this.sectionNumber == 2) {
       this.databaseRef.child("groups").child(this.groupNumber).set(0);
-      this.databaseRef.child("users").child(userID).child(this.groupNumber).set(this.sectionNumber);
+      this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
       promise = new Promise(function(resolve, reject){resolve(true)});
     }
     return promise;

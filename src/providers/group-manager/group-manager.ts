@@ -25,7 +25,7 @@ export class GroupManagerProvider {
   setUpManager(){
     if(firebase.auth().currentUser != null){
         this.userID = firebase.auth().currentUser.uid;
-        this.userRef = this.databaseRef.child("users").child(this.userID);
+        this.userRef = this.databaseRef.child("users").child(this.userID).child("completed");
         this.done = this.getGroups();
         this.done.then(() => {
           this.listenForAddedGroups();
@@ -68,7 +68,6 @@ export class GroupManagerProvider {
     }
 
     var self = this;
-    //var user = this.userID;
     this.userRef.orderByKey().startAt(self.lastTime).on('child_added', userGroupSnapshot => {
         self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
     });
@@ -115,7 +114,8 @@ export class GroupManagerProvider {
     var self = this;
     var promise = self.databaseRef.child("groups").child(group).once('value', function(groupSnapshot){
         var info = {"section" : section, "group": groupSnapshot.key};
-        if(groupSnapshot.val() == "drawing"){
+        var value = groupSnapshot.val()
+        if(value == "inProgress" || value == 11 || value == 12){
           self.inProgress.push(info);
         } else {
           self.completed.push(info);

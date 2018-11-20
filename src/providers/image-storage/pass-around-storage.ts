@@ -66,7 +66,7 @@ export class PassAroundStorageProvider {
     var self = this;
     var userID = firebase.auth().currentUser.uid;
 
-    this.databaseRef.child("users").child(userID).push(0).then((ref) => { // make new group
+    this.databaseRef.child("users").child(userID).child("completed").push(0).then((ref) => { // make new group
       self.groupNumber = ref.getKey();
       self.databaseRef.child("groups").child(ref.getKey()).set(2); // add group to groups list
       for (var i = 0; i < self.storedImageUrls.length; i++) { // store images in groups folder
