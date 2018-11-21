@@ -19,8 +19,8 @@
     <ion-item>
       <h2>New Drawing!</h2>
     </ion-item>
-    <ion-item *ngFor="let i of [1, 2, 3]">
-      <h2>Drawing you've been invited to</h2>
+    <ion-item *ngFor="let group of this.groupManager.invited">
+      <h2>{{group['group']}}</h2>
     </ion-item>
   </ion-list>
 
