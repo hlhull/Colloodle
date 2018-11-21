@@ -6,7 +6,8 @@ import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
-import { RandomStorageProvider } from '../../providers/image-storage/random-storage'
+import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
+import { PassAroundStorageProvider } from '../../providers/image-storage/pass-around-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -94,14 +95,14 @@ export class DrawingPage {
       this.undoStack.push(img);
 
       // once group and section #s are assigned, draw the overlap
-      if (this.imageStorage instanceof RandomStorageProvider) {
+      if (this.imageStorage instanceof PassAroundStorageProvider) {
+        this.presentWhichSection(this.imageStorage.sectionNumber);
+      } else {
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
           this.presentWhichSection(this.imageStorage.sectionNumber);
         });
-      } else {
-        this.presentWhichSection(this.imageStorage.sectionNumber);
       }
 
       this.removeOverlapIfHead();

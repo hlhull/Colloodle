@@ -9,6 +9,7 @@ import { AlertController } from 'ionic-angular';
 import { UserPopoverPage } from '../user-popover/user-popover';
 import { LoginPage } from '../login/login';
 import { SignupPage } from '../signup/signup';
+import { FriendsPage } from '../friends/friends';
 import * as firebase from 'firebase';
 
 /**
@@ -48,8 +49,7 @@ export class DrawingModesPage {
     if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
       this.presentError(" draw with Friends");
     } else {
-      //var imageStorage = new RandomStorageProvider();
-      //this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+      this.navCtrl.push(FriendsPage, {animate:false});
     }
   }
 
