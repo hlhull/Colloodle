@@ -16,11 +16,13 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item>
+    <ion-item (click)="drawGroup('new')">
       <h2>New Drawing!</h2>
     </ion-item>
-    <ion-item *ngFor="let group of this.groupManager.invited">
+    <ion-item *ngFor="let group of this.groupManager.invited" (click)="drawGroup(group['group'])">
       <h2>{{group['group']}}</h2>
+      <!--button ion-button clear item-end>Draw</button-->
+
     </ion-item>
   </ion-list>
 

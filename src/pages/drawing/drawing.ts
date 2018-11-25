@@ -4,10 +4,12 @@ import { HomePage } from '../home/home';
 import { PopoverController } from 'ionic-angular';
 import { PopoverPage } from '../color-popover/color-popover'
 import { FinalPage } from '../final/final';
+import { ChooseFriendsPage } from '../choose-friends/choose-friends';
 import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import { PassAroundStorageProvider } from '../../providers/image-storage/pass-around-storage';
+import { FriendsStorageProvider } from '../../providers/image-storage/friends-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -95,14 +97,18 @@ export class DrawingPage {
       this.undoStack.push(img);
 
       // once group and section #s are assigned, draw the overlap
+
       if (this.imageStorage instanceof PassAroundStorageProvider) {
         this.presentWhichSection(this.imageStorage.sectionNumber);
-      } else {
+      } else if (this.imageStorage instanceof RandomStorageProvider){
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
           this.presentWhichSection(this.imageStorage.sectionNumber);
         });
+      } else {
+        this.presentWhichSection(this.imageStorage.sectionNumber);
+        this.drawOverlap(null);
       }
 
       this.removeOverlapIfHead();
@@ -166,17 +172,7 @@ export class DrawingPage {
     img.src = this.canvasElement.toDataURL(); //saving current image in cavas
 
     //store image
-    if (this.imageStorage instanceof RandomStorageProvider) {
-      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
-          if (this.imageStorage.sectionNumber == 2) {
-            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-          }
-          else {
-            this.presentInfo();
-            this.navCtrl.push(HomePage);
-          }
-      }));
-    } else { //for local storage
+    if (this.imageStorage instanceof PassAroundStorageProvider){
       var proceed = this.imageStorage.storeImage(img.src);
       if (proceed) {
           this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
@@ -185,6 +181,18 @@ export class DrawingPage {
         this.drawOverlap(img);
         this.presentWhichSection(this.imageStorage.sectionNumber);
       }
+    } else {
+      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
+          if (this.imageStorage.sectionNumber == 2) {
+            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+          }
+          else if (this.imageStorage.sectionNumber == 1 || this.imageStorage instanceof RandomStorageProvider){
+            this.presentInfo();
+            this.navCtrl.push(HomePage);
+          } else {
+            this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage});
+          }
+      }));
     }
   }
 
