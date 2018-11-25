@@ -8,6 +8,7 @@ import { NavController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import firebase from 'firebase';
 
 @Component({
 	selector: 'as-page-signup',
@@ -34,7 +35,7 @@ export class SignupPage {
 	/*
 	* Signs the user up with the given email and password, sending info to firebase
 	*
-	* Then sends the user to the home page
+	* Adds user to database userList, then sends the user to the home page
 	*/
   signup() {
 		let data = this.form.value;
@@ -43,7 +44,9 @@ export class SignupPage {
 			password: data.password
 		};
 		this.auth.signUp(credentials).then(
-			() => this.navCtrl.setRoot(HomePage),
+			() => { var userID = firebase.auth().currentUser.uid;
+							firebase.database().ref().child("userList").child(userID).set(credentials['email']);
+				 			this.navCtrl.setRoot(HomePage)},
 			error => this.signupError = error.message
 		);
   }
