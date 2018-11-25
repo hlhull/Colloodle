@@ -13,8 +13,14 @@ export class ImageStorageProvider {
   /*
    * store image with given image
    */
-  storeImage(imgUrl){
-    return new Promise(function(resolve, reject) { resolve(null) } );
+  static storeImage(imgUrl, group, section){
+    var blob = this.dataUrlToBlob(imgUrl);
+
+    // Put the image in the correct group folder
+    var groupRef = firebase.storage().ref().child(group + '/' + section + '.png');
+
+    //upload to firebase
+    return groupRef.put(blob);
   }
 
   /*
@@ -31,6 +37,7 @@ export class ImageStorageProvider {
      from: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata/5100158#5100158
   */
   static dataUrlToBlob(dataUrl){
+      console.log("here");
       var byteString;
       if (dataUrl.split(',')[0].indexOf('base64') >= 0){
           byteString = atob(dataUrl.split(',')[1]);
@@ -61,4 +68,12 @@ export class ImageStorageProvider {
       return Promise.all([imageRef0.getDownloadURL(), imageRef1.getDownloadURL(), imageRef2.getDownloadURL()]);
   }
 
+  static getOverlap(group, section){
+      if(section > 0){
+        var storageRef = firebase.storage().ref().child(group); // folder we want to get images from
+        var imageRef = storageRef.child(section - 1 + '.png'); // references previous image
+        return imageRef.getDownloadURL();
+      }
+      return null;
+    }
 }

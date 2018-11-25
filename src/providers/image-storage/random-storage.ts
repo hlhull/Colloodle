@@ -56,12 +56,7 @@ export class RandomStorageProvider {
     Returns the previous image in the group, or null if this is the first image
   */
   getOverlap(){
-    if(this.sectionNumber > 0){
-      var storageRef = firebase.storage().ref().child(this.groupNumber); // folder we want to get images from
-      var imageRef = storageRef.child(this.sectionNumber - 1 + '.png'); // references previous image
-      return imageRef.getDownloadURL();
-    }
-    return null;
+    return ImageStorageProvider.getOverlap(this.groupNumber, this.sectionNumber);
   }
 
   /*
@@ -69,13 +64,7 @@ export class RandomStorageProvider {
     returns promise for when upload is complete
    */
   storeImage(imgUrl){
-      var blob = ImageStorageProvider.dataUrlToBlob(imgUrl);
-
-      // Put the image in the correct group folder
-      var groupRef = this.storageRef.child(this.groupNumber + '/' + this.sectionNumber + '.png');
-
-      //upload to firebase
-      return groupRef.put(blob);
+      return ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
   }
 
   /*
