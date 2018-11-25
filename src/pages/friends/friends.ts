@@ -21,9 +21,11 @@ export class FriendsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
   }
 
-  drawGroup(group){
-    var imageStorage = new FriendsStorageProvider(group);
-    this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+  drawGroup(group, conflict){
+    if(!conflict){
+      var imageStorage = new FriendsStorageProvider(group);
+      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    }
   }
 
   ionViewDidLoad() {

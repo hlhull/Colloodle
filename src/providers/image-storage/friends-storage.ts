@@ -30,6 +30,7 @@ export class FriendsStorageProvider {
       this.groupNumber = group;
       return this.databaseRef.child("groups").child(group).once('value', function(snapshot) {
         self.sectionNumber = snapshot.val() % 10;
+        self.databaseRef.child("groups").child(group).set("currDrawing");
       });
     }
   }
