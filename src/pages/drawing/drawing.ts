@@ -175,7 +175,7 @@ export class DrawingPage {
     if (this.imageStorage instanceof PassAroundStorageProvider){
       var proceed = this.imageStorage.storeImage(img.src);
       if (proceed) {
-          this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+          this.navCtrl.setRoot(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
       } else {
         this.resetPage();
         this.drawOverlap(img);
@@ -184,11 +184,11 @@ export class DrawingPage {
     } else {
       this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
           if (this.imageStorage.sectionNumber == 2) {
-            this.navCtrl.push(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+            this.navCtrl.setRoot(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
           }
           else if (this.imageStorage.sectionNumber == 1 || this.imageStorage instanceof RandomStorageProvider){
             this.presentInfo();
-            this.navCtrl.push(HomePage);
+            this.navCtrl.setRoot(HomePage);
           } else {
             this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage, imgUrl: img.src});
           }
