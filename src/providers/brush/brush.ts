@@ -7,8 +7,8 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class BrushProvider {
-  color: string = '#1abc9c';
-  styleColor: string = '#1abc9c';
+  color: string = '#fffc54';
+  styleColor: string = '#fffc54';
   size: number = 10;
 
   eraserColor: string = '#ffffff';
@@ -40,9 +40,9 @@ export class BrushProvider {
   }
 
   reset() {
-    this.color = '#1abc9c';
+    this.color = '#fffc54';
     this.size = 10;
-    this.styleColor = '#1abc9c';
+    this.styleColor = '#fffc54';
   }
 
   eraser() {
