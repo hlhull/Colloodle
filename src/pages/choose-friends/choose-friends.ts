@@ -52,9 +52,16 @@ export class ChooseFriendsPage {
 
       this.databaseRef.child("userList").once('value', function(snapshot) {
         snapshot.forEach(function(userSnapshot) {
-          var childKey = userSnapshot.key;
-          if(userSnapshot.val() == email){
-            self.matches.push({"email": email, "userID": childKey});
+          var invitedUID = userSnapshot.key;
+          var inviteEmail = userSnapshot.val();
+          if(inviteEmail == email && inviteEmail != self.currUserEmail){ //don't let user invite themselves
+            if(self.invites.length > 0) {
+              if (inviteEmail != self.invites[0]){ // don't let user invite other user 2x
+                self.matches.push({"email": email, "userID": invitedUID});
+              }
+            } else {
+              self.matches.push({"email": email, "userID": invitedUID});
+            }
           }
         });
       });

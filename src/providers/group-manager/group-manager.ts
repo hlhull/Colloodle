@@ -106,7 +106,7 @@ export class GroupManagerProvider {
       var length = self.invited.length;
       for (var i = 0; i < length; i++) {
           var entry = self.invited[i];
-          if(entry['group'] == removedSnapshot.key && !found){
+          if(!found && entry['group'] == removedSnapshot.key){
             var found = true;
             self.invited.splice(i, 1);
           }

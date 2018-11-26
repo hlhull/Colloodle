@@ -82,7 +82,7 @@ export class FriendsStorageProvider {
   }
 
   cancelDrawing(){
-    return null;
+    this.databaseRef.child("groups").child(this.groupNumber).set(this.sectionNumber + 10);
   }
 
 }
