@@ -190,7 +190,7 @@ export class DrawingPage {
             this.presentInfo();
             this.navCtrl.push(HomePage);
           } else {
-            this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage});
+            this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage, imgUrl: img.src});
           }
       }));
     }

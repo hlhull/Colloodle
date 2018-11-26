@@ -42,18 +42,10 @@ export class FriendsStorageProvider {
   updateGroup(){
     var promise;
     var userID = firebase.auth().currentUser.uid;
-    // if no group has been made yet (this was first drawing) --> push to Firebase,
-    // assign groupNumber as the uid of that push
-    if(this.sectionNumber == 0) {
-      var self = this;
-      promise = this.databaseRef.child("groups").push(this.sectionNumber + 11).then((ref) => {
-        self.groupNumber = ref.getKey();
-        self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
-      });
-      // add to the invited path of 2 other users
-    }
+    // if no group has been made yet (this was first drawing) wait until friends added to push
+
     // if this was the 2nd drawing increment its section number, add to user's completed, and remove from invited
-    else if (this.sectionNumber == 1) {
+    if (this.sectionNumber == 1) {
       this.databaseRef.child("groups").child(this.groupNumber).set(this.sectionNumber + 11);
       this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
       this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).remove();
@@ -67,11 +59,41 @@ export class FriendsStorageProvider {
       this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).remove();
       promise = new Promise(function(resolve, reject){resolve(true)});
     }
-    return promise;
+    return new Promise(function(resolve, reject){resolve(true)});
   }
 
   storeImage(imgUrl){
-    return ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
+    if(this.sectionNumber != 0){
+      return ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
+    }
+    else {
+      return new Promise(function(resolve, reject) { resolve(null) } );
+    }
+  }
+
+  /*
+    create a group and add the users in invited[] to join it
+  */
+  createGroup(imgUrl, invited, currUserEmail){
+    var self = this;
+    var userID = firebase.auth().currentUser.uid;
+
+    this.databaseRef.child("groups").push(this.sectionNumber + 11).then((ref) => {
+       self.groupNumber = ref.getKey();
+       self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
+       ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
+       for (var i in invited){
+         console.log(invited[i]['userID']);
+         self.inviteUser(invited[i]['userID'], currUserEmail);
+       }
+     });
+  }
+
+  /*
+    invite a user to join the doodle
+  */
+  inviteUser(userID, currUserEmail){
+    this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).set(currUserEmail);
   }
 
   /*

@@ -30,7 +30,7 @@
       </button>
     </ion-item>
     <ion-item *ngFor="let invited of invites">
-      <h2>{{ invited }}</h2>
+      <h2>{{ invited['email'] }}</h2>
       <button ion-button icon-only clear item-end>
         <ion-icon name="checkmark-circle"></ion-icon>
       </button>

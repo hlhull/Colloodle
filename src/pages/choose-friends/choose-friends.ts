@@ -23,11 +23,13 @@ export class ChooseFriendsPage {
   databaseRef = firebase.database().ref();
   currUserEmail: String;
   numInvited = 0;
+  imgUrl: String;
   matches = [];
   invites = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
+    this.imgUrl = navParams.get('imgUrl');
 
     // get current user's email
     var self = this;
@@ -56,7 +58,7 @@ export class ChooseFriendsPage {
           var inviteEmail = userSnapshot.val();
           if(inviteEmail == email && inviteEmail != self.currUserEmail){ //don't let user invite themselves
             if(self.invites.length > 0) {
-              if (inviteEmail != self.invites[0]){ // don't let user invite other user 2x
+              if (inviteEmail != self.invites[0]['email']){ // don't let user invite other user 2x
                 self.matches.push({"email": email, "userID": invitedUID});
               }
             } else {
@@ -70,14 +72,13 @@ export class ChooseFriendsPage {
 
   // invite up to 2 other users, then go to home page
   inviteUser(matchInfo){
-    this.invites.push(matchInfo['email']);
-    var userUID = matchInfo['userID'];
+    this.invites.push(matchInfo);
     this.matches = [];
     this.searchbar.clearInput(null);
     this.numInvited += 1;
 
-    this.databaseRef.child("users").child(userUID).child("invited").child(this.imageStorage.groupNumber).set(this.currUserEmail);
     if (this.numInvited > 1){
+      this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserEmail);
       this.presentInfo();
     }
   }
