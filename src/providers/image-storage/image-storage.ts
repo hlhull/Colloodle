@@ -32,6 +32,8 @@ export class ImageStorageProvider {
 
   setUp(group, section){}
 
+  createGroup(imgUrl, invites, currUserEmail){}
+
   /*
     convert base64/URLEncoded data component to raw binary data held in a string
      from: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata/5100158#5100158
