@@ -16,11 +16,11 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item>
+    <ion-item (click)="drawGroup('new')">
       <h2>New Drawing!</h2>
     </ion-item>
-    <ion-item *ngFor="let group of this.groupManager.invited">
-      <h2>{{group['group']}}</h2>
+    <ion-item *ngFor="let group of this.groupManager.invited" (click)="drawGroup(group['group'], group['conflict'])">
+      <h2 [ngStyle]="{'color': group['conflict']? 'gray' : 'black'}">Doodle with {{group['inviter']}}</h2>
     </ion-item>
   </ion-list>
 

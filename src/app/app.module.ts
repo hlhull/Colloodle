@@ -16,6 +16,7 @@ import { FinalPage } from '../pages/final/final';
 import { GroupsPage } from '../pages/groups/groups';
 import { DrawingModesPage } from '../pages/drawing-modes/drawing-modes';
 import { FriendsPage } from '../pages/friends/friends';
+import { ChooseFriendsPage } from '../pages/choose-friends/choose-friends';
 
 import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
 
@@ -54,7 +55,8 @@ import { Screenshot } from '@ionic-native/screenshot';
     PopoverPage,
     UserPopoverPage,
     DrawingModesPage,
-    FriendsPage
+    FriendsPage,
+    ChooseFriendsPage
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,8 @@ import { Screenshot } from '@ionic-native/screenshot';
     UserPopoverPage,
     FinalPage,
     DrawingModesPage,
-    FriendsPage
+    FriendsPage,
+    ChooseFriendsPage
   ],
   providers: [
     StatusBar,

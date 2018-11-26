@@ -10,6 +10,7 @@ import { AlertController } from 'ionic-angular';
 import * as firebase from 'firebase';
 import { InfoPage } from '../info/info';
 import { GroupsPage } from '../groups/groups';
+import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 
 @Component({
   selector: 'page-home',
@@ -17,7 +18,7 @@ import { GroupsPage } from '../groups/groups';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public groupManager: GroupManagerProvider) {
     this.screenOrientation.lock('portrait');
   }
 

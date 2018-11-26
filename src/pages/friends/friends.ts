@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
+import { FriendsStorageProvider } from '../../providers/image-storage/friends-storage';
+import { DrawingPage } from '../drawing/drawing';
 
 /**
  * Generated class for the FriendsPage page.
@@ -17,6 +19,13 @@ import { GroupManagerProvider } from '../../providers/group-manager/group-manage
 export class FriendsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
+  }
+
+  drawGroup(group, conflict){
+    if(!conflict){
+      var imageStorage = new FriendsStorageProvider(group);
+      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    }
   }
 
   ionViewDidLoad() {

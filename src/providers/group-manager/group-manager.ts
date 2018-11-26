@@ -15,9 +15,10 @@ export class GroupManagerProvider {
   completed = [];
   inProgress = [];
   invited = [];
-  done : any;
+  done: any;
   compLastTime: any;
   invitLastTime: any;
+  new = 0;
 
   constructor(private localNotifications: LocalNotifications) {}
 
@@ -69,7 +70,7 @@ export class GroupManagerProvider {
       snapshot.forEach(function(userGroupSnapshot) {
         self.invitLastTime = userGroupSnapshot.key;
         //don't set section b/c we don't know which section user will draw yet
-        var info = {"section" : null, "group": userGroupSnapshot.key};
+        var info = {"inviter" : userGroupSnapshot.val(), "group": userGroupSnapshot.key};
         self.invited.push(info);
       });
     });
@@ -87,7 +88,7 @@ export class GroupManagerProvider {
 
     this.invitLastTime = this.getLastTimestamp(this.invitLastTime);
     this.userRef.child("invited").orderByKey().startAt(self.invitLastTime).on('child_added', userGroupSnapshot => {
-      var info = {"section" : null, "group": userGroupSnapshot.key};
+      var info = {"section" : null, "group": userGroupSnapshot.key, "conflict": false};
       self.invited.push(info);
     });
   }
@@ -139,19 +140,42 @@ export class GroupManagerProvider {
     this.databaseRef.child("groups").on('child_changed', changedSnapshot => {
       // loop over inProgress and if the changed group matches, move to completed
       found = false;
-      if(changedSnapshot.val() == 0){
-        var length = this.inProgress.length;
-        for (var i = 0; i < length; i++) {
-            var entry = self.inProgress[i];
-            if(entry['group'] == changedSnapshot.key && !found){
-              var found = true;
-              self.inProgress.splice(i, 1);
-              self.completed.push(entry);
-              self.sendNotification();
-            }
-        }
+      var val = changedSnapshot.val();
+      if(val == 0){
+        self.checkForCompleted(changedSnapshot.key);
+      } else if (val == "currDrawing" || val == 12){
+        self.checkForInvitedConflict(val, changedSnapshot.key);
       }
     });
+  }
+
+  checkForCompleted(groupNum){
+    var length = this.inProgress.length;
+    for (var i = 0; i < length; i++) {
+        var entry = this.inProgress[i];
+        if(entry['group'] == groupNum && !found){
+          var found = true;
+          this.inProgress.splice(i, 1);
+          this.completed.push(entry);
+          this.new += 1;
+          this.sendNotification();
+        }
+    }
+  }
+
+  checkForInvitedConflict(status, groupNum){
+    var length = this.invited.length;
+    for (var i = 0; i < length; i++) {
+        var entry = this.invited[i];
+        if(entry['group'] == groupNum && !found){
+          var found = true;
+          if(status == "currDrawing"){
+            this.invited[i]['conflict'] = true;
+          } else {
+            this.invited[i]['conflict'] = false;
+          }
+        }
+    }
   }
 
   sendNotification(){
@@ -229,6 +253,7 @@ export class GroupManagerProvider {
     this.completed = [];
     this.inProgress = [];
     this.invited = [];
+    this.new = 0;
 
     if(this.userID != null){
       this.databaseRef.child("groups").off();
@@ -237,5 +262,9 @@ export class GroupManagerProvider {
 
     this.userID = null;
     this.userRef = null;
+  }
+
+  resetNew(){
+    this.new = 0;
   }
 }

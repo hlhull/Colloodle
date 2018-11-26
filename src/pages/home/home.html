@@ -50,7 +50,9 @@ text-align: center;
 <ion-content  padding class="bg-image">
 
        <button id='Doodle' ion-button (click)="goToDrawingModesPage()" color="light" round outline large>Doodle</button>
-       <button id='Gallery' ion-button (click)="goToGallery()" color="light" round outline large>Gallery</button>
+       <button id='Gallery' ion-button (click)="goToGallery()" color="light" round outline large>Gallery
+       </button>
+       <ion-badge *ngIf="this.groupManager.new > 0" id='Gallery-badge' color="lightPrimary">{{this.groupManager.new}}</ion-badge>
        <button id='info' ion-button (click)="goToInfoPage()" color="light" round clear icon-only>How To Play<ion-icon name="information-circle"></ion-icon></button>
 
 </ion-content>

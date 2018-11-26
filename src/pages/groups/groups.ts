@@ -23,6 +23,7 @@ export class GroupsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
       this.setThumnails(); // set the thumbnails
+      this.groupManager.resetNew();
   }
 
   /*
