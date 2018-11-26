@@ -46,7 +46,7 @@ export class ChooseFriendsPage {
 
   // on input, check if input is a user's email; invite them if so
   onInput(searchbar){
-    if (searchbar.srcElement != undefined){
+    if (searchbar != null){
       var email = searchbar.srcElement.value;
       var self = this;
 
@@ -66,7 +66,7 @@ export class ChooseFriendsPage {
     this.invites.push(matchInfo['email']);
     var userUID = matchInfo['userID'];
     this.matches = [];
-    this.searchbar.clearInput(' ');
+    this.searchbar.clearInput(null);
     this.numInvited += 1;
 
     this.databaseRef.child("users").child(userUID).child("invited").child(this.imageStorage.groupNumber).set(this.currUserEmail);

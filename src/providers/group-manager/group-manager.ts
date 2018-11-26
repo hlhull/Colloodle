@@ -18,6 +18,7 @@ export class GroupManagerProvider {
   done: any;
   compLastTime: any;
   invitLastTime: any;
+  new = 0;
 
   constructor(private localNotifications: LocalNotifications) {}
 
@@ -156,6 +157,7 @@ export class GroupManagerProvider {
           var found = true;
           this.inProgress.splice(i, 1);
           this.completed.push(entry);
+          this.new += 1;
           this.sendNotification();
         }
     }
@@ -251,6 +253,7 @@ export class GroupManagerProvider {
     this.completed = [];
     this.inProgress = [];
     this.invited = [];
+    this.new = 0;
 
     if(this.userID != null){
       this.databaseRef.child("groups").off();
@@ -259,5 +262,9 @@ export class GroupManagerProvider {
 
     this.userID = null;
     this.userRef = null;
+  }
+
+  resetNew(){
+    this.new = 0;
   }
 }
