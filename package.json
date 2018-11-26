@@ -24,12 +24,14 @@
     "@ionic-native/file": "^4.15.0",
     "@ionic-native/local-notifications": "^4.17.0",
     "@ionic-native/screen-orientation": "^4.17.0",
+    "@ionic-native/screenshot": "^4.17.0",
     "@ionic-native/splash-screen": "~4.15.0",
     "@ionic-native/status-bar": "^4.15.0",
     "@ionic/pro": "2.0.3",
     "@ionic/storage": "2.2.0",
     "@ultimate/ngxerrors": "^1.4.0",
     "angularfire2": "^5.1.0",
+    "com.darktalker.cordova.screenshot": "0.1.6",
     "cordova-android": "7.1.1",
     "cordova-ios": "4.5.5",
     "cordova-plugin-badge": "0.8.7",
@@ -69,7 +71,8 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-file": {},
       "cordova-plugin-screen-orientation": {},
-      "cordova-plugin-local-notification": {}
+      "cordova-plugin-local-notification": {},
+      "com.darktalker.cordova.screenshot": {}
     },
     "platforms": [
       "android",

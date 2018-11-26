@@ -6,6 +6,7 @@ import { ImageStorageProvider } from '../../providers/image-storage/image-storag
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
+import { Screenshot } from '@ionic-native/screenshot';
 
 /**
  * Class for the FinalPage page.
@@ -24,7 +25,7 @@ export class FinalPage {
   @ViewChild('bottomCanvas') Bcanvas: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.screenOrientation.lock('portrait');
@@ -32,6 +33,20 @@ export class FinalPage {
 
   goHome(): void {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  save() {
+    // Take a screenshot and save to file
+this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
+  res => console.log('Saved image to camera roll ', res),
+  err => console.log('Error saving image to camera roll ', err)
+);
+
+// Take a screenshot and get temporary file URI
+this.screenshot.URI(80).then(
+  res => console.log('Saved image to URI ', res),
+  err => console.log('Error saving image to URI ', err)
+);
   }
 
   /*

@@ -37,6 +37,7 @@ import { UserPopoverPage } from '../pages/user-popover/user-popover';
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../providers/group-manager/group-manager';
+import { Screenshot } from '@ionic-native/screenshot';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { GroupManagerProvider } from '../providers/group-manager/group-manager';
     AngularFireAuth,
     AuthService,
     ScreenOrientation,
-    GroupManagerProvider
+    GroupManagerProvider,
+    Screenshot
   ]
 })
 export class AppModule {}
