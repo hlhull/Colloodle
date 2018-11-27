@@ -20,10 +20,11 @@ import { Screenshot } from '@ionic-native/screenshot';
   templateUrl: 'final.html',
 })
 export class FinalPage {
-  @ViewChild('topCanvas') Tcanvas: any;
-  @ViewChild('middleCanvas') Mcanvas: any;
-  @ViewChild('bottomCanvas') Bcanvas: any;
+  @ViewChild('finalCanvas') finalCanvas: any;
+  @ViewChild('backgroundCanvas') backcanvas: any;
 
+  canvasElement: any;
+  picHeight: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot) {
     this.imageStorage = navParams.get('imageStorage');
@@ -37,44 +38,57 @@ export class FinalPage {
 
   save() {
     // Take a screenshot and save to file
-this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
-  res => console.log('Saved image to camera roll ', res),
-  err => console.log('Error saving image to camera roll ', err)
-);
+    this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
+      res => console.log('Saved image to camera roll ', res),
+      err => console.log('Error saving image to camera roll ', err)
+    );
 
-// Take a screenshot and get temporary file URI
-this.screenshot.URI(80).then(
-  res => console.log('Saved image to URI ', res),
-  err => console.log('Error saving image to URI ', err)
-);
+    // Take a screenshot and get temporary file URI
+    this.screenshot.URI(80).then(
+      res => console.log('Saved image to URI ', res),
+      err => console.log('Error saving image to URI ', err)
+    );
   }
 
   /*
-  * Takes the 3 picture urls passed in and draws them each on their own canvas,
-  * scaling them down in the process. The canvases are stacked on one another,
-  * so it becomes 1 picture.
+    Takes the 3 picture urls passed in and loads them and then calls drawImages
   */
-  drawPictures(pictures){
-    //was hoping to change this so it set the canvases to the following width and heights
-    //var setWidth =this.platform.width();
-    //var setHeight = this.platform.width()*9/16;
-
-    var canvases = [this.Tcanvas, this.Mcanvas, this.Bcanvas];
-    for (var i = 0; i < pictures.length; i++) {
-      let ctx = canvases[i].nativeElement.getContext('2d'); // assigns context to appropriate canvas
-      let img = new Image();
-      img = pictures[i]; //assign image to one of the pictures passed into drawPictures
-      img.onload = function() { //once the image loads, then draw it on the canvas
-        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-      }
+  loadImages(pictures){
+    var loadedImages = 0;
+    var numImages = 3;
+    var images = {};
+    var self = this;
+    // get num of sources
+    for(var i in pictures) {
+      images[i] = new Image();
+      images[i] = pictures[i]
+      images[i].onload = function() {
+        if(++loadedImages >= numImages) {
+          //once all images are loaded, draw them
+          self.drawImages(images);
+        }
+      };
     }
   }
 
   /*
-  * Downloads the 3 images from the appropriate group # and calls drawPictures
-  * to draw them on the canvas
+    draws the loaded images in images{} onto the canvas
+  */
+  drawImages(images){
+    let ctx = this.finalCanvas.nativeElement.getContext('2d'); // assigns context to appropriate canvas
+
+    for (var i = 0; i < 3; i++) {
+      ctx.drawImage(images[i], 0, i*this.picHeight, ctx.canvas.clientWidth, this.picHeight);
+    }
+  }
+
+  /*
+    Set canvas, then downloads the 3 images from the appropriate group # and calls
+    loadImages to draw them on the canvas
   */
   ngAfterViewInit(){
+    this.setCanvas();
+
     var img = new Image();
     var pictures = [new Image(), new Image(), new Image()];
 
@@ -85,10 +99,43 @@ this.screenshot.URI(80).then(
        pictures[0].src = value[0];
        pictures[1].src = value[1];
        pictures[2].src = value[2];
-       this.drawPictures(pictures);
+       this.loadImages(pictures);
      });
 
   }
+
+  /*
+    sets the canvas size to be as large as possible while keeping 16:9 ratio
+    for each image
+  */
+  setCanvas(){
+    // get the max height / width we can use
+    var canvas = document.getElementById('backgroundCanvas');
+    this.canvasElement = this.backcanvas.nativeElement;
+
+    var maxHeight = this.canvasElement.offsetHeight;
+    var maxWidth = this.canvasElement.offsetWidth;
+
+    // set height / width of canvas with 16:9 ratio
+    var c = <HTMLCanvasElement>document.getElementById('finalCanvas');
+    if(maxHeight < maxWidth){
+      // when coming from drawing page, sometimes it'll still think it's in
+      // landscape, so we need to switch height and width
+      var temp = maxWidth;
+      maxWidth = maxHeight;
+      maxHeight = temp;
+    }
+    if((maxHeight/3) > (maxWidth*(9/16))){
+      this.picHeight = ((27/16)*maxWidth)/3;
+      c.width = maxWidth;
+      c.height = this.picHeight*3;
+    } else {
+      this.picHeight = maxHeight / 3;
+      c.width = ((16/9)*this.picHeight);
+      c.height = this.picHeight*3;
+    }
+  }
+
 
   deleteGroup(){
     this.groupManager.deleteGroup(this.imageStorage.groupNumber);
