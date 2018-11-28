@@ -10,4 +10,6 @@ import { GroupsPage } from './groups';
     IonicPageModule.forChild(GroupsPage),
   ],
 })
-export class GroupsPageModule {}
+export class GroupsPageModule {
+  this.drawings='Completed';
+}

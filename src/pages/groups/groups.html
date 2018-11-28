@@ -4,37 +4,45 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+
+
 <ion-header>
 
   <ion-navbar>
     <ion-title>My Groups</ion-title>
   </ion-navbar>
+  <div padding>
+    <ion-segment [(ngModel)]="drawings">
+      <ion-segment-button value="Completed" (click)='setThumnails()' isActive='Completed'>
+        Completed
+      </ion-segment-button>
+      <ion-segment-button value="In Progress" (click)='setThumnails()'>
+        In Progress
+      </ion-segment-button>
+    </ion-segment>
+  </div>
 
 </ion-header>
 
 
 <ion-content padding>
 
-  <ion-list>
-    <ion-list-header>
-      Completed
-    </ion-list-header>
-    <ion-item *ngFor="let group of this.groupManager.completed">
-       <ion-thumbnail item-start>
-         <img id="{{group['group']}}" style="border:1px solid #009691">
-      </ion-thumbnail>
-      <h2>{{this.getSectionName(group['section'])}}</h2>
-        <button ion-button clear item-end (click)="this.viewGroupDrawing(group['group'])">View</button>
-        <button ion-button icon-only clear item-end (click)="this.groupManager.deleteGroup(group['group'])">
-          <ion-icon name="trash"></ion-icon>
-        </button>
-    </ion-item>
-  </ion-list>
+  <div [ngSwitch]="drawings">
+    <ion-list *ngSwitchCase="'Completed'">
+      <ion-item *ngFor="let group of this.groupManager.completed">
+         <ion-thumbnail item-start>
+           <img id="{{group['group']}}" style="border:1px solid #009691">
+        </ion-thumbnail>
+        <h2>{{this.getSectionName(group['section'])}}</h2>
+          <button ion-button clear item-end (click)="this.viewGroupDrawing(group['group'])">View</button>
+          <button ion-button icon-only clear item-end (click)="this.groupManager.deleteGroup(group['group'])">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+      </ion-item>
+    </ion-list>
 
-  <ion-list>
-    <ion-list-header>
-      In Progress
-    </ion-list-header>
+
+  <ion-list *ngSwitchCase="'In Progress'">
     <ion-item *ngFor="let group of this.groupManager.inProgress">
        <ion-thumbnail item-start>
          <img id="{{group['group']}}" style="border:1px solid #009691">
@@ -42,5 +50,6 @@
       <h2>{{this.getSectionName(group['section'])}}</h2>
     </ion-item>
   </ion-list>
+  </div>
 
 </ion-content>

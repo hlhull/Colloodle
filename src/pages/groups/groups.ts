@@ -66,6 +66,7 @@ export class GroupsPage {
     Assigns the src url of the thumbnail images to the user's drawing
   */
   assignSrc(info){
+    console.log("assigning", info)
     var group = info['group'];
     this.storageRef.child(group).child(info['section']+'.png').getDownloadURL().then(function(url) {
       var img: HTMLElement  = document.getElementById(group);
