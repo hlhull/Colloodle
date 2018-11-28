@@ -40,15 +40,41 @@ text-align: center;
     </ion-item>
     <ion-item>
       <button ion-button (click)="goToPassAround()">Pass Around</button>
-      <ion-icon name="arrow-down" item-right></ion-icon>
+      <button ion-button icon-only clear item-right (click)="togglePassAroundDetails()" *ngIf="!passAroundDetailsVisible">
+        <ion-icon name="arrow-down"></ion-icon>
+      </button>
+      <button ion-button icon-only clear item-right (click)="togglePassAroundDetails()" *ngIf="passAroundDetailsVisible">
+        <ion-icon name="arrow-up"></ion-icon>
+      </button>
+      <p *ngIf="passAroundDetailsVisible">
+        Draw the head, then torso, then legs, all on your own phone! Pass your
+        phone around so friends can draw a section, or draw it all by yourself!
+      </p>
     </ion-item>
     <ion-item>
       <button ion-button (click)="goToRandom()">Random</button>
-      <ion-icon name="arrow-down" item-right></ion-icon>
+      <button ion-button icon-only clear item-right (click)="toggleRandomDetails()" *ngIf="!randomDetailsVisible">
+        <ion-icon name="arrow-down"></ion-icon>
+      </button>
+      <button ion-button icon-only clear item-right (click)="toggleRandomDetails()" *ngIf="randomDetailsVisible">
+        <ion-icon name="arrow-up"></ion-icon>
+      </button>
+      <p *ngIf="randomDetailsVisible">
+        Draw one piece of the drawing and other Colloodlers will draw the rest!
+        You must be logged in and connected to the internet to use this mode.
+      </p>
     </ion-item>
     <ion-item>
       <button ion-button (click)="goToFriends()">Friends</button>
-      <ion-icon name="arrow-down" item-right></ion-icon>
+      <button ion-button icon-only clear item-right (click)="toggleFriendsDetails()" *ngIf="!friendsDetailsVisible">
+        <ion-icon name="arrow-down"></ion-icon>
+      </button>
+      <button ion-button icon-only clear item-right (click)="toggleFriendsDetails()" *ngIf="friendsDetailsVisible">
+        <ion-icon name="arrow-up"></ion-icon>
+      </button>
+      <p *ngIf="friendsDetailsVisible">
+        Draw one piece of the drawing and invite friends to draw the rest!
+        You must be logged in and connected to the internet to use this mode.
     </ion-item>
   </ion-list>
 </ion-content>

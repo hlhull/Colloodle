@@ -26,7 +26,23 @@ import * as firebase from 'firebase';
 })
 export class DrawingModesPage {
 
+  passAroundDetailsVisible = false;
+  randomDetailsVisible = false;
+  friendsDetailsVisible = false;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private alertCtrl: AlertController, public popoverCtrl: PopoverController) {
+  }
+
+  togglePassAroundDetails() {
+    this.passAroundDetailsVisible = !this.passAroundDetailsVisible;
+  }
+
+  toggleRandomDetails() {
+    this.randomDetailsVisible = !this.randomDetailsVisible;
+  }
+
+  toggleFriendsDetails() {
+    this.friendsDetailsVisible = !this.friendsDetailsVisible;
   }
 
   goToPassAround(){
