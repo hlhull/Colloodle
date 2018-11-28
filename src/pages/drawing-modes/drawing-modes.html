@@ -6,25 +6,25 @@
 -->
 
 <ion-header>
-
-      <ion-item *ngIf="auth.getEmail()" left dark>
+  <!-- <ion-navbar color="primary" hideBackButton=true> -->
+      <ion-item *ngIf="auth.getEmail()" left color="primary">
         {{auth.getEmail()}}
-        <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="presentUserPopover($event)">
       	   <ion-icon name="person" right></ion-icon>
         </button>
-        <button ion-button icon-only clear style="float: right;" (click)="goToHome()">
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="goToHome()">
            <ion-icon name="home" right></ion-icon>
         </button>
       </ion-item>
 
-      <ion-item (click)="login()" *ngIf="!auth.authenticated">
+      <ion-item (click)="login()" *ngIf="!auth.authenticated" color="primary">
         <ion-icon name="log-in" item-left></ion-icon>
         Log in
-        <button ion-button icon-only clear style="float: right;" (click)="goToHome();$event.stopPropagation();">
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="goToHome();$event.stopPropagation();">
           <ion-icon name="home" right></ion-icon>
         </button>
       </ion-item>
-
+  <!-- </ion-navbar> -->
 </ion-header>
 
 <style>
@@ -32,7 +32,28 @@ ion-header {
 text-align: center;
 }
 </style>
-<ion-content  padding style="background-color: #009691">
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      Drawing Modes:
+    </ion-item>
+    <ion-item>
+      <button ion-button (click)="goToPassAround()">Pass Around</button>
+      <ion-icon name="arrow-down" item-right></ion-icon>
+    </ion-item>
+    <ion-item>
+      <button ion-button (click)="goToRandom()">Random</button>
+      <ion-icon name="arrow-down" item-right></ion-icon>
+    </ion-item>
+    <ion-item>
+      <button ion-button (click)="goToFriends()">Friends</button>
+      <ion-icon name="arrow-down" item-right></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<!-- <ion-content  padding style="background-color: #009691">
 
   <ion-card (click)="goToPassAround()">
     <ion-card-header>
@@ -67,4 +88,4 @@ text-align: center;
     </ion-card-content>
   </ion-card>
 
-</ion-content>
+</ion-content> -->
