@@ -499,11 +499,13 @@ export class DrawingPage {
   presentConfirmOrError(){
     var section = this.imageStorage.sectionNumber;
 
-    if(!this.checkEdgeOfCanvas("bottom") && (section == 0 || section == 1)){
-      this.presentError('bottom');
+    if(!this.checkEdgeOfCanvas("top") && !this.checkEdgeOfCanvas("bottom") && section == 1) {
+      this.presentError("top and bottom edges")
+    } else if(!this.checkEdgeOfCanvas("bottom") && (section == 0 || section == 1)) {
+      this.presentError("bottom edge");
     }
-    else if (!this.checkEdgeOfCanvas("top") && (section == 1 || section == 2)){
-      this.presentError('top')
+    else if (!this.checkEdgeOfCanvas("top") && (section == 1 || section == 2)) {
+      this.presentError("top edge");
     }
     else {
       this.presentConfirmNextStep();
@@ -511,7 +513,7 @@ export class DrawingPage {
   }
 
   presentError(whichEdge){
-    var message = 'Be sure to draw to the very ' + whichEdge + ' edge of the screen'
+    var message = "Be sure to draw to the very " + whichEdge + " of the screen";
     let alert = this.alertCtrl.create({
       title: 'Hold on!',
       message: message,
