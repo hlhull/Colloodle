@@ -11,6 +11,7 @@ import { LoginPage } from '../login/login';
 import { SignupPage } from '../signup/signup';
 import { FriendsPage } from '../friends/friends';
 import * as firebase from 'firebase';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 /**
  * Generated class for the DrawingModesPage page.
@@ -30,7 +31,8 @@ export class DrawingModesPage {
   randomDetailsVisible = false;
   friendsDetailsVisible = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private alertCtrl: AlertController, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public popoverCtrl: PopoverController) {
+    this.screenOrientation.unlock();
   }
 
   togglePassAroundDetails() {

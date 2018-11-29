@@ -4,6 +4,7 @@ import { GroupManagerProvider } from '../../providers/group-manager/group-manage
 import { FinalPage } from '../final/final';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import firebase from 'firebase';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 
 /**
@@ -21,7 +22,8 @@ import firebase from 'firebase';
 export class GroupsPage {
   storageRef = firebase.storage().ref();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private screenOrientation: ScreenOrientation, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
+      this.screenOrientation.lock('portrait');
       this.setThumnails(); // set the thumbnails
       this.groupManager.resetNew();
   }

@@ -31,7 +31,7 @@ export class LoginPage {
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 
-    this.screenOrientation.lock("portrait");
+    this.screenOrientation.unlock();
 	}
 
 /*
@@ -67,7 +67,7 @@ login() {
   * go to reset password page
   */
   goResetPassword() {
-    this.navCtrl.setRoot(ResetPasswordPage);
+    this.navCtrl.push(ResetPasswordPage);
   }
 
 
