@@ -8,30 +8,19 @@ import { BrushProvider } from '../../providers/brush/brush'
   Menu on DrawingPage that allows user to change brush options, using BrushProvider
 */
 @Component({
-  template: ` 
-    <ion-list>
-      <ion-item>
-        <h2 ion-text [style.color]="dark">Brush Options</h2>
-        <button ion-button icon-only (click)="this.close()" item-right color="dark" clear>
-          <ion-icon name="close" align="right"></ion-icon>
-        </button>
-      </ion-item>
-      <button *ngFor="let color of this.brushService.availableColors" icon-only ion-button clear (click)="this.brushService.changeColor(color)">
-          <ion-icon [style.color]="color" name="square"></ion-icon>
-      </button>
-      <button ion-button outline small (click)="this.brushService.eraser()">Eraser</button>
-      <ion-item>
-        <ion-range min="1" max="100" [style.color]="this.brushService.styleColor" [(ngModel)]="this.brushService.size" (ionChange)="this.brushService.changeSize($event)">
-          <ion-icon range-left style="font-size: 1em;" name="radio-button-on"></ion-icon>
-          <ion-icon range-right style="font-size: 2em;" name="radio-button-on"></ion-icon>
-        </ion-range>
-      </ion-item>
-    </ion-list>
-  `
+  selector: '.custom-popover',
+  templateUrl: 'color-popover.html'
 })
 // TODO: RENAME
 export class PopoverPage {
   constructor(public viewCtrl: ViewController, public brushService: BrushProvider) {}
+
+  // ionViewDidLoad() {
+  //   let element = document.getElementById('id')
+  //   let parent=element.parentElement
+  //   let parent2 = parent.parentElement //popover-content
+  //   parent2.parentElement.style['width'] = "92px"
+  // }
 
   close() {
     this.viewCtrl.dismiss();
