@@ -39,7 +39,6 @@ export class ImageStorageProvider {
      from: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata/5100158#5100158
   */
   static dataUrlToBlob(dataUrl){
-      console.log("here");
       var byteString;
       if (dataUrl.split(',')[0].indexOf('base64') >= 0){
           byteString = atob(dataUrl.split(',')[1]);

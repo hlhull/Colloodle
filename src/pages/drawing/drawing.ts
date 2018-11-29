@@ -9,6 +9,7 @@ import { BrushProvider } from '../../providers/brush/brush';
 import { AlertController } from 'ionic-angular';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import { PassAroundStorageProvider } from '../../providers/image-storage/pass-around-storage';
+import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FriendsStorageProvider } from '../../providers/image-storage/friends-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { LocalNotifications } from '@ionic-native/local-notifications';
@@ -47,7 +48,7 @@ export class DrawingPage {
 
   imageStorage;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar, private localNotifications: LocalNotifications) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public brushService: BrushProvider, private alertCtrl: AlertController, private screenOrientation: ScreenOrientation, private statusBar: StatusBar, private localNotifications: LocalNotifications, public groupManager: GroupManagerProvider) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.statusBar.hide();
@@ -182,7 +183,12 @@ export class DrawingPage {
         this.presentWhichSection(this.imageStorage.sectionNumber);
       }
     } else {
-      this.imageStorage.updateGroup().then(() => this.imageStorage.storeImage(img.src).then((proceed) => {
+      if(!this.groupManager.connected){
+        this.imageStorage.updateGroup(img.src);
+        this.presentDisconnected();
+        this.navCtrl.setRoot(HomePage);
+      }
+      this.imageStorage.updateGroup(img.src).then(() => {
           if (this.imageStorage.sectionNumber == 2) {
             this.navCtrl.setRoot(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
           }
@@ -192,7 +198,7 @@ export class DrawingPage {
           } else {
             this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage, imgUrl: img.src});
           }
-      }));
+      });
     }
   }
 
@@ -404,7 +410,7 @@ export class DrawingPage {
   *Presents the popover menu with color and brush size
   */
   presentPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverPage);
+    let popover = this.popoverCtrl.create(PopoverPage, { cssClass: 'custom-popover'});
     popover.present({
       ev: myEvent
     });
@@ -499,11 +505,13 @@ export class DrawingPage {
   presentConfirmOrError(){
     var section = this.imageStorage.sectionNumber;
 
-    if(!this.checkEdgeOfCanvas("bottom") && (section == 0 || section == 1)){
-      this.presentError('bottom');
+    if(!this.checkEdgeOfCanvas("top") && !this.checkEdgeOfCanvas("bottom") && section == 1) {
+      this.presentError("top and bottom edges")
+    } else if(!this.checkEdgeOfCanvas("bottom") && (section == 0 || section == 1)) {
+      this.presentError("bottom edge");
     }
-    else if (!this.checkEdgeOfCanvas("top") && (section == 1 || section == 2)){
-      this.presentError('top')
+    else if (!this.checkEdgeOfCanvas("top") && (section == 1 || section == 2)) {
+      this.presentError("top edge");
     }
     else {
       this.presentConfirmNextStep();
@@ -511,7 +519,7 @@ export class DrawingPage {
   }
 
   presentError(whichEdge){
-    var message = 'Be sure to draw to the very ' + whichEdge + ' edge of the screen'
+    var message = "Be sure to draw to the very " + whichEdge + " of the screen";
     let alert = this.alertCtrl.create({
       title: 'Hold on!',
       message: message,
@@ -541,6 +549,24 @@ export class DrawingPage {
         },
         {
           text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /*
+    Let user know they're disconnected from network
+  */
+  presentDisconnected(){
+    let alert = this.alertCtrl.create({
+      title: 'No Connection',
+      message: 'Once you connect to the internet we will finish uploading your drawing',
+      buttons: [
+        {
+          text: 'Ok',
           role: 'cancel',
           handler: () => {}
         }

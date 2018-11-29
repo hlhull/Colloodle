@@ -29,7 +29,7 @@ export class SignupPage {
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 
-		this.screenOrientation.lock("portrait");
+		this.screenOrientation.unlock();
   }
 
 	/*

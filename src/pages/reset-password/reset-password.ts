@@ -25,7 +25,7 @@ export class ResetPasswordPage {
 			email: ['', Validators.compose([Validators.required, Validators.email])]
 		});
 
-		this.screenOrientation.lock("portrait");
+		this.screenOrientation.unlock();
   }
 
 	// /*
