@@ -11,13 +11,13 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   template: `
     <ion-list>
-      <button icon-only ion-button (click)="this.close()" style="float: right;" color="dark" clear>
-        <ion-icon name="close" align="right"></ion-icon>
-      </button>
       <ion-item>
         <button ion-button clear (click)="this.logout()">
             <ion-icon name="log-out"></ion-icon>
             Logout
+        </button>
+        <button icon-only ion-button (click)="this.close()" item-right color="dark" clear>
+          <ion-icon name="close" align="right"></ion-icon>
         </button>
       </ion-item>
       <ion-item>
