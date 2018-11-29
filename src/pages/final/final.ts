@@ -1,5 +1,5 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import { HomePage} from '../home/home';
 
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
@@ -26,7 +26,7 @@ export class FinalPage {
   canvasElement: any;
   picHeight: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.screenOrientation.lock('portrait');
@@ -51,7 +51,7 @@ export class FinalPage {
   }
 
   share() {
-    
+
   }
 
   /*
@@ -149,5 +149,29 @@ export class FinalPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad FinalPage');
+  }
+
+  /*
+  * Causes an alert/confirmation screen to pop up when delete/trash button is pressed
+  */
+  presentConfirmDelete() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to delete this drawing? If you delete it, it cannot be recovered.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.deleteGroup();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 }
