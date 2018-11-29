@@ -72,7 +72,7 @@ export class RandomStorageProvider {
     creates group, puts group in next list, or updates group status as done
     returns promise for when new group has been created / updateGroup() is done
   */
-  updateGroup(){
+  updateGroup(imgUrl){
     var promise;
     var userID = firebase.auth().currentUser.uid;
     // if no group has been made yet (this was first drawing) --> push to Firebase,
@@ -83,19 +83,20 @@ export class RandomStorageProvider {
         self.groupNumber = ref.getKey();
         self.databaseRef.child("groups").child(ref.getKey()).set("inProgress");
         self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
+        self.storeImage(imgUrl);
       });
     }
     // if this was the 2nd drawing put group back into next list
     else if (this.sectionNumber == 1) {
       this.nextListRef.child(this.groupNumber).set(this.sectionNumber + 1);
       this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
-      promise = new Promise(function(resolve, reject) {resolve(true)});
+      promise = this.storeImage(imgUrl); //new Promise(function(resolve, reject) {resolve(true)});
     }
     // if this was the last drawing, update group status that 1 person has seen it
     else if (this.sectionNumber == 2) {
       this.databaseRef.child("groups").child(this.groupNumber).set(0);
       this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
-      promise = new Promise(function(resolve, reject){resolve(true)});
+      promise = this.storeImage(imgUrl);//new Promise(function(resolve, reject){resolve(true)});
     }
     return promise;
   }

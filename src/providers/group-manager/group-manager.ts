@@ -31,66 +31,24 @@ export class GroupManagerProvider {
         this.listenForConnectionChanges();
         this.userID = firebase.auth().currentUser.uid;
         this.userRef = this.databaseRef.child("users").child(this.userID);
-        this.done = this.getGroups();
-        this.done.then(() => {
-          this.listenForAddedGroups();
-          this.listenForCompletedGroups();
-          this.listenForInvitedRemoved();
-        });
+        this.listenForAddedGroups();
+        this.listenForCompletedGroups();
+        this.listenForInvitedRemoved();
     }
-  }
-
-  /*
-    sets variable groups to array of all groups user is in
-  */
-  getGroups(){
-    var self = this;
-    var promises = [];
-
-    this.getInvitedGroups();
-
-    // add all groups user is currently in to inProgress or completed in form
-    // [{"section": x, "group": y}, {...}, ...]
-    var userInfo = this.userRef.child("completed").orderByKey().once('value');
-    return userInfo.then((snapshot) => {
-      snapshot.forEach(function(userGroupSnapshot) {
-        self.compLastTime= userGroupSnapshot.key;
-        var promise = self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
-        promises.push(promise);
-      });
-      return Promise.all(promises);
-    });
-  }
-
-  /*
-    add all groups user is invited to to invited[]
-  */
-  getInvitedGroups(){
-    var self = this;
-
-    this.userRef.child("invited").once('value', function(snapshot){
-      snapshot.forEach(function(userGroupSnapshot) {
-        self.invitLastTime = userGroupSnapshot.key;
-        //don't set section b/c we don't know which section user will draw yet
-        var info = {"inviter" : userGroupSnapshot.val(), "group": userGroupSnapshot.key};
-        self.invited.push(info);
-      });
-    });
   }
 
   /*
     When a user joins a new group, adds it to inProgress or Completed or Invited
   */
   listenForAddedGroups(){
-    this.compLastTime = this.getLastTimestamp(this.compLastTime);
     var self = this;
-    this.userRef.child("completed").orderByKey().startAt(self.compLastTime).on('child_added', userGroupSnapshot => {
+
+    this.userRef.child("completed").orderByKey().on('child_added', userGroupSnapshot => {
         self.addGroup(userGroupSnapshot.key, userGroupSnapshot.val());
     });
 
-    this.invitLastTime = this.getLastTimestamp(this.invitLastTime);
-    this.userRef.child("invited").orderByKey().startAt(self.invitLastTime).on('child_added', userGroupSnapshot => {
-      var info = {"section" : null, "group": userGroupSnapshot.key, "conflict": false};
+    this.userRef.child("invited").orderByKey().on('child_added', userGroupSnapshot => {
+      var info = {"section" : null, "group": userGroupSnapshot.key, "conflict": false, "inviter" : userGroupSnapshot.val()};
       self.invited.push(info);
       self.sendNotification(false);
     });
@@ -115,21 +73,6 @@ export class GroupManagerProvider {
           }
       }
     });
-  }
-
-  /*
-    takes the most recent timestamp and increments it, so we can listen for next time
-  */
-  getLastTimestamp(listLastTime): string{
-    var lastTime = listLastTime;
-    if(lastTime == undefined){
-      lastTime = 'a';
-    } else {
-      length = lastTime.length;
-      var char = String.fromCharCode(lastTime[length-1].charCodeAt(0) + 1);
-      lastTime = lastTime.substring(0,length-1) + char;
-    }
-    return lastTime;
   }
 
   /*
@@ -158,10 +101,8 @@ export class GroupManagerProvider {
     connectedRef.on("value", function(snap) {
       if (snap.val()) {
         self.connected = true;
-        console.log("connection?", self.connected);
       } else {
         self.connected = false;
-        console.log("connection?", self.connected);
       }
     });
   }

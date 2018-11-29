@@ -39,7 +39,7 @@ export class FriendsStorageProvider {
     return ImageStorageProvider.getOverlap(this.groupNumber, this.sectionNumber);
   }
 
-  updateGroup(){
+  updateGroup(imgUrl){
     var promise;
     var userID = firebase.auth().currentUser.uid;
     // if no group has been made yet (this was first drawing) wait until friends added to push
@@ -49,7 +49,8 @@ export class FriendsStorageProvider {
       this.databaseRef.child("groups").child(this.groupNumber).set(this.sectionNumber + 11);
       this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
       this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).remove();
-      promise = new Promise(function(resolve, reject) {resolve(true)});
+      promise = this.storeImage(imgUrl);
+      //promise = new Promise(function(resolve, reject) {resolve(true)});
     }
     // if this was the last drawing, update group status that 0 people have deleted it
     // move from user's invited list to completed list
@@ -57,9 +58,12 @@ export class FriendsStorageProvider {
       this.databaseRef.child("groups").child(this.groupNumber).set(0);
       this.databaseRef.child("users").child(userID).child("completed").child(this.groupNumber).set(this.sectionNumber);
       this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).remove();
+      promise = this.storeImage(imgUrl);
+      //promise = new Promise(function(resolve, reject){resolve(true)});
+    } else {
       promise = new Promise(function(resolve, reject){resolve(true)});
     }
-    return new Promise(function(resolve, reject){resolve(true)});
+    return promise; //new Promise(function(resolve, reject){resolve(true)});
   }
 
   storeImage(imgUrl){
@@ -83,7 +87,6 @@ export class FriendsStorageProvider {
        self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
        ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
        for (var i in invited){
-         console.log(invited[i]['userID']);
          self.inviteUser(invited[i]['userID'], currUserEmail);
        }
      });
@@ -104,7 +107,9 @@ export class FriendsStorageProvider {
   }
 
   cancelDrawing(){
-    this.databaseRef.child("groups").child(this.groupNumber).set(this.sectionNumber + 10);
+    if(this.sectionNumber != 0){
+      this.databaseRef.child("groups").child(this.groupNumber).set(this.sectionNumber + 10);
+    }
   }
 
 }
