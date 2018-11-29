@@ -19,6 +19,7 @@ export class GroupManagerProvider {
   compLastTime: any;
   invitLastTime: any;
   new = 0;
+  connected = false;
 
   constructor(private localNotifications: LocalNotifications) {}
 
@@ -27,6 +28,7 @@ export class GroupManagerProvider {
   */
   setUpManager(){
     if(firebase.auth().currentUser != null){
+        this.listenForConnectionChanges();
         this.userID = firebase.auth().currentUser.uid;
         this.userRef = this.databaseRef.child("users").child(this.userID);
         this.done = this.getGroups();
@@ -146,6 +148,20 @@ export class GroupManagerProvider {
         self.checkForCompleted(changedSnapshot.key);
       } else if (val == "currDrawing" || val == 12){
         self.checkForInvitedConflict(val, changedSnapshot.key);
+      }
+    });
+  }
+
+  listenForConnectionChanges(){
+    var self = this;
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+      if (snap.val()) {
+        self.connected = true;
+        console.log("connection?", self.connected);
+      } else {
+        self.connected = false;
+        console.log("connection?", self.connected);
       }
     });
   }

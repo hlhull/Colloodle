@@ -12,6 +12,7 @@ import { SignupPage } from '../signup/signup';
 import { FriendsPage } from '../friends/friends';
 import * as firebase from 'firebase';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 
 /**
  * Generated class for the DrawingModesPage page.
@@ -31,7 +32,7 @@ export class DrawingModesPage {
   randomDetailsVisible = false;
   friendsDetailsVisible = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public popoverCtrl: PopoverController, private groupManager: GroupManagerProvider) {
     this.screenOrientation.unlock();
   }
 
@@ -53,21 +54,29 @@ export class DrawingModesPage {
   }
 
   goToRandom(){
-    var userID = firebase.auth().currentUser;
-    if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-      this.presentError(" enter Random mode");
+    if(this.groupManager.connected){
+      var userID = firebase.auth().currentUser;
+      if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+        this.presentErrorSignIn(" enter Random mode");
+      } else {
+        var imageStorage = new RandomStorageProvider();
+        this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+      }
     } else {
-      var imageStorage = new RandomStorageProvider();
-      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+      this.presentErrorConnect(" Random mode");
     }
   }
 
   goToFriends(){
-    var userID = firebase.auth().currentUser;
-    if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-      this.presentError(" draw with Friends");
+    if(this.groupManager.connected){
+      var userID = firebase.auth().currentUser;
+      if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+        this.presentErrorSignIn(" draw with Friends");
+      } else {
+        this.navCtrl.push(FriendsPage, {animate:false});
+      }
     } else {
-      this.navCtrl.push(FriendsPage, {animate:false});
+      this.presentErrorConnect(" Friends mode");
     }
   }
 
@@ -78,27 +87,44 @@ export class DrawingModesPage {
   /*
   * Causes an alert to popup asking the user to cancel, signup, or login
   */
-  presentError(actionString) {
-  let alert = this.alertCtrl.create({
-    title: 'Error',
-    message: 'You must be signed in to '+ actionString,
-    buttons: [
-      { text: 'Login',
-        handler: () => {
-          this.navCtrl.push(LoginPage);
+  presentErrorSignIn(actionString) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      message: 'You must be signed in to '+ actionString,
+      buttons: [
+        { text: 'Login',
+          handler: () => {
+            this.navCtrl.push(LoginPage);
+          }
+        },
+        { text: 'Sign Up',
+          handler: () => {
+            this.navCtrl.push(SignupPage);
+          }
+        },
+        { text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
         }
-      },
-      { text: 'Sign Up',
-        handler: () => {
-          this.navCtrl.push(SignupPage);
+      ]});
+    alert.present();
+  }
+
+  /*
+    Causes an alert to popup telling the user they must connect to the internet
+    to continue
+  */
+  presentErrorConnect(mode){
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      message: 'You must be connected to the internet to enter '+ mode,
+      buttons: [
+        { text: 'Ok',
+          role: 'cancel',
+          handler: () => {}
         }
-      },
-      { text: 'Cancel',
-        role: 'cancel',
-        handler: () => {}
-      }
-    ]});
-  alert.present();
+      ]});
+    alert.present();
   }
 
   /*
