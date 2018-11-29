@@ -6,10 +6,8 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-buttons start>
+    <ion-buttons end>
       <button ion-button clear (click)="goHome()"><ion-icon name="home"></ion-icon></button>
-      <button ion-button clear (click)="deleteGroup()"><ion-icon name="trash"></ion-icon></button>
-      <button ion-button clear (click)="save()"><ion-icon name="download"></ion-icon></button>
     </ion-buttons>
     <ion-title>Complete!</ion-title>
   </ion-navbar>
@@ -22,9 +20,21 @@ text-align: center;
 </style> -->
 
 
-<ion-content padding class="final" style="background-color: #DFEEEB">
+<ion-content padding class="final" style="background-color: #DFEEEB" no-bounce>
   <div id="wrapper">
     <canvas id='backgroundCanvas' style="background-color: #DFEEEB" #backgroundCanvas></canvas>
     <canvas id='finalCanvas' #finalCanvas></canvas>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button ion-button clear (click)="save()"><ion-icon name="download"></ion-icon></button>
+      <button ion-button clear (click)="share()"><ion-icon name="share"></ion-icon></button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button clear (click)="deleteGroup()"><ion-icon name="trash"></ion-icon></button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

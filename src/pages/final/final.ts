@@ -50,6 +50,10 @@ export class FinalPage {
     );
   }
 
+  share() {
+    
+  }
+
   /*
     Takes the 3 picture urls passed in and loads them and then calls drawImages
   */
