@@ -25,7 +25,7 @@
       </ion-thumbnail>
       <h2>{{this.getSectionName(group['section'])}}</h2>
         <button ion-button clear item-end (click)="this.viewGroupDrawing(group['group'])">View</button>
-        <button ion-button icon-only clear item-end (click)="this.groupManager.deleteGroup(group['group'])">
+        <button ion-button icon-only clear item-end (click)="this.presentConfirmDelete(group['group'])">
           <ion-icon name="trash"></ion-icon>
         </button>
     </ion-item>

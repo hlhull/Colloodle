@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FinalPage } from '../final/final';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
@@ -21,7 +21,7 @@ import firebase from 'firebase';
 export class GroupsPage {
   storageRef = firebase.storage().ref();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
       this.setThumnails(); // set the thumbnails
       this.groupManager.resetNew();
   }
@@ -77,6 +77,30 @@ export class GroupsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GroupsPage');
+  }
+
+  /*
+  * Causes an alert/confirmation screen to pop up when delete/trash button is pressed
+  */
+  presentConfirmDelete(group) {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to delete this drawing? If you delete it, it cannot be recovered.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.groupManager.deleteGroup(group);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 
 
