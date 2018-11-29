@@ -90,6 +90,7 @@ export class GroupManagerProvider {
     this.userRef.child("invited").orderByKey().startAt(self.invitLastTime).on('child_added', userGroupSnapshot => {
       var info = {"section" : null, "group": userGroupSnapshot.key, "conflict": false};
       self.invited.push(info);
+      self.sendNotification(false);
     });
   }
 
@@ -158,7 +159,7 @@ export class GroupManagerProvider {
           this.inProgress.splice(i, 1);
           this.completed.push(entry);
           this.new += 1;
-          this.sendNotification();
+          this.sendNotification(true);
         }
     }
   }
@@ -178,10 +179,18 @@ export class GroupManagerProvider {
     }
   }
 
-  sendNotification(){
+  sendNotification(type){
+    var title, text;
+    if(type){
+      title = 'A drawing is complete!';
+      text = 'Go to the drawings page to see the finished creation';
+    } else {
+      title = "You've been invited to a drawing!";
+      text = 'Go to the Friends drawing mode to doodle';
+    }
     this.localNotifications.schedule({
-        title: 'A drawing is complete!',
-        text: 'Go to the drawings page to see the finished creation',
+        title: title,
+        text: text,
         sound: null
     });
   }
