@@ -11,5 +11,5 @@ import { GroupsPage } from './groups';
   ],
 })
 export class GroupsPageModule {
-  this.drawings='Completed';
+  drawings='Completed';
 }
