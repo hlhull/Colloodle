@@ -187,18 +187,19 @@ export class DrawingPage {
         this.imageStorage.updateGroup(img.src);
         this.presentDisconnected();
         this.navCtrl.setRoot(HomePage);
+      } else {
+        this.imageStorage.updateGroup(img.src).then(() => {
+            if (this.imageStorage.sectionNumber == 2) {
+              this.navCtrl.setRoot(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
+            }
+            else if (this.imageStorage.sectionNumber == 1 || this.imageStorage instanceof RandomStorageProvider){
+              this.presentInfo();
+              this.navCtrl.setRoot(HomePage);
+            } else {
+              this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage, imgUrl: img.src});
+            }
+        });
       }
-      this.imageStorage.updateGroup(img.src).then(() => {
-          if (this.imageStorage.sectionNumber == 2) {
-            this.navCtrl.setRoot(FinalPage, {imageStorage: this.imageStorage}, {animate:false});
-          }
-          else if (this.imageStorage.sectionNumber == 1 || this.imageStorage instanceof RandomStorageProvider){
-            this.presentInfo();
-            this.navCtrl.setRoot(HomePage);
-          } else {
-            this.navCtrl.setRoot(ChooseFriendsPage, {imageStorage: this.imageStorage, imgUrl: img.src});
-          }
-      });
     }
   }
 
