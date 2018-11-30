@@ -13,10 +13,10 @@
   </ion-navbar>
   <div padding>
     <ion-segment [(ngModel)]="drawings">
-      <ion-segment-button value="Completed" (click)='setThumnails()' isActive='Completed'>
+      <ion-segment-button value="Completed" (click)="setThumnails('Completed')" isActive='Completed'>
         Completed
       </ion-segment-button>
-      <ion-segment-button value="In Progress" (click)='setThumnails()'>
+      <ion-segment-button value="In Progress" (click)="setThumnails('InProgress')">
         In Progress
       </ion-segment-button>
     </ion-segment>

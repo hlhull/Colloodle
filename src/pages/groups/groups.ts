@@ -24,7 +24,6 @@ export class GroupsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private screenOrientation: ScreenOrientation, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
       this.screenOrientation.lock('portrait');
-      this.setThumnails(); // set the thumbnails
       this.groupManager.resetNew();
   }
 
@@ -54,14 +53,16 @@ export class GroupsPage {
   /*
     Loops through the group lists to set the thumnail for every group the user's in
   */
-  setThumnails(){
-    this.groupManager.inProgress.forEach((info) => {
-      this.assignSrc(info);
-    });
-
-    this.groupManager.completed.forEach((info) => {
-      this.assignSrc(info);
-    });
+  setThumnails(list){
+    if(list == 'Completed'){
+      this.groupManager.completed.forEach((info) => {
+        this.assignSrc(info);
+      });
+    } else {
+      this.groupManager.inProgress.forEach((info) => {
+        this.assignSrc(info);
+      });
+    }
   }
 
   /*
