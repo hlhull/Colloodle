@@ -11,9 +11,5 @@ import { GroupsPage } from './groups';
   ],
 })
 export class GroupsPageModule {
-<<<<<<< HEAD
-  
-=======
   drawings='Completed';
->>>>>>> 6bedb6086464b043e408bf4da347b9d4c4c8ac81
 }
