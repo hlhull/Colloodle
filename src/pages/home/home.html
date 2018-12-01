@@ -4,7 +4,7 @@
 -->
 
 <ion-header>
-  
+
   <!-- <ion-navbar> -->
     <!-- original: -->
     <!-- <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
@@ -22,8 +22,8 @@
     <!-- trying new hopefully prettier thing: -->
 
     <!-- <ion-list *ngIf="auth.getEmail()" style="background-color: dark"> -->
-      <ion-item *ngIf="auth.getEmail()" left dark>
-        {{auth.getEmail()}}
+      <ion-item *ngIf="auth.getUsername()" left dark>
+        {{auth.getUsername()}}
         <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
       	   <ion-icon name="person" right></ion-icon>
         </button>

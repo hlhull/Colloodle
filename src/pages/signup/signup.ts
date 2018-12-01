@@ -9,6 +9,7 @@ import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import firebase from 'firebase';
+import { AlertController } from 'ionic-angular';
 
 @Component({
 	selector: 'as-page-signup',
@@ -17,14 +18,11 @@ import firebase from 'firebase';
 export class SignupPage {
 	signupError: string;
 	form: FormGroup;
+  databaseRef = firebase.database().ref();
 
-	constructor(
-		fb: FormBuilder,
-		private navCtrl: NavController,
-    private auth: AuthService,
-		private screenOrientation: ScreenOrientation
-	) {
+	constructor(fb: FormBuilder, private navCtrl: NavController, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
 		this.form = fb.group({
+			username: ['', Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z0-9]*')])],
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
@@ -33,9 +31,10 @@ export class SignupPage {
   }
 
 	/*
-	* Signs the user up with the given email and password, sending info to firebase
+	* Signs the user up with the given email and password if their username is unqiue,
+	* sending info to firebase
 	*
-	* Adds user to database userList, then sends the user to the home page
+	* Adds username to user's profile and database userList and usernames, then sends the user to the home page
 	*/
   signup() {
 		let data = this.form.value;
@@ -43,12 +42,28 @@ export class SignupPage {
 			email: data.email,
 			password: data.password
 		};
-		this.auth.signUp(credentials).then(
-			() => { var userID = firebase.auth().currentUser.uid;
-							firebase.database().ref().child("userList").child(userID).set(credentials['email']);
-				 			this.navCtrl.setRoot(HomePage)},
-			error => this.signupError = error.message
-		);
+		var username = data.username;
+
+		var self = this;
+		this.databaseRef.child("usernames").once('value', function(snapshot) {
+			if(snapshot.hasChild(username)){
+				self.presentNewUsername();
+			} else {
+				self.auth.signUp(credentials).then(() => {
+						var userID = firebase.auth().currentUser.uid;
+						firebase.auth().currentUser.updateProfile({ //add username to user's profile
+  						displayName: username,
+							photoURL: null
+						}).then(() => {
+			 				self.navCtrl.setRoot(HomePage)
+						});
+						self.databaseRef.child("usernames").child(username).set(0); // add username to usernames
+						self.databaseRef.child("userList").child(userID).set(username); // add username to userList
+					},
+					error => this.signupError = error.message
+				);
+			}
+		});
   }
 
 	/*
@@ -57,5 +72,23 @@ export class SignupPage {
   goHome(): void {
     this.navCtrl.setRoot(HomePage);
   }
+
+	/*
+		Let user know that username is already taken
+	*/
+	presentNewUsername(){
+		let alert = this.alertCtrl.create({
+			title: 'Username Taken',
+			message: 'Please choose a new username',
+			buttons: [
+				{
+					text: 'Ok',
+					role: 'cancel',
+					handler: () => {}
+				}
+			]
+		});
+		alert.present();
+	}
 
 }

@@ -23,6 +23,18 @@
 	<form (ngSubmit)="signup()" [formGroup]="form">
 		<ion-list inset>
 
+			<ion-item [ngClass]="{ invalid: usernameErrors.hasError('*', ['touched']) }">
+				<ion-input type="username" placeholder="Username" formControlName="username"></ion-input>
+			</ion-item>
+
+			<div ngxErrors="username" #usernameErrors="ngxErrors">
+				<div [ngxError]="['minlength', 'required']" [when]="['touched']">A Username is required</div>
+			</div>
+
+			<div ngxErrors="username" #usernameErrors="ngxErrors">
+				<div [ngxError]="['pattern']" [when]="['touched']">Can only contain letters and numbers</div>
+			</div>
+
 			<ion-item [ngClass]="{ invalid: emailErrors.hasError('*', ['touched']) }">
 				<ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
 			</ion-item>

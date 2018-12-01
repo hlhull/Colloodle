@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   signUp(credentials) {
-	   return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+		 return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
   }
 
 	/*
@@ -56,11 +56,18 @@ export class AuthService {
   }
 
 	/*
+	* Get the username of current user (CHECK IF AUTHENTICATED, above, FIRST)
+	*/
+  getUsername() {
+    return this.user && this.user.displayName;
+  }
+
+	/*
 	* Get the email of current user (CHECK IF AUTHENTICATED, above, FIRST)
 	*/
-  getEmail() {
-    return this.user && this.user.email;
-  }
+	getEmail() {
+		return this.user && this.user.email;
+	}
 
 // TODO: refine resetPassword				(tasks listed in order of priority)
 // - maybe send them to a new page instead of being lazy/quick and just checking
