@@ -3,7 +3,7 @@
 <!-- <ion-content id="align-format"> -->
 <ion-list>
   <ion-item>
-    <h2 ion-text [style.color]="dark">Brush Options</h2>
+    <h2 ion-text [style.color]="dark">Brush Options <ion-icon [style.color]="this.brushService.styleColor" name="brush"></ion-icon></h2>
     <button ion-button icon-only (click)="this.close()" item-right color="dark" clear>
       <ion-icon name="close" align="right"></ion-icon>
     </button>
@@ -13,7 +13,7 @@
   </button>
   <button ion-button outline small (click)="this.brushService.eraser()">Eraser</button>
   <ion-item>
-    <ion-range min="1" max="100" [style.color]="this.brushService.styleColor" [(ngModel)]="this.brushService.size" (ionChange)="this.brushService.changeSize($event)">
+    <ion-range min="1" max="100" [style.color]="dark" [(ngModel)]="this.brushService.size" (ionChange)="this.brushService.changeSize($event)">
       <ion-icon range-left style="font-size: 1em;" name="radio-button-on"></ion-icon>
       <ion-icon range-right style="font-size: 2em;" name="radio-button-on"></ion-icon>
     </ion-range>

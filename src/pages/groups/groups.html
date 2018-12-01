@@ -28,7 +28,7 @@
 <ion-content padding>
 
   <div [ngSwitch]="drawings">
-    <ion-list *ngSwitchCase="'Completed'">
+    <ion-list *ngSwitchCase="'Completed'" selected>
       <ion-item *ngFor="let group of this.groupManager.completed">
          <ion-thumbnail item-start>
            <img id="{{group['group']}}" style="border:1px solid #009691">

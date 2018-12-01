@@ -25,6 +25,9 @@ export class GroupsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private screenOrientation: ScreenOrientation, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
       this.screenOrientation.lock('portrait');
       this.groupManager.resetNew();
+      this.drawings='Completed';
+      this.setThumnails('Completed');
+
   }
 
   /*
