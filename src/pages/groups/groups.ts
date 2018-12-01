@@ -21,11 +21,11 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 })
 export class GroupsPage {
   storageRef = firebase.storage().ref();
+  drawings='Completed';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private screenOrientation: ScreenOrientation, private groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
       this.screenOrientation.lock('portrait');
       this.groupManager.resetNew();
-      this.drawings='Completed';
       this.setThumnails('Completed');
 
   }
