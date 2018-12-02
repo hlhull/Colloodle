@@ -34,7 +34,7 @@ export class SignupPage {
 	* Signs the user up with the given email and password if their username is unqiue,
 	* sending info to firebase
 	*
-	* Adds username to user's profile and database userList and usernames, then sends the user to the home page
+	* Adds username to user's profile and database userList, then sends the user to the home page
 	*/
   signup() {
 		let data = this.form.value;
@@ -45,7 +45,7 @@ export class SignupPage {
 		var username = data.username;
 
 		var self = this;
-		this.databaseRef.child("usernames").once('value', function(snapshot) {
+		this.databaseRef.child("userList").once('value', function(snapshot) {
 			if(snapshot.hasChild(username)){
 				self.presentNewUsername();
 			} else {
@@ -57,8 +57,7 @@ export class SignupPage {
 						}).then(() => {
 			 				self.navCtrl.setRoot(HomePage)
 						});
-						self.databaseRef.child("usernames").child(username).set(0); // add username to usernames
-						self.databaseRef.child("userList").child(userID).set(username); // add username to userList
+						self.databaseRef.child("userList").child(username).set(userID); // add username to userList
 					},
 					error => this.signupError = error.message
 				);

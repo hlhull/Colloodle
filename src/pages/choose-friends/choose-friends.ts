@@ -35,13 +35,7 @@ export class ChooseFriendsPage {
     var self = this;
     if(firebase.auth().currentUser != null){
       var id = firebase.auth().currentUser.uid;
-      this.databaseRef.child("userList").once('value', function(snapshot) {
-        snapshot.forEach(function(userSnapshot) {
-          if(userSnapshot.key == id){
-            self.currUserName = userSnapshot.val();
-          }
-        });
-      });
+      this.currUserName = firebase.auth().currentUser.displayName;
     }
 
   }
@@ -54,8 +48,8 @@ export class ChooseFriendsPage {
 
       this.databaseRef.child("userList").once('value', function(snapshot) {
         snapshot.forEach(function(userSnapshot) {
-          var invitedUID = userSnapshot.key;
-          var inviteUsername = userSnapshot.val();
+          var invitedUID = userSnapshot.val();
+          var inviteUsername = userSnapshot.key;
           if(inviteUsername == username && inviteUsername != self.currUserName){ //don't let user invite themselves
             if(self.invites.length > 0) {
               if (inviteUsername != self.invites[0]['username']){ // don't let user invite other user 2x
