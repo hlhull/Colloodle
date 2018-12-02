@@ -78,7 +78,7 @@ export class FriendsStorageProvider {
   /*
     create a group and add the users in invited[] to join it
   */
-  createGroup(imgUrl, invited, currUserEmail){
+  createGroup(imgUrl, invited, currUserName){
     var self = this;
     var userID = firebase.auth().currentUser.uid;
 
@@ -87,7 +87,7 @@ export class FriendsStorageProvider {
        self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
        ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
        for (var i in invited){
-         self.inviteUser(invited[i]['userID'], currUserEmail);
+         self.inviteUser(invited[i]['userID'], currUserName);
        }
      });
   }

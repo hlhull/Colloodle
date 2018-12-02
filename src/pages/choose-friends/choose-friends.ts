@@ -21,7 +21,7 @@ export class ChooseFriendsPage {
   @ViewChild('mySearchbar') searchbar: Searchbar;
 
   databaseRef = firebase.database().ref();
-  currUserEmail: String;
+  currUserName: String;
   numInvited = 0;
   imgUrl: String;
   matches = [];
@@ -31,14 +31,14 @@ export class ChooseFriendsPage {
     this.imageStorage = navParams.get('imageStorage');
     this.imgUrl = navParams.get('imgUrl');
 
-    // get current user's email
+    // get current user's username
     var self = this;
     if(firebase.auth().currentUser != null){
       var id = firebase.auth().currentUser.uid;
       this.databaseRef.child("userList").once('value', function(snapshot) {
         snapshot.forEach(function(userSnapshot) {
           if(userSnapshot.key == id){
-            self.currUserEmail = userSnapshot.val();
+            self.currUserName = userSnapshot.val();
           }
         });
       });
@@ -49,20 +49,20 @@ export class ChooseFriendsPage {
   // on input, check if input is a user's email; invite them if so
   onInput(searchbar){
     if (searchbar != null){
-      var email = searchbar.srcElement.value;
+      var username = searchbar.srcElement.value;
       var self = this;
 
       this.databaseRef.child("userList").once('value', function(snapshot) {
         snapshot.forEach(function(userSnapshot) {
           var invitedUID = userSnapshot.key;
-          var inviteEmail = userSnapshot.val();
-          if(inviteEmail == email && inviteEmail != self.currUserEmail){ //don't let user invite themselves
+          var inviteUsername = userSnapshot.val();
+          if(inviteUsername == username && inviteUsername != self.currUserName){ //don't let user invite themselves
             if(self.invites.length > 0) {
-              if (inviteEmail != self.invites[0]['email']){ // don't let user invite other user 2x
-                self.matches.push({"email": email, "userID": invitedUID});
+              if (inviteUsername != self.invites[0]['username']){ // don't let user invite other user 2x
+                self.matches.push({"username": username, "userID": invitedUID});
               }
             } else {
-              self.matches.push({"email": email, "userID": invitedUID});
+              self.matches.push({"username": username, "userID": invitedUID});
             }
           }
         });
@@ -78,7 +78,7 @@ export class ChooseFriendsPage {
     this.numInvited += 1;
 
     if (this.numInvited > 1){
-      this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserEmail);
+      this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
       this.presentInfo();
     }
   }

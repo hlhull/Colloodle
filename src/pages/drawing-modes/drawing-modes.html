@@ -7,8 +7,8 @@
 
 <ion-header>
   <!-- <ion-navbar color="primary" hideBackButton=true> -->
-      <ion-item *ngIf="auth.getEmail()" left color="primary">
-        {{auth.getEmail()}}
+      <ion-item *ngIf="auth.getUsername()" left color="primary">
+        {{auth.getUsername()}}
         <button ion-button icon-only color="secondary" clear style="float: right;" (click)="presentUserPopover($event)">
       	   <ion-icon name="person" right></ion-icon>
         </button>
