@@ -13,6 +13,8 @@ export class BrushProvider {
 
   eraserColor: string = '#ffffff';
 
+  eraserClicked: boolean = false;
+
   availableColors = [
       '#e74c3c',
       '#e67e22',
@@ -34,11 +36,7 @@ export class BrushProvider {
 
   changeColor(color) {
       this.color = color;
-      if (this.color == "#ffffff") {
-        this.styleColor = "black";
-      } else {
-        this.styleColor = color;
-      }
+      this.styleColor = color;
   }
 
   changeSize(sliderState) {
@@ -49,11 +47,17 @@ export class BrushProvider {
     this.color = '#fffc54';
     this.size = 10;
     this.styleColor = '#fffc54';
+    this.eraserClicked = false;
   }
 
-  eraser() {
+  changePaint(color) {
+    this.eraserClicked = false;
+    this.changeColor(color);
+  }
+
+  changeToEraser() {
+    this.eraserClicked = true;
     this.changeColor(this.eraserColor);
-    this.styleColor = '#1abc9c';
   }
 
 }
