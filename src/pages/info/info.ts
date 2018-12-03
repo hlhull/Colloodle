@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomePage} from '../home/home';
+import { DrawingModesPage } from '../drawing-modes/drawing-modes';
 
 /**
  * Generated class for the InfoPage page.
@@ -45,6 +46,10 @@ export class InfoPage {
 
   goHome(): void {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  goToDrawingModesPage(): void {
+    this.navCtrl.setRoot(DrawingModesPage);
   }
 
   ionViewDidLoad() {
