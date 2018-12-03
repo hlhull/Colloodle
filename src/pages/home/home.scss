@@ -8,11 +8,14 @@ page-home {
 
   }
 
+  #loginLabel{
+    height:10%;
+  }
   #Doodle{
     position:fixed;
     width: 60%;
     left: 20%;
-    bottom:90px;
+    bottom:95px;
   }
   #Gallery{
     position: fixed;
@@ -31,7 +34,7 @@ page-home {
 
   #info{
     position: fixed;
-    right: 0%;
     top: 0%;
+    right:0%
   }
 }

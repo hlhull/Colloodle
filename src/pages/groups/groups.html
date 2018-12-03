@@ -28,8 +28,19 @@
 <ion-content padding>
 
   <div [ngSwitch]="drawings">
-    <ion-list *ngSwitchCase="'Completed'" selected>
-      <ion-item *ngFor="let group of this.groupManager.completed">
+    <ion-list *ngSwitchCase="'Completed'">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-4 col-md-2 col-xl-2 *ngFor="let group of this.groupManager.completed">
+              <ion-card  large clear (click)="this.viewGroupDrawing(group['group'])">
+                <img id="{{group['group']}}" style="border:1px solid #009691">
+             </ion-card>
+       </ion-col>
+     </ion-row>
+   </ion-grid>
+   </ion-list>
+
+  <!--    <ion-item *ngFor="let group of this.groupManager.completed">
          <ion-thumbnail item-start>
            <img id="{{group['group']}}" style="border:1px solid #009691">
         </ion-thumbnail>
@@ -40,6 +51,7 @@
           </button>
       </ion-item>
     </ion-list>
+    -->
 
 
   <ion-list *ngSwitchCase="'In Progress'">
