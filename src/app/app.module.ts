@@ -39,6 +39,7 @@ import { UserPopoverPage } from '../pages/user-popover/user-popover';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../providers/group-manager/group-manager';
 import { Screenshot } from '@ionic-native/screenshot';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { Screenshot } from '@ionic-native/screenshot';
     AuthService,
     ScreenOrientation,
     GroupManagerProvider,
-    Screenshot
+    Screenshot,
+    SocialSharing
   ]
 })
 export class AppModule {}

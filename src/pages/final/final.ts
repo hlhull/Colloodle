@@ -7,6 +7,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import { Screenshot } from '@ionic-native/screenshot';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 /**
  * Class for the FinalPage page.
@@ -26,7 +27,7 @@ export class FinalPage {
   canvasElement: any;
   picHeight: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController, private socialSharing: SocialSharing) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.screenOrientation.lock('portrait');
@@ -37,17 +38,29 @@ export class FinalPage {
   }
 
   save() {
-    // Take a screenshot and save to file
-    this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
-      res => console.log('Saved image to camera roll ', res),
-      err => console.log('Error saving image to camera roll ', err)
-    );
+    // // Take a screenshot and save to file
+    // this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
+    //   res => console.log('Saved image to camera roll ', res),
+    //   err => console.log('Error saving image to camera roll ', err)
+    // );
+    //
+    // // Take a screenshot and get temporary file URI
+    // this.screenshot.URI(80).then(
+    //   res => console.log('Saved image to URI ', res),
+    //   err => console.log('Error saving image to URI ', err)
+    // );
 
-    // Take a screenshot and get temporary file URI
-    this.screenshot.URI(80).then(
-      res => console.log('Saved image to URI ', res),
-      err => console.log('Error saving image to URI ', err)
-    );
+    //somehow check if this is possible? (maybe unnecessary)
+
+    var img = new Image;
+
+    img.src = this.canvasElement.toDataURL();
+
+    this.socialSharing.saveToPhotoAlbum(img.src).then(() => {
+      // Success!
+    }).catch(() => {
+      // Error!
+    });
   }
 
   share() {
