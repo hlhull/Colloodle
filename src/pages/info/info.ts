@@ -21,23 +21,28 @@ import { DrawingModesPage } from '../drawing-modes/drawing-modes';
 export class InfoPage {
   slides = [
     {
+      title: "Colloodling 101",
+      description: "Colin and I will be working together to show you how to play! Keep swiping to learn more.",
+      image: "assets/imgs/info-slide-0.png",
+    },
+    {
       title: "Drawn Together",
       description: "<b>Make masterpieces with the people around you!</b> Each player draws one section of a zany hybrid creation. The more ridiculous, the better!",
       image: "assets/imgs/info-slide-1.png",
     },
     {
       title: "Head, Torso, Body",
-      description: "You'll be assigned to draw either the <b>head</b> (face and neck), <b>body</b> (shirt area), or <b>legs</b> (pants and shoes area) of your drawing.",
+      description: "You'll be assigned to draw either the <b>head</b> and neck, <b>torso</b> (shirt area), or <b>legs</b> (pants and shoes area) of your drawing. Make sure to <b>draw to the bottom</b> of the canvas and connect to the top!",
       image: "assets/imgs/info-slide-2.png",
     },
     {
-      title: "Stay Connected",
-      description: "If you're drawing the head or torso, make sure to <b>draw to the bottom of your screen</b>! It helps the next player <b>connect their lines to the previous player's art</b>.",
+      title: "Colors, Buttons, and Canvas, Oh My!",
+      description: "Here's the canvas! I automatically rotate your screen horizontal to give you more room to create your masterpiece.",
       image: "assets/imgs/info-slide-3.png",
     },
     {
-      title: "Two Modes of Play",
-      description: "Hanging out with some friends? Play with <b>Pass Around</b> to take turns drawing on one device. Flying solo? Login with <b>Connect Mode</b> to play with other users!",
+      title: "Three Modes of Play",
+      description: "When you click on <b>Doodle</b> on the home page, you'll be able to read more info about each of these modes.",
       image: "assets/imgs/info-slide-4.png",
     }
   ];
