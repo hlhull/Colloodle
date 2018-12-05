@@ -13,13 +13,6 @@
   </ion-navbar>
 </ion-header>
 
-<!-- <style>
-ion-title {
-text-align: center;
-}
-</style> -->
-
-
 <ion-content padding class="final" style="background-color: #DFEEEB" no-bounce>
   <div id="wrapper">
     <canvas id='backgroundCanvas' style="background-color: #DFEEEB" #backgroundCanvas></canvas>
@@ -30,8 +23,9 @@ text-align: center;
 <ion-footer>
   <ion-toolbar>
     <ion-buttons start>
-      <button ion-button clear (click)="save()"><ion-icon name="download"></ion-icon></button>
-      <button ion-button clear (click)="share()"><ion-icon name="share"></ion-icon></button>
+      <p style="color: white;" absolute-drag>Screenshot to save!</p>
+      <!-- <button ion-button clear (click)="save()"><ion-icon name="download"></ion-icon></button>
+      <button ion-button clear (click)="share()"><ion-icon name="share"></ion-icon></button> -->
     </ion-buttons>
     <ion-buttons end>
       <button ion-button clear (click)="presentConfirmDelete()"><ion-icon name="trash"></ion-icon></button>
