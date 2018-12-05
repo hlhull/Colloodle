@@ -35,9 +35,9 @@
               <ion-card  large clear (click)="this.viewGroupDrawing(group['group'])">
                 <img id="{{group['group']}}" style="border:1px solid #009691">
              </ion-card>
-       </ion-col>
-     </ion-row>
-   </ion-grid>
+           </ion-col>
+         </ion-row>
+       </ion-grid>
    </ion-list>
 
   <!--    <ion-item *ngFor="let group of this.groupManager.completed">
@@ -55,12 +55,15 @@
 
 
   <ion-list *ngSwitchCase="'In Progress'">
-    <ion-item *ngFor="let group of this.groupManager.inProgress">
-       <ion-thumbnail item-start>
-         <img id="{{group['group']}}" style="border:1px solid #009691">
-      </ion-thumbnail>
-      <h2>{{this.getSectionName(group['section'])}}</h2>
-    </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-4 col-md-2 col-xl-2 *ngFor="let group of this.groupManager.inProgress">
+            <ion-card  large clear (click)="this.viewGroupDrawing(group['group'])">
+              <img id="{{group['group']}}" style="border:1px solid #009691">
+           </ion-card>
+         </ion-col>
+       </ion-row>
+     </ion-grid>
   </ion-list>
   </div>
 
