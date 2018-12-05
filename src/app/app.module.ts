@@ -40,6 +40,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../providers/group-manager/group-manager';
 import { Screenshot } from '@ionic-native/screenshot';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { SocialSharing } from '@ionic-native/social-sharing';
     ScreenOrientation,
     GroupManagerProvider,
     Screenshot,
-    SocialSharing
+    SocialSharing,
+    Base64ToGallery
   ]
 })
 export class AppModule {}
