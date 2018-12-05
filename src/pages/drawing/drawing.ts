@@ -28,14 +28,18 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 export class DrawingPage {
   @ViewChild('myCanvas') canvas: ElementRef;
+  @ViewChild('infoCanvas') infoCanvas: ElementRef;
   @ViewChild('overlap') overlapCanvas: ElementRef;
   @ViewChild(Content) content: Content;
 
   canvasElement: any;
+  infoCanvasElement: any;
   overlapElement: any;
   lastX: number;
   lastY: number;
   drawingFromOverlap: boolean = false;
+  sectionNum: number;
+  numStrokes: number;;
 
   combinedCanvasHeight: number; // overlap canvas + drawing canvas heights!
   overlapHeight: number;
@@ -64,6 +68,7 @@ export class DrawingPage {
    */
   ngAfterViewInit(){
       this.canvasElement = this.canvas.nativeElement;
+      this.infoCanvasElement = this.infoCanvas.nativeElement;
       this.overlapElement = this.overlapCanvas.nativeElement;
 
       if (this.platform.height() > this.platform.width()) {
@@ -91,7 +96,12 @@ export class DrawingPage {
       this.renderer.setElementAttribute(this.canvasElement, 'height', this.canvasHeight + '');
       this.renderer.setElementAttribute(this.canvasElement, 'width', this.canvasWidth + '');
 
+      this.renderer.setElementAttribute(this.infoCanvasElement, 'height', this.canvasHeight + '');
+      this.renderer.setElementAttribute(this.infoCanvasElement, 'width', this.canvasWidth + '');
+
       this.setCanvasToWhite();
+
+      this.clearCanvas(this.infoCanvasElement);
 
       // push current image to undoStack
       var img = this.saveCurrentImage();
@@ -99,16 +109,24 @@ export class DrawingPage {
 
       // once group and section #s are assigned, draw the overlap
 
+      this.numStrokes = 0;
+
       if (this.imageStorage instanceof PassAroundStorageProvider) {
-        this.presentWhichSection(this.imageStorage.sectionNumber);
+        // this.presentWhichSection(this.imageStorage.sectionNumber);
+        this.sectionNum = this.imageStorage.sectionNumber;
+        this.showInitialInstructions();
       } else if (this.imageStorage instanceof RandomStorageProvider){
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
-          this.presentWhichSection(this.imageStorage.sectionNumber);
+          // this.presentWhichSection(this.imageStorage.sectionNumber);
+          this.sectionNum = this.imageStorage.sectionNumber;
+          this.showInitialInstructions();
         });
       } else {
-        this.presentWhichSection(this.imageStorage.sectionNumber);
+        // this.presentWhichSection(this.imageStorage.sectionNumber);
+        this.sectionNum = this.imageStorage.sectionNumber;
+        this.showInitialInstructions();
         this.drawOverlap(null);
       }
 
@@ -160,6 +178,37 @@ export class DrawingPage {
     }
   }
 
+  showInitialInstructions() {
+    this.clearCanvas(this.infoCanvasElement);
+    var alpha = 1 - 0.25*this.numStrokes;
+
+    var bodyPart = ["head", "torso", "legs"];
+    var edges = ["bottom edge", "top and bottom edges", "top edge"];
+
+    var whichSection = "You are drawing the " + bodyPart[this.sectionNum] + ".";
+
+    var ctx = this.infoCanvasElement.getContext('2d');
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "rgba(0, 150, 145,"+alpha+")";
+    ctx.textAlign = "center";
+
+    ctx.fillText(whichSection, this.infoCanvasElement.width/2, 3*this.infoCanvasElement.height/7);
+
+    var edgeInstructions = "Make sure to draw all the way to the " + edges[this.sectionNum] + "!"
+
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "rgba(0, 150, 145,"+alpha+")";
+    ctx.textAlign = "center";
+
+    ctx.fillText(edgeInstructions, this.infoCanvasElement.width/2, 4*this.infoCanvasElement.height/7);
+
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "rgba(0, 150, 145,"+alpha+")";
+    ctx.textAlign = "center";
+
+    ctx.fillText("Tap the ? for more help :)", this.infoCanvasElement.width/2, 5*this.infoCanvasElement.height/7);
+  }
+
   goHome(): void {
     this.presentConfirmGoHome();
   }
@@ -180,7 +229,9 @@ export class DrawingPage {
       } else {
         this.resetPage();
         this.drawOverlap(img);
-        this.presentWhichSection(this.imageStorage.sectionNumber);
+        // this.presentWhichSection(this.imageStorage.sectionNumber);
+        this.sectionNum = this.imageStorage.sectionNumber;
+        this.showInitialInstructions();
       }
     } else {
       if(!this.groupManager.connected){
@@ -231,6 +282,10 @@ export class DrawingPage {
     // fill it with white
     this.setCanvasToWhite();
 
+    // make info canvas clear/transparent
+    this.clearCanvas(this.infoCanvasElement);
+    this.numStrokes = 0;
+
     //reset undo/redo stacks:
     // push current image to undoStack
     var img = this.saveCurrentImage();
@@ -242,39 +297,53 @@ export class DrawingPage {
    * on first tap, make dot @ location and save x, y
    */
   handleStart(ev){
-      var canvasPosition = this.canvasElement.getBoundingClientRect();
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
 
-      this.lastX = ev.touches[0].pageX - canvasPosition.x;
-      this.lastY = ev.touches[0].pageY - canvasPosition.y;
+    this.lastX = ev.touches[0].pageX - canvasPosition.x;
+    this.lastY = ev.touches[0].pageY - canvasPosition.y;
 
-      let ctx = this.canvasElement.getContext('2d');
-      ctx.beginPath();
-      ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
-      ctx.fillStyle = this.brushService.color;
-      ctx.fill();
+    let ctx = this.canvasElement.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(this.lastX, this.lastY, this.brushService.size/2, 0, 2 * Math.PI);
+    ctx.fillStyle = this.brushService.color;
+    ctx.fill();
   }
 
   /*
    * on drag, draw line from last x, y to current x, y
    */
   handleMove(ev){
-      var canvasPosition = this.canvasElement.getBoundingClientRect();
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
 
-      let ctx = this.canvasElement.getContext('2d');
-      let currentX = ev.touches[0].pageX - canvasPosition.x;
-      let currentY = ev.touches[0].pageY - canvasPosition.y;
+    let ctx = this.canvasElement.getContext('2d');
+    let currentX = ev.touches[0].pageX - canvasPosition.x;
+    let currentY = ev.touches[0].pageY - canvasPosition.y;
 
-      ctx.beginPath();
-      ctx.lineJoin = "round";
-      ctx.moveTo(this.lastX, this.lastY);
-      ctx.lineTo(currentX, currentY);
-      ctx.closePath();
-      ctx.strokeStyle = this.brushService.color;
-      ctx.lineWidth = this.brushService.size;
-      ctx.stroke();
+    ctx.beginPath();
+    ctx.lineJoin = "round";
+    ctx.moveTo(this.lastX, this.lastY);
+    ctx.lineTo(currentX, currentY);
+    ctx.closePath();
+    ctx.strokeStyle = this.brushService.color;
+    ctx.lineWidth = this.brushService.size;
+    ctx.stroke();
 
-      this.lastX = currentX;
-      this.lastY = currentY;
+    this.lastX = currentX;
+    this.lastY = currentY;
+  }
+
+  /*
+  * Pushes the stroke to the undo stack
+  */
+  handleEndStroke() {
+    var img = this.saveCurrentImage();
+
+    this.undoStack.push(img);
+
+    this.redoStack = []; //can't redo once you've added a new stroke!
+
+    this.numStrokes += 1;
+    this.showInitialInstructions();
   }
 
   /*
@@ -312,17 +381,6 @@ export class DrawingPage {
     img.src = this.canvasElement.toDataURL();
 
     return img;
-  }
-
-  /*
-  * Pushes the stroke to the undo stack
-  */
-  handleEndStroke() {
-    var img = this.saveCurrentImage();
-
-    this.undoStack.push(img);
-
-    this.redoStack = []; //can't redo once you've added a new stroke!
   }
 
   overlapStart(ev){
