@@ -119,6 +119,9 @@ export class FinalPage {
 
     var img = new Image();
     var pictures = [new Image(), new Image(), new Image()];
+    // pictures[0].setAttribute("crossOrigin","anonymous");
+    // pictures[1].setAttribute("crossOrigin","anonymous");
+    // pictures[2].setAttribute("crossOrigin","anonymous");
 
     // calls ImageStorage to download the image urls; once it gets them back,
     // then it assigns them to an array to pass to drawPictures
@@ -129,6 +132,10 @@ export class FinalPage {
        pictures[2].src = value[2];
        this.loadImages(pictures);
      });
+     //
+     // var img = new Image;
+     //
+     // img.src = this.canvasElement.toDataURL();
 
   }
 
