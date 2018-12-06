@@ -23,15 +23,15 @@
     (ionCancel)="onCancel($event)">
   </ion-searchbar>
   <ion-list>
-    <ion-item *ngFor="let match of matches" (click)="inviteUser(match)">
+    <ion-item #items *ngFor="let match of matches" >
       {{ match['username'] }}
-      <button ion-button icon-only clear item-end>
+      <button ion-button icon-only clear item-end [large]="true" (click)="inviteUser(match)">
         <ion-icon name="add-circle"></ion-icon>
       </button>
     </ion-item>
     <ion-item *ngFor="let invited of invites">
       <h2>{{ invited['username'] }}</h2>
-      <button ion-button icon-only clear item-end>
+      <button ion-button icon-only clear item-end [large]="true">
         <ion-icon name="checkmark-circle"></ion-icon>
       </button>
     </ion-item>

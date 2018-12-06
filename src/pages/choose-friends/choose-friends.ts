@@ -22,9 +22,11 @@ export class ChooseFriendsPage {
 
   databaseRef = firebase.database().ref();
   currUserName: String;
+  currUserID: string;
   numInvited = 0;
   imgUrl: String;
   matches = [];
+  friends = [];
   invites = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private alertCtrl: AlertController) {
@@ -32,12 +34,21 @@ export class ChooseFriendsPage {
     this.imgUrl = navParams.get('imgUrl');
 
     // get current user's username
-    var self = this;
     if(firebase.auth().currentUser != null){
-      var id = firebase.auth().currentUser.uid;
+      this.currUserID = firebase.auth().currentUser.uid;
       this.currUserName = firebase.auth().currentUser.displayName;
     }
 
+    //add friends as matches
+    var self = this;
+    this.databaseRef.child("users").child(this.currUserID).child("friends").once('value', function(snapshot) {
+      snapshot.forEach(function(userSnapshot) {
+        var id = userSnapshot.val();
+        var username = userSnapshot.key;
+        self.friends.push({"username": username, "userID": id, "invited": false});
+        self.matches.push({"username": username, "userID": id, "invited": false});
+      })
+    });
   }
 
   // on input, check if input is a user's email; invite them if so
@@ -50,13 +61,22 @@ export class ChooseFriendsPage {
         snapshot.forEach(function(userSnapshot) {
           var invitedUID = userSnapshot.val();
           var inviteUsername = userSnapshot.key;
-          if(inviteUsername == username && inviteUsername != self.currUserName){ //don't let user invite themselves
-            if(self.invites.length > 0) {
-              if (inviteUsername != self.invites[0]['username']){ // don't let user invite other user 2x
-                self.matches.push({"username": username, "userID": invitedUID});
+          // don't let user invite themselves
+          if(inviteUsername == username && inviteUsername != self.currUserName){
+            var isUnique = true;
+            //don't add to matches if it's already in matches
+            for (var i = 0; i < self.matches.length; i++) {
+              if(username == self.matches[i]['username']){
+                isUnique = false;
+                break;
               }
-            } else {
-              self.matches.push({"username": username, "userID": invitedUID});
+            }
+            //don't add to matches if that user was already invited
+            if(self.invites.length > 0 && self.invites[0]['username'] == username){
+              isUnique = false;
+            }
+            if(isUnique){
+              self.matches.push({"username": username, "userID": invitedUID, "invited": false});
             }
           }
         });
@@ -66,15 +86,28 @@ export class ChooseFriendsPage {
 
   // invite up to 2 other users, then go to home page
   inviteUser(matchInfo){
+    var found = false;
+    //if the match was in friends, remove from friends list
+    for (var i = 0; i < this.friends.length; i++) {
+      if(!found && this.friends[i]['username'] == matchInfo['username']){
+        found = true;
+        this.friends.splice(i, 1);
+      }
+    }
+
     this.invites.push(matchInfo);
-    this.matches = [];
+    this.matches = this.friends;
     this.searchbar.clearInput(null);
     this.numInvited += 1;
+
+    //save this user as a friend of current user
+    this.databaseRef.child("users").child(this.currUserID).child("friends").child(matchInfo['username']).set(matchInfo['userID']);
 
     if (this.numInvited > 1){
       this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
       this.presentInfo();
     }
+
   }
 
   onCancel(event){
