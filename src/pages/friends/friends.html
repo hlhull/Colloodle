@@ -5,22 +5,38 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+      <ion-item *ngIf="auth.getUsername()" left color="primary">
+        {{auth.getUsername()}}
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="presentUserPopover($event)">
+      	   <ion-icon name="person" right></ion-icon>
+        </button>
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="goToHome()">
+           <ion-icon name="home" right></ion-icon>
+        </button>
+      </ion-item>
 
-  <ion-navbar>
-    <ion-title>Friends</ion-title>
-  </ion-navbar>
-
+      <ion-item (click)="login()" *ngIf="!auth.authenticated" color="primary">
+        <ion-icon name="log-in" item-left></ion-icon>
+        Log in
+        <button ion-button icon-only color="secondary" clear style="float: right;" (click)="goToHome();$event.stopPropagation();">
+          <ion-icon name="home" right></ion-icon>
+        </button>
+      </ion-item>
 </ion-header>
 
 
 <ion-content padding>
 
-  <ion-list>
-    <ion-item (click)="drawGroup('new')">
-      <h2>New Drawing!</h2>
-    </ion-item>
+  <!-- <ion-list> -->
+    <!-- <ion-item> -->
+      <button id="new" ion-button round (click)="drawGroup('new')">New Drawing</button>
+    <!-- </ion-item>
+  </ion-list> -->
+  <ion-list id="invites">
+    <ion-list-header color="primary">Or, accept invites from friends!</ion-list-header>
+    <!-- <ion-item><h2 ion-text color="primary">Your drawing invites:</h2></ion-item> -->
     <ion-item *ngFor="let group of this.groupManager.invited" (click)="drawGroup(group['group'], group['conflict'])">
-      <h2 [ngStyle]="{'color': group['conflict']? 'gray' : 'black'}">Doodle with {{group['inviter']}}</h2>
+      <p [ngStyle]="{'color': group['conflict']? 'gray' : 'black'}">Doodle with {{group['inviter']}}</p>
     </ion-item>
   </ion-list>
 

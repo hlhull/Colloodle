@@ -134,4 +134,33 @@ export class ChooseFriendsPage {
     alert.present();
   }
 
+  goHome(): void {
+    this.presentConfirmGoHome();
+  }
+
+  /*
+  * Causes an alert/confirmation screen to pop up when home button is pressed
+  */
+  presentConfirmGoHome() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to leave and go to the Home page? Your drawing will be lost.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            // this.imageStorage.cancelDrawing();
+            this.navCtrl.setRoot(HomePage);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
+  }
+
 }

@@ -180,7 +180,7 @@ export class DrawingPage {
 
   showInitialInstructions() {
     this.clearCanvas(this.infoCanvasElement);
-    var alpha = 1 - 0.25*this.numStrokes;
+    var alpha = 0.99 - 0.33*this.numStrokes;
 
     var bodyPart = ["head", "torso", "legs"];
     var edges = ["bottom edge", "top and bottom edges", "top edge"];

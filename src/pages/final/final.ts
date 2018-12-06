@@ -8,6 +8,7 @@ import { GroupManagerProvider } from '../../providers/group-manager/group-manage
 import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
 import { Screenshot } from '@ionic-native/screenshot';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
 
 /**
  * Class for the FinalPage page.
@@ -27,7 +28,7 @@ export class FinalPage {
   canvasElement: any;
   picHeight: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController, private socialSharing: SocialSharing) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController, private socialSharing: SocialSharing, private base64ToGallery: Base64ToGallery) {
     this.imageStorage = navParams.get('imageStorage');
 
     this.screenOrientation.lock('portrait');
@@ -37,7 +38,7 @@ export class FinalPage {
     this.navCtrl.setRoot(HomePage);
   }
 
-  save() {
+  // save() {
     // // Take a screenshot and save to file
     // this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
     //   res => console.log('Saved image to camera roll ', res),
@@ -52,20 +53,30 @@ export class FinalPage {
 
     //somehow check if this is possible? (maybe unnecessary)
 
-    var img = new Image;
+    // var img = new Image;
+    //
+    // img.src = this.canvasElement.toDataURL();
 
-    img.src = this.canvasElement.toDataURL();
+    // saveToPhotoAlbum only supported on iOS :(
 
-    this.socialSharing.saveToPhotoAlbum(img.src).then(() => {
-      // Success!
-    }).catch(() => {
-      // Error!
-    });
-  }
+    // this.socialSharing.saveToPhotoAlbum(img.src).then(() => {
+    //   // Success!
+    // }).catch(() => {
+    //   // Error!
+    // });
 
-  share() {
 
-  }
+    // did not work, github link says "DISCONTINUED," which is sketchy
+
+    // this.base64ToGallery.base64ToGallery(img.src).then(
+    //   res => console.log('Saved image to gallery ', res),
+    //   err => console.log('Error saving image to gallery ', err)
+    // );
+  // }
+
+  // share() {
+  //
+  // }
 
   /*
     Takes the 3 picture urls passed in and loads them and then calls drawImages
@@ -108,6 +119,9 @@ export class FinalPage {
 
     var img = new Image();
     var pictures = [new Image(), new Image(), new Image()];
+    // pictures[0].setAttribute("crossOrigin","anonymous");
+    // pictures[1].setAttribute("crossOrigin","anonymous");
+    // pictures[2].setAttribute("crossOrigin","anonymous");
 
     // calls ImageStorage to download the image urls; once it gets them back,
     // then it assigns them to an array to pass to drawPictures
@@ -118,6 +132,10 @@ export class FinalPage {
        pictures[2].src = value[2];
        this.loadImages(pictures);
      });
+     //
+     // var img = new Image;
+     //
+     // img.src = this.canvasElement.toDataURL();
 
   }
 
