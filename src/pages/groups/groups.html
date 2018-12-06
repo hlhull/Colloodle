@@ -9,7 +9,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>My Groups</ion-title>
+    <ion-title>My Gallery</ion-title>
   </ion-navbar>
   <div padding>
     <ion-segment [(ngModel)]="drawings">
@@ -58,7 +58,7 @@
       <ion-grid>
         <ion-row>
           <ion-col col-4 col-md-2 col-xl-2 *ngFor="let group of this.groupManager.inProgress">
-            <ion-card  large clear (click)="this.viewGroupDrawing(group['group'])">
+            <ion-card  large clear>
               <img id="{{group['group']}}" style="border:1px solid #009691">
            </ion-card>
          </ion-col>
