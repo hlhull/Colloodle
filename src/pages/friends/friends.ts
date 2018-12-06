@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FriendsStorageProvider } from '../../providers/image-storage/friends-storage';
 import { DrawingPage } from '../drawing/drawing';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 /**
  * Generated class for the FriendsPage page.
@@ -18,7 +19,8 @@ import { DrawingPage } from '../drawing/drawing';
 })
 export class FriendsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider, private screenOrientation: ScreenOrientation) {
+    this.screenOrientation.unlock();
   }
 
   drawGroup(group, conflict){
