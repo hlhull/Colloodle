@@ -6,9 +6,14 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Invite Friends</ion-title>
-  </ion-navbar>
+  <!-- <ion-navbar> -->
+    <ion-item left color="primary">
+      Invite Two Friends!
+      <button ion-button icon-only color="secondary" clear style="float: right;" (click)="goHome()">
+         <ion-icon name="home" right></ion-icon>
+      </button>
+    </ion-item>
+  <!-- </ion-navbar> -->
 
 </ion-header>
 
@@ -18,7 +23,7 @@
     [(ngModel)]="myInput"
     [showCancelButton]="shouldShowCancel"
     [type]="email"
-    [placeholder]="'Search for Friends by Username'"
+    [placeholder]="'Search by Username'"
     (ionInput)="onInput($event)"
     (ionCancel)="onCancel($event)">
   </ion-searchbar>
