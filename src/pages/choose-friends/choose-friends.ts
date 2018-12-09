@@ -116,24 +116,28 @@ export class ChooseFriendsPage {
     add user to the current user's friends in firebase;
   */
   inviteUser(matchInfo){
-    var found = false;
-    //if the match was in friends, remove from friends list
-    for (var i = 0; i < this.friends.length; i++) {
-      if(!found && this.friends[i]['username'] == matchInfo['username']){
-        found = true;
-        this.friends.splice(i, 1);
+    if(this.numInvited < 2){
+      var found = false;
+      //if the match was in friends, remove from friends list
+      for (var i = 0; i < this.friends.length; i++) {
+        if(!found && this.friends[i]['username'] == matchInfo['username']){
+          found = true;
+          this.friends.splice(i, 1);
+        }
       }
-    }
 
-    this.invites.push(matchInfo);
-    this.matches = this.friends;
-    this.searchbar.clearInput(null);
-    this.numInvited += 1;
+      this.invites.push(matchInfo);
+      this.matches = this.friends;
+      this.searchbar.clearInput(null);
+      this.numInvited += 1;
 
-    if(this.numInvited == 2){
-      this.twoFriends = true;
+      if(this.numInvited == 2){
+        this.twoFriends = true;
+      } else {
+        this.twoFriends = false;
+      }
     } else {
-      this.twoFriends = false;
+      this.presentTwoUsers();
     }
 
     //save this user as a friend of current user
@@ -152,6 +156,20 @@ export class ChooseFriendsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChooseFriendsPage');
+  }
+
+  presentTwoUsers(){
+    let alert = this.alertCtrl.create({
+      title: 'Only Invite 2 Friends',
+      message: "To invite another friend, remove one of the currently selected friends by clicking the minus sign.",
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 
   presentInfo() {
