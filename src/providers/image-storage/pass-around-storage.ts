@@ -70,9 +70,7 @@ export class PassAroundStorageProvider {
       self.groupNumber = ref.getKey();
       self.databaseRef.child("groups").child(ref.getKey()).set(2); // add group to groups list
       for (var i = 0; i < self.storedImageUrls.length; i++) { // store images in groups folder
-        var blob = ImageStorageProvider.dataUrlToBlob(self.storedImageUrls[i]);
-        var groupRef = this.storageRef.child(self.groupNumber + '/' + i + '.png');
-        groupRef.put(blob)
+        ImageStorageProvider.storeImage(self.storedImageUrls[i], self.groupNumber, i);
       }
     });
   }

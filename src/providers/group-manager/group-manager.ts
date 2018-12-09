@@ -68,7 +68,7 @@ export class GroupManagerProvider {
       for (var i = 0; i < length; i++) {
           var entry = self.invited[i];
           if(!found && entry['group'] == removedSnapshot.key){
-            var found = true;
+            found = true;
             self.invited.splice(i, 1);
           }
       }
@@ -223,7 +223,7 @@ export class GroupManagerProvider {
 
     if(this.userID != null){
       this.databaseRef.child("groups").off();
-      //this.userRef.child("completed").orderByKey().startAt(this.compLastTime).off();
+      //this.userRef.child("completed").off();
     }
 
     this.userID = null;
