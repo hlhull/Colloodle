@@ -29,6 +29,7 @@ export class ChooseFriendsPage {
   matches = [];
   friends = [];
   invites = [];
+  twoFriends = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
@@ -86,29 +87,61 @@ export class ChooseFriendsPage {
     }
   }
 
-  // invite up to 2 other users, then go to home page
-  inviteUser(matchInfo){
+  /*
+    move user from invited list to matched list
+  */
+  uninviteUser(friendInfo){
+    //remove from invited list
     var found = false;
     //if the match was in friends, remove from friends list
-    for (var i = 0; i < this.friends.length; i++) {
-      if(!found && this.friends[i]['username'] == matchInfo['username']){
+    for (var i = 0; i < this.invites.length; i++) {
+      if(!found && this.invites[i]['username'] == friendInfo['username']){
         found = true;
-        this.friends.splice(i, 1);
+        this.invites.splice(i, 1);
       }
     }
 
-    this.invites.push(matchInfo);
-    this.matches = this.friends;
-    this.searchbar.clearInput(null);
-    this.numInvited += 1;
+    this.matches.push(friendInfo);
+    this.numInvited -= 1;
+
+    if(this.numInvited == 2){
+      this.twoFriends = true;
+    } else {
+      this.twoFriends = false;
+    }
+  }
+
+  /*
+    remove user from matched list, add to invited list and
+    add user to the current user's friends in firebase;
+  */
+  inviteUser(matchInfo){
+    if(this.numInvited < 2){
+      var found = false;
+      //if the match was in friends, remove from friends list
+      for (var i = 0; i < this.friends.length; i++) {
+        if(!found && this.friends[i]['username'] == matchInfo['username']){
+          found = true;
+          this.friends.splice(i, 1);
+        }
+      }
+
+      this.invites.push(matchInfo);
+      this.matches = this.friends;
+      this.searchbar.clearInput(null);
+      this.numInvited += 1;
+
+      if(this.numInvited == 2){
+        this.twoFriends = true;
+      } else {
+        this.twoFriends = false;
+      }
+    } else {
+      this.presentTwoUsers();
+    }
 
     //save this user as a friend of current user
     this.databaseRef.child("users").child(this.currUserID).child("friends").child(matchInfo['username']).set(matchInfo['userID']);
-
-    if (this.numInvited > 1){
-      this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
-      this.presentInfo();
-    }
 
   }
 
@@ -116,8 +149,27 @@ export class ChooseFriendsPage {
     this.matches = [];
   }
 
+  addFriends(){
+    this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
+    this.presentInfo();
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChooseFriendsPage');
+  }
+
+  presentTwoUsers(){
+    let alert = this.alertCtrl.create({
+      title: 'Only Invite 2 Friends',
+      message: "To invite another friend, remove one of the currently selected friends by clicking the minus sign.",
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 
   presentInfo() {
