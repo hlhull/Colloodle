@@ -174,7 +174,14 @@ export class FinalPage {
 
   deleteGroup(){
     this.groupManager.deleteGroup(this.imageStorage.groupNumber);
-    this.goHome();
+    
+    //if it came from the Gallery (have back button to Gallery), go back to gallery
+    //otherwise, if no back button, came from drawing page, so go home
+    if(this.navCtrl.length() > 1){
+      this.navCtrl.pop();
+    } else {
+      this.goHome();
+    }
   }
 
 
