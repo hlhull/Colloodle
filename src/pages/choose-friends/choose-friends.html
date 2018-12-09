@@ -36,7 +36,7 @@
     </ion-item>
     <ion-item *ngFor="let invited of invites">
       <h2>{{ invited['username'] }}</h2>
-      <button ion-button icon-only clear item-end [large]="true">
+      <button ion-button icon-only clear item-end [large]="true" (click)="uninviteUser(invited)">
         <ion-icon name="checkmark-circle"></ion-icon>
       </button>
     </ion-item>

@@ -87,7 +87,34 @@ export class ChooseFriendsPage {
     }
   }
 
-  // invite up to 2 other users, then go to home page
+  /*
+    move user from invited list to matched list
+  */
+  uninviteUser(friendInfo){
+    //remove from invited list
+    var found = false;
+    //if the match was in friends, remove from friends list
+    for (var i = 0; i < this.invites.length; i++) {
+      if(!found && this.invites[i]['username'] == friendInfo['username']){
+        found = true;
+        this.invites.splice(i, 1);
+      }
+    }
+
+    this.matches.push(friendInfo);
+    this.numInvited -= 1;
+
+    if(this.numInvited == 2){
+      this.twoFriends = true;
+    } else {
+      this.twoFriends = false;
+    }
+  }
+
+  /*
+    remove user from matched list, add to invited list and
+    add user to the current user's friends in firebase;
+  */
   inviteUser(matchInfo){
     var found = false;
     //if the match was in friends, remove from friends list
@@ -108,7 +135,6 @@ export class ChooseFriendsPage {
     } else {
       this.twoFriends = false;
     }
-    console.log(this.twoFriends);
 
     //save this user as a friend of current user
     this.databaseRef.child("users").child(this.currUserID).child("friends").child(matchInfo['username']).set(matchInfo['userID']);
