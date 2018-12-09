@@ -32,7 +32,7 @@
 			</div>
 
 			<div ngxErrors="username" #usernameErrors="ngxErrors">
-				<div [ngxError]="['pattern']" [when]="['touched']">Can only contain letters and numbers</div>
+				<div [ngxError]="['pattern']" [when]="['touched']">Can only contain lowercase letters and numbers</div>
 			</div>
 
 			<ion-item [ngClass]="{ invalid: emailErrors.hasError('*', ['touched']) }">

@@ -22,12 +22,13 @@ export class SignupPage {
 
 	constructor(fb: FormBuilder, private navCtrl: NavController, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
 		this.form = fb.group({
-			username: ['', Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z0-9]*')])],
+			username: ['', Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern('[a-z0-9]*')])],
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 
 		this.screenOrientation.unlock();
+
   }
 
 	/*
@@ -43,7 +44,6 @@ export class SignupPage {
 			password: data.password
 		};
 		var username = data.username;
-
 		var self = this;
 		this.databaseRef.child("userList").once('value', function(snapshot) {
 			if(snapshot.hasChild(username)){

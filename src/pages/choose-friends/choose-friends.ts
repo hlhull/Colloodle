@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Searchbar } from 'ionic-angular';
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { HomePage } from '../home/home';
 import { AlertController } from 'ionic-angular';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import firebase from 'firebase';
 
 /**
@@ -29,9 +30,10 @@ export class ChooseFriendsPage {
   friends = [];
   invites = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
     this.imgUrl = navParams.get('imgUrl');
+    this.screenOrientation.unlock();
 
     // get current user's username
     if(firebase.auth().currentUser != null){
@@ -54,7 +56,7 @@ export class ChooseFriendsPage {
   // on input, check if input is a user's email; invite them if so
   onInput(searchbar){
     if (searchbar != null){
-      var username = searchbar.srcElement.value;
+      var username = searchbar.srcElement.value.toLowerCase();
       var self = this;
 
       this.databaseRef.child("userList").once('value', function(snapshot) {
