@@ -1,9 +1,9 @@
-<!-- TODO: how to set background of entire page to be "primary" from variables.scss in theme folder? this just wasn't working -->
+
 <ion-content no-bounce style="background-color: #009691">
   <canvas id='overlap' #overlap (touchstart)="overlapStart($event)"(touchmove)="overlapMove($event)" (touchend)="overlapEnd($event)" style="border:1px solid #009691;"></canvas>
-  <!-- <canvas id='myCanvas' #myCanvas (touchstart)="handleStart($event)" (touchmove)="handleMove($event)" (touchend)="handleEndStroke($event)" style="border:1px solid #009691;"></canvas> -->
 
-  <!-- Explanation: myCanvas hold our image and is underneath infoCanvas, 
+
+  <!-- Explanation: myCanvas hold our image and is underneath infoCanvas,
   since infoCanvas is on top, it has the touch functions trigger drawing on
   the canvas below it, the purpose of infoCanvas is to display instructions
   that do not immediately disappear (like a popup) -->
@@ -43,7 +43,6 @@
   <div id="finished">
     <ion-buttons end>
       <button ion-button clear color=secondary (click)="presentConfirmOrError()">
-        <!-- <ion-icon name="checkmark"></ion-icon> -->
         Done
       </button>
     </ion-buttons>

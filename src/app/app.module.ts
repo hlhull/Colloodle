@@ -18,7 +18,7 @@ import { DrawingModesPage } from '../pages/drawing-modes/drawing-modes';
 import { FriendsPage } from '../pages/friends/friends';
 import { ChooseFriendsPage } from '../pages/choose-friends/choose-friends';
 
-import { CanvasDrawComponent } from '../components/canvas-draw/canvas-draw';
+
 
 import { File } from '@ionic-native/file';
 import { IonicStorageModule } from '@ionic/storage';
@@ -53,7 +53,6 @@ import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
     DrawingPage,
     FinalPage,
     GroupsPage,
-    CanvasDrawComponent,
     PopoverPage,
     UserPopoverPage,
     DrawingModesPage,

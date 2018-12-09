@@ -5,31 +5,13 @@
 
 <ion-header>
 
-  <!-- <ion-navbar> -->
-    <!-- original: -->
-    <!-- <ion-list-header *ngIf="auth.getEmail()">{{auth.getEmail()}}</ion-list-header>
-
-    <ion-item (click)="logout()" *ngIf="auth.authenticated">
-    	<ion-icon name="log-out" item-left></ion-icon>
-    	Log out
+  <div>
+    <ion-item id='loginLabel' *ngIf="auth.getUsername()" left dark>
+      {{auth.getUsername()}}
+      <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
+    	   <ion-icon name="person" right></ion-icon>
+      </button>
     </ion-item>
-
-    <ion-item (click)="login()" *ngIf="!auth.authenticated">
-    	<ion-icon name="log-in" item-left></ion-icon>
-    	Log in
-    </ion-item> -->
-
-    <!-- trying new hopefully prettier thing: -->
-
-    <!-- <ion-list *ngIf="auth.getEmail()" style="background-color: dark"> -->
-<div id='loginLabel'>
-      <ion-item *ngIf="auth.getUsername()" left dark>
-        {{auth.getUsername()}}
-        <button ion-button icon-only clear style="float: right;" (click)="presentUserPopover($event)">
-      	   <ion-icon name="person" right></ion-icon>
-        </button>
-      </ion-item>
-    <!-- </ion-list> -->
 
     <ion-item (click)="login()" *ngIf="!auth.authenticated">
       <ion-icon name="log-in" item-left></ion-icon>
@@ -37,11 +19,6 @@
     </ion-item>
   </div>
 
-    <!-- <ion-item (click)="login()" *ngIf="!auth.authenticated">
-    	<ion-icon name="log-in" item-left></ion-icon>
-    	Log in
-    </ion-item> -->
-  <!-- </ion-navbar> -->
 </ion-header>
 
 <style>
@@ -60,10 +37,3 @@ text-align: center;
        <button id='info' ion-button (click)="goToInfoPage()" color="light" round clear icon-end>How To Play<ion-icon name="information-circle"></ion-icon></button>
 
 </ion-content>
-<!--<!-- <style>
-ion-content {
-  align: center;
-text-align: center;
-}
-</style>
--->
