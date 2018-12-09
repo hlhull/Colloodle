@@ -29,6 +29,7 @@ export class ChooseFriendsPage {
   matches = [];
   friends = [];
   invites = [];
+  twoFriends = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
@@ -102,18 +103,25 @@ export class ChooseFriendsPage {
     this.searchbar.clearInput(null);
     this.numInvited += 1;
 
+    if(this.numInvited == 2){
+      this.twoFriends = true;
+    } else {
+      this.twoFriends = false;
+    }
+    console.log(this.twoFriends);
+
     //save this user as a friend of current user
     this.databaseRef.child("users").child(this.currUserID).child("friends").child(matchInfo['username']).set(matchInfo['userID']);
-
-    if (this.numInvited > 1){
-      this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
-      this.presentInfo();
-    }
 
   }
 
   onCancel(event){
     this.matches = [];
+  }
+
+  addFriends(){
+    this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
+    this.presentInfo();
   }
 
   ionViewDidLoad() {
