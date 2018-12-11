@@ -30,6 +30,8 @@ export class HomePage {
     var userID = firebase.auth().currentUser;
     if (userID == null){
       this.presentError(" see your drawings.");
+    } else if (!this.groupManager.connected){
+      this.presentDisconnected();
     } else {
       this.navCtrl.push(GroupsPage);
     }
@@ -88,8 +90,23 @@ export class HomePage {
         role: 'cancel',
         handler: () => {}
       }
-    ]});
-  alert.present();
-}
+      ]});
+    alert.present();
+  }
+
+  /*
+  * Causes an alert to popup asking the user to cancel, signup, or login
+  */
+  presentDisconnected() {
+  let alert = this.alertCtrl.create({
+    title: 'Error',
+    message: 'You must be connected to the internet in to see your drawings.',
+    buttons: [
+      { text: 'Ok',
+        handler: () => {
+        }
+      }]});
+    alert.present();
+  }
 
 }
