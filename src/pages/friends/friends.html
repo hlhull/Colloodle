@@ -5,8 +5,12 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+
       <ion-item *ngIf="auth.getUsername()" left color="primary">
         {{auth.getUsername()}}
+        <button ion-button icon-only color="secondary" clear style="float: left" (click)="goBack()">
+            <ion-icon name="arrow-back"></ion-icon>
+        </button>
         <button ion-button icon-only color="secondary" clear style="float: right;" (click)="presentUserPopover($event)">
       	   <ion-icon name="person" right></ion-icon>
         </button>

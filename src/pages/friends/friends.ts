@@ -52,6 +52,10 @@ export class FriendsPage {
     this.navCtrl.push(HomePage);
   }
 
+  goBack(){
+    this.navCtrl.pop();
+  }
+
   /*
   * sends the user to login page (also signs out if already signed in,
   * even though you shouldn't be, just in case)
