@@ -81,22 +81,23 @@ export class FriendsStorageProvider {
   createGroup(imgUrl, invited, currUserName){
     var self = this;
     var userID = firebase.auth().currentUser.uid;
+    var user1 = invited[0];
+    var user2 = invited[1];
 
     this.databaseRef.child("groups").push(this.sectionNumber + 11).then((ref) => {
        self.groupNumber = ref.getKey();
        self.databaseRef.child("users").child(userID).child("completed").child(ref.getKey()).set(this.sectionNumber);
        ImageStorageProvider.storeImage(imgUrl, this.groupNumber, this.sectionNumber);
-       for (var i in invited){
-         self.inviteUser(invited[i]['userID'], currUserName);
-       }
+       self.inviteUser(user1['userID'], currUserName, user2['username']);
+       self.inviteUser(user2['userID'], currUserName, user1['username']);
      });
   }
 
   /*
     invite a user to join the doodle
   */
-  inviteUser(userID, currUserEmail){
-    this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).set(currUserEmail);
+  inviteUser(userID, currUserEmail, otherUser){
+    this.databaseRef.child("users").child(userID).child("invited").child(this.groupNumber).set(currUserEmail + " and " + otherUser);
   }
 
   /*
