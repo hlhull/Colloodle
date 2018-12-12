@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 import { HomePage } from '../home/home';
 import { UserPopoverPage } from '../user-popover/user-popover';
+import { AlertController } from 'ionic-angular';
+import firebase from 'firebase';
 
 /**
  * Generated class for the FriendsPage page.
@@ -23,14 +25,27 @@ import { UserPopoverPage } from '../user-popover/user-popover';
 })
 export class FriendsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider, private screenOrientation: ScreenOrientation, private auth: AuthService, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private groupManager: GroupManagerProvider, private screenOrientation: ScreenOrientation, private auth: AuthService, public popoverCtrl: PopoverController, private alertCtrl: AlertController) {
     this.screenOrientation.unlock();
   }
 
   drawGroup(group, conflict){
-    if(!conflict){
+    // var userID = firebase.auth().currentUser;
+    //
+    // if(!conflict && this.groupManager.connected && userID != null){
+    //   var imageStorage = new FriendsStorageProvider(group);
+    //   this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    // }
+
+    var userID = firebase.auth().currentUser;
+
+    if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+      this.presentErrorSignIn(" draw with Friends");
+    } else if (this.groupManager.connected){
       var imageStorage = new FriendsStorageProvider(group);
       this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
+    } else {
+      this.presentErrorConnect(" Friends mode");
     }
   }
 
@@ -71,6 +86,49 @@ export class FriendsPage {
   */
   logout() {
     this.auth.signOut();
+  }
+
+  /*
+  * Causes an alert to popup asking the user to cancel, signup, or login
+  */
+  presentErrorSignIn(actionString) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      message: 'You must be signed in to '+ actionString,
+      buttons: [
+        { text: 'Login',
+          handler: () => {
+            this.navCtrl.push(LoginPage);
+          }
+        },
+        { text: 'Sign Up',
+          handler: () => {
+            this.navCtrl.push(SignupPage);
+          }
+        },
+        { text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]});
+    alert.present();
+  }
+
+  /*
+    Causes an alert to popup telling the user they must connect to the internet
+    to continue
+  */
+  presentErrorConnect(mode){
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      message: 'You must be connected to the internet to enter '+ mode,
+      buttons: [
+        { text: 'Ok',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]});
+    alert.present();
   }
 
 }

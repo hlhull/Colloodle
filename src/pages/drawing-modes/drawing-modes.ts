@@ -54,27 +54,26 @@ export class DrawingModesPage {
   }
 
   goToRandom(){
-    if(this.groupManager.connected){
-      var userID = firebase.auth().currentUser;
-      if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-        this.presentErrorSignIn(" enter Random mode");
-      } else {
-        var imageStorage = new RandomStorageProvider();
-        this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
-      }
+    var userID = firebase.auth().currentUser;
+
+    if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+      this.presentErrorSignIn(" enter Random mode");
+    } else if (this.groupManager.connected){
+      var imageStorage = new RandomStorageProvider();
+      this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
     } else {
       this.presentErrorConnect(" Random mode");
     }
   }
 
   goToFriends(){
-    if(this.groupManager.connected){
-      var userID = firebase.auth().currentUser;
-      if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
-        this.presentErrorSignIn(" draw with Friends");
-      } else {
-        this.navCtrl.push(FriendsPage, {animate:false});
-      }
+    var userID = firebase.auth().currentUser;
+
+    if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
+      this.presentErrorSignIn(" draw with Friends");
+    } else if (this.groupManager.connected){
+      var imageStorage = new RandomStorageProvider();
+      this.navCtrl.push(FriendsPage, {animate:false});
     } else {
       this.presentErrorConnect(" Friends mode");
     }
