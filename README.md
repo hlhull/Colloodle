@@ -23,7 +23,10 @@ Run `npm audit fix` from inside the cloned directory in your terminal.
 ### On Laptop:
 
 Run `ionic serve` from within the cloned directory in your terminal. If it asks you to install ‘@ionic/app-scripts’, say yes.
-Ignore and close all errors regarding screenOrientation locking/unlocking, as this is not supported by ionic serve. However, the app should still run smoothly. Tip: Change orientation to landscape on the drawing page. Keep it vertical on other pages.
+
+Ignore and close all errors regarding screenOrientation locking/unlocking, as this is not supported by ionic serve. However, the app should still run smoothly. 
+
+Tip: Change orientation to landscape on the drawing page. Keep it vertical on other pages.
 
 ### Android: 
 
@@ -52,31 +55,20 @@ Be sure to recognize developer in Settings.
 
 
 ## Known bugs:
-Notifications and badges sometimes display and sometimes don’t. One phone in the group did not get badges or the completed drawing notifications. (This phone still got invitation notifications).
-
-The status bar shows up with black icons on a black bar on Android, and it is squished on iOS.
-
-The app’s UI is not optimized for tablets. However, it still can be used on a tablet.
+- Notifications and badges sometimes display and sometimes don’t. One phone in the group did not get badges or the completed drawing notifications. (This phone still got invitation notifications).
+- The status bar shows up with black icons on a black bar on Android, and it is squished on iOS.
+- The app’s UI is not optimized for tablets. However, it still can be used on a tablet.
 
 
 ## Next steps:
-Fix all current bugs.
-
-Implement save and share for completed drawings. Saving the image was more difficult than expected. 
-
-Have drawing groups work for 2 or 4 people, not just 3.
-
-Add a color picker and eyedropper tool.
-
-Have the chosen color checked or pressed on the popover menu.
-
-Show the full drawings on the Completed section of the gallery page, not just the one segment.
-
-Add badges for being added to a drawing. 
-
-Display which user did which part of the drawing. (Maybe, and only for Friends Mode drawings).
-
-Allow users to delete their account.
-
-Allow users to switch which email address is linked to their account.
+- Fix all current bugs.
+- Implement save and share for completed drawings. Saving the image was more difficult than expected. 
+- Have drawing groups work for 2 or 4 people, not just 3.
+- Add a color picker and eyedropper tool.
+- Have the chosen color checked or pressed on the popover menu.
+- Show the full drawings on the Completed section of the gallery page, not just the one segment.
+- Add badges for being added to a drawing. 
+- Display which user did which part of the drawing. (Maybe, and only for Friends Mode drawings).
+- Allow users to delete their account.
+- Allow users to switch which email address is linked to their account.
 
