@@ -6,6 +6,7 @@ import { DrawingPage } from '../drawing/drawing';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
+import {SignupPage} from '../signup/signup';
 import { HomePage } from '../home/home';
 import { UserPopoverPage } from '../user-popover/user-popover';
 import { AlertController } from 'ionic-angular';
