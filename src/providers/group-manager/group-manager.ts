@@ -80,12 +80,10 @@ export class GroupManagerProvider {
   */
   listenForCompletedGroups(){
     var self = this;
-    var found = false;
 
     //fires every time a group in "groups" changes
     this.databaseRef.child("groups").on('child_changed', changedSnapshot => {
       // loop over inProgress and if the changed group matches, move to completed
-      found = false;
       var val = changedSnapshot.val();
       if(val == 0){
         self.checkForCompleted(changedSnapshot.key);
@@ -160,9 +158,9 @@ export class GroupManagerProvider {
     var promise = self.databaseRef.child("groups").child(group).once('value', function(groupSnapshot){
         var info = {"section" : section, "group": groupSnapshot.key};
         var value = groupSnapshot.val()
-        if(value == "inProgress" || value == 11 || value == 12){
+        if(value == "inProgress" || value == 11 || value == 12 || value == "currDrawing"){
           self.inProgress.push(info);
-        } else {
+        } else if (value == 0 || value == 1 || value == 2){
           self.completed.push(info);
         }
       });
