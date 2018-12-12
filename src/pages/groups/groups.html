@@ -43,7 +43,7 @@
   <ion-list *ngSwitchCase="'In Progress'">
       <ion-grid>
         <ion-row>
-          <ion-col col-4 col-md-2 col-xl-2 *ngFor="let group of this.groupManager.inProgress">
+          <ion-col col-4 col-md-2 col-xl-2 *ngFor="let group of this.groupManager.inProgress.slice().reverse()">
             <ion-card  large clear>
               <img id="{{group['group']}}" style="border:1px solid #009691">
            </ion-card>
