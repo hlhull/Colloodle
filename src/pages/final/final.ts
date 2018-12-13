@@ -1,14 +1,9 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import { HomePage} from '../home/home';
-
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
-import { RandomStorageProvider } from '../../providers/image-storage/random-storage';
-import { Screenshot } from '@ionic-native/screenshot';
-import { SocialSharing } from '@ionic-native/social-sharing';
-import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
 
 /**
  * Class for the FinalPage page.
@@ -27,10 +22,10 @@ export class FinalPage {
 
   canvasElement: any;
   picHeight: number;
+  numImages = 3;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private screenshot: Screenshot, private alertCtrl: AlertController, private socialSharing: SocialSharing, private base64ToGallery: Base64ToGallery) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
     this.imageStorage = navParams.get('imageStorage');
-
     this.screenOrientation.lock('portrait');
   }
 
@@ -38,60 +33,19 @@ export class FinalPage {
     this.navCtrl.setRoot(HomePage);
   }
 
-  // save() {
-    // // Take a screenshot and save to file
-    // this.screenshot.save('jpg', 80, 'myscreenshot.jpg').then(
-    //   res => console.log('Saved image to camera roll ', res),
-    //   err => console.log('Error saving image to camera roll ', err)
-    // );
-    //
-    // // Take a screenshot and get temporary file URI
-    // this.screenshot.URI(80).then(
-    //   res => console.log('Saved image to URI ', res),
-    //   err => console.log('Error saving image to URI ', err)
-    // );
-
-    //somehow check if this is possible? (maybe unnecessary)
-
-    // var img = new Image;
-    //
-    // img.src = this.canvasElement.toDataURL();
-
-    // saveToPhotoAlbum only supported on iOS :(
-
-    // this.socialSharing.saveToPhotoAlbum(img.src).then(() => {
-    //   // Success!
-    // }).catch(() => {
-    //   // Error!
-    // });
-
-
-    // did not work, github link says "DISCONTINUED," which is sketchy
-
-    // this.base64ToGallery.base64ToGallery(img.src).then(
-    //   res => console.log('Saved image to gallery ', res),
-    //   err => console.log('Error saving image to gallery ', err)
-    // );
-  // }
-
-  // share() {
-  //
-  // }
-
   /*
     Takes the 3 picture urls passed in and loads them and then calls drawImages
   */
   loadImages(pictures){
     var loadedImages = 0;
-    var numImages = 3;
     var images = {};
     var self = this;
-    // get num of sources
+
     for(var i in pictures) {
       images[i] = new Image();
       images[i] = pictures[i]
       images[i].onload = function() {
-        if(++loadedImages >= numImages) {
+        if(++loadedImages >= self.numImages) {
           //once all images are loaded, draw them
           self.drawImages(images);
         }
@@ -105,7 +59,7 @@ export class FinalPage {
   drawImages(images){
     let ctx = this.finalCanvas.nativeElement.getContext('2d'); // assigns context to appropriate canvas
 
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < this.numImages; i++) {
       ctx.drawImage(images[i], 0, i*this.picHeight, ctx.canvas.clientWidth, this.picHeight);
     }
   }
@@ -117,26 +71,16 @@ export class FinalPage {
   ngAfterViewInit(){
     this.setCanvas();
 
-    var img = new Image();
     var pictures = [new Image(), new Image(), new Image()];
-    // pictures[0].setAttribute("crossOrigin","anonymous");
-    // pictures[1].setAttribute("crossOrigin","anonymous");
-    // pictures[2].setAttribute("crossOrigin","anonymous");
 
     // calls ImageStorage to download the image urls; once it gets them back,
     // then it assigns them to an array to pass to drawPictures
-    //var value = this.imageStorage.getImageUrls();
     this.imageStorage.getImageUrls().then((value) => {
        pictures[0].src = value[0];
        pictures[1].src = value[1];
        pictures[2].src = value[2];
        this.loadImages(pictures);
      });
-     //
-     // var img = new Image;
-     //
-     // img.src = this.canvasElement.toDataURL();
-
   }
 
   /*
@@ -145,9 +89,7 @@ export class FinalPage {
   */
   setCanvas(){
     // get the max height / width we can use
-    var canvas = document.getElementById('backgroundCanvas');
     this.canvasElement = this.backcanvas.nativeElement;
-
     var maxHeight = this.canvasElement.offsetHeight;
     var maxWidth = this.canvasElement.offsetWidth;
 
@@ -160,22 +102,28 @@ export class FinalPage {
       maxWidth = maxHeight;
       maxHeight = temp;
     }
-    if((maxHeight/3) > (maxWidth*(9/16))){
-      this.picHeight = ((27/16)*maxWidth)/3;
+
+    // determine whether height or width will be maximized and set other accordingly
+    if((maxHeight/this.numImages) > (maxWidth*(9/16))){
+      this.picHeight = ((27/16)*maxWidth)/this.numImages;
       c.width = maxWidth;
-      c.height = this.picHeight*3;
+      c.height = this.picHeight*this.numImages;
     } else {
-      this.picHeight = maxHeight / 3;
+      this.picHeight = maxHeight / this.numImages;
       c.width = ((16/9)*this.picHeight);
-      c.height = this.picHeight*3;
+      c.height = this.picHeight*this.numImages;
     }
   }
 
 
+  /*
+    delete the drawing and return to either Gallery or Home, depending on
+    where user came from
+  */
   deleteGroup(){
     this.groupManager.deleteGroup(this.imageStorage.groupNumber);
-    
-    //if it came from the Gallery (have back button to Gallery), go back to gallery
+
+    //if it came from the Gallery (has back button to Gallery), go back to gallery
     //otherwise, if no back button, came from drawing page, so go home
     if(this.navCtrl.length() > 1){
       this.navCtrl.pop();
