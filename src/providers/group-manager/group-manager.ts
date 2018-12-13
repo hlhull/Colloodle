@@ -4,7 +4,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import firebase from 'firebase';
 
 /*
-  Generated class for the GroupManagerProvider provider.
+  Generated class for the GroupManagerProvider provider;
+  handles all the group updates for a user
 */
 @Injectable()
 export class GroupManagerProvider {
@@ -12,19 +13,17 @@ export class GroupManagerProvider {
   databaseRef = firebase.database().ref();
   userID: string = null;
   userRef: firebase.database.Reference;
-  completed = [];
-  inProgress = [];
-  invited = [];
-  done: any;
-  compLastTime: any;
-  invitLastTime: any;
-  new = 0;
-  connected = false;
+
+  completed = []; //list of completed drawings user drew in
+  inProgress = []; //list of uncomplete drawings user drew in
+  invited = []; //list of drawings user has been invited to
+  new = 0; //number of newly completed drawings user hasn't yet seen
+  connected = false; //whether user is connected to internet
 
   constructor(private localNotifications: LocalNotifications) {}
 
   /*
-    sets up manager for a new user, getting their groups and listening for changes
+    sets up class for a new user, getting their groups and listening for changes
   */
   setUpManager(){
     if(firebase.auth().currentUser != null){
@@ -93,6 +92,9 @@ export class GroupManagerProvider {
     });
   }
 
+  /*
+    Update connected variable to reflect whether user is connected to the internet
+  */
   listenForConnectionChanges(){
     var self = this;
     var connectedRef = firebase.database().ref(".info/connected");
@@ -105,6 +107,9 @@ export class GroupManagerProvider {
     });
   }
 
+  /*
+    Takes a group from inProgress and moves it to completed
+  */
   checkForCompleted(groupNum){
     var length = this.inProgress.length;
     for (var i = 0; i < length; i++) {
@@ -119,12 +124,18 @@ export class GroupManagerProvider {
     }
   }
 
+  /*
+    when a group the user is invited to changes, update its conflict flag to
+    true is another user is currently drawing, false if no other user is drawing
+  */
   checkForInvitedConflict(status, groupNum){
     var length = this.invited.length;
+    var found = false;
+
     for (var i = 0; i < length; i++) {
         var entry = this.invited[i];
         if(entry['group'] == groupNum && !found){
-          var found = true;
+          found = true;
           if(status == "currDrawing"){
             this.invited[i]['conflict'] = true;
           } else {
@@ -134,6 +145,9 @@ export class GroupManagerProvider {
     }
   }
 
+  /*
+    Notify a user when their drawing is complete or they've been invited to draw
+  */
   sendNotification(type){
     var title, text;
     if(type){
@@ -221,13 +235,15 @@ export class GroupManagerProvider {
 
     if(this.userID != null){
       this.databaseRef.child("groups").off();
-      //this.userRef.child("completed").off();
     }
 
     this.userID = null;
     this.userRef = null;
   }
 
+  /*
+    when user goes sees the new drawings, reset new
+  */
   resetNew(){
     this.new = 0;
   }

@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, Nav, PopoverController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, PopoverController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { LoginPage } from '../login/login';
 import { SignupPage } from '../signup/signup';
@@ -26,11 +26,15 @@ export class HomePage {
     this.navCtrl.push(InfoPage);
   }
 
+  /*
+    If user is connected to internet and logged in, go to Gallery page
+  */
   goToGallery(){
     var userID = firebase.auth().currentUser;
-    if (userID == null){
+
+    if (userID == null){ //make sure logged in
       this.presentError(" see your drawings.");
-    } else if (!this.groupManager.connected){
+    } else if (!this.groupManager.connected){ //make sure connected to internet
       this.presentDisconnected();
     } else {
       this.navCtrl.push(GroupsPage);

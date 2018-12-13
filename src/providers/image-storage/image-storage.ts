@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import firebase from 'firebase';
 
 /*
-  ImageStorageProvider contains the methods needed in NetworkStorageProvider
-  and LocalStorageProvider to save and retrieve image data
+  ImageStorageProvider handles storing images and retrieving images
 */
 @Injectable()
 export class ImageStorageProvider {
@@ -29,8 +28,6 @@ export class ImageStorageProvider {
   getImageUrls(){
     return new Promise(function(resolve, reject) { resolve(null) } );
   }
-
-  setUp(group, section){}
 
   createGroup(imgUrl, invites, currUserEmail){}
 
@@ -69,6 +66,9 @@ export class ImageStorageProvider {
       return Promise.all([imageRef0.getDownloadURL(), imageRef1.getDownloadURL(), imageRef2.getDownloadURL()]);
   }
 
+  /*
+    get the URL for the previous image
+  */
   static getOverlap(group, section){
       if(section > 0){
         var storageRef = firebase.storage().ref().child(group); // folder we want to get images from

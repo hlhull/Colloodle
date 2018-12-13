@@ -3,7 +3,8 @@ import { ImageStorageProvider } from '../image-storage/image-storage';
 import firebase from 'firebase';
 
 /*
-  LocalStorageProvider saves images locally for pass-Around mode
+  PassAroundStorageProvider saves images locally for pass-Around mode, uploading
+  them to FB @ end if user is signed in
 */
 @Injectable()
 export class PassAroundStorageProvider {
@@ -16,8 +17,6 @@ export class PassAroundStorageProvider {
   constructor() {
     this.sectionNumber = 0;
   }
-
-  setUp(group, section) {}
 
   /*
    * store image with given image url in the array
@@ -33,10 +32,8 @@ export class PassAroundStorageProvider {
           this.uploadImages();
         }
         return true;
-        //return new Promise(function(resolve, reject) { resolve(true) } );
       }
       return false;
-      //return new Promise(function(resolve, reject) { resolve(false) } );
   }
 
   /*
@@ -47,6 +44,9 @@ export class PassAroundStorageProvider {
     return new Promise(function(resolve, reject) { resolve(urls); });
   }
 
+  /*
+    get previous image
+  */
   getOverlap() {
     if (this.sectionNumber > 0){
       var overlap =  this.storedImageUrls[this.sectionNumber - 1];
