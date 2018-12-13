@@ -87,7 +87,7 @@ export class GroupManagerProvider {
       var val = changedSnapshot.val();
       if(val == 0){
         self.checkForCompleted(changedSnapshot.key);
-      } else if (val == "currDrawing" || val == 12) || val == 11 || val == 10){
+      } else if (val == "currDrawing" || val == 12 || val == 11 || val == 10){
         self.checkForInvitedConflict(val, changedSnapshot.key);
       }
     });
