@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
 import { FinalPage } from '../final/final';
@@ -27,11 +27,10 @@ export class GroupsPage {
       this.screenOrientation.unlock();
       this.groupManager.resetNew();
       this.setThumnails('Completed');
-
   }
 
   /*
-    When user clicks 'view', go to final page and show that group's drawing
+    When user clicks on drawing, go to final page and show that group's drawing
   */
   viewGroupDrawing(groupName){
     var imageStorage = new RandomStorageProvider();
@@ -40,21 +39,7 @@ export class GroupsPage {
   }
 
   /*
-    Get the section name to show on screen from the section number
-  */
-  getSectionName(sectionNum){
-    switch(sectionNum){
-      case 0:
-        return "Head";
-      case 1:
-        return "Torso";
-      case 2:
-        return "Legs";
-    }
-  }
-
-  /*
-    Loops through the group lists to set the thumnail for every group the user's in
+    Loops through the list of groups to set the thumnail for every group the user's in
   */
   setThumnails(list){
     if(list == 'Completed'){
@@ -69,14 +54,15 @@ export class GroupsPage {
   }
 
   /*
-    Assigns the src url of the thumbnail images to the user's drawing
+    Assigns the src url of the thumbnail image to the corresponding drawing
   */
   assignSrc(info){
-    console.log("assigning", info)
-    var group = info['group'];
+    var group = info['group']; //get group #
+
+    //download image @ correct group and section number
     this.storageRef.child(group).child(info['section']+'.png').getDownloadURL().then(function(url) {
       var img: HTMLElement  = document.getElementById(group);
-      img.setAttribute("src", url);
+      img.setAttribute("src", url); //set thumnail image to the downloaded image
     }).catch(function(error) {
       console.log("error", error);
     });

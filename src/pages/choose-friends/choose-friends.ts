@@ -36,13 +36,20 @@ export class ChooseFriendsPage {
     this.imgUrl = navParams.get('imgUrl');
     this.screenOrientation.unlock();
 
-    // get current user's username
+    // get current user's username and ID
     if(firebase.auth().currentUser != null){
       this.currUserID = firebase.auth().currentUser.uid;
       this.currUserName = firebase.auth().currentUser.displayName;
     }
 
     //add friends as matches
+    this.getFriends();
+  }
+
+  /*
+    get user's friends from FB and add them to list of matches
+  */
+  getFriends(){
     var self = this;
     this.databaseRef.child("users").child(this.currUserID).child("friends").once('value', function(snapshot) {
       snapshot.forEach(function(userSnapshot) {
@@ -54,18 +61,21 @@ export class ChooseFriendsPage {
     });
   }
 
-  // on input, check if input is a user's email; invite them if so
+  /*
+   on searchbar input, check if input is a user's email; add them to matches if so
+  */
   onInput(searchbar){
-    if (searchbar != null){
+    // check that searchbar isn't empty / not right after cancel was hit (sends MouseEvent)
+    if (searchbar != null && !(searchbar instanceof MouseEvent)){
       var username = searchbar.srcElement.value.toLowerCase();
       var self = this;
 
       this.databaseRef.child("userList").once('value', function(snapshot) {
         snapshot.forEach(function(userSnapshot) {
-          var invitedUID = userSnapshot.val();
-          var inviteUsername = userSnapshot.key;
+          var matchUID = userSnapshot.val();
+          var matchUsername = userSnapshot.key;
           // don't let user invite themselves
-          if(inviteUsername == username && inviteUsername != self.currUserName){
+          if(matchUsername == username && matchUsername != self.currUserName){
             var isUnique = true;
             //don't add to matches if it's already in matches
             for (var i = 0; i < self.matches.length; i++) {
@@ -79,7 +89,7 @@ export class ChooseFriendsPage {
               isUnique = false;
             }
             if(isUnique){
-              self.matches.push({"username": username, "userID": invitedUID, "invited": false});
+              self.matches.push({"username": username, "userID": matchUID, "invited": false});
             }
           }
         });
@@ -93,7 +103,8 @@ export class ChooseFriendsPage {
   uninviteUser(friendInfo){
     //remove from invited list
     var found = false;
-    //if the match was in friends, remove from friends list
+
+    //remove from invites list
     for (var i = 0; i < this.invites.length; i++) {
       if(!found && this.invites[i]['username'] == friendInfo['username']){
         found = true;
@@ -101,9 +112,17 @@ export class ChooseFriendsPage {
       }
     }
 
+    //add to matches list
     this.matches.push(friendInfo);
     this.numInvited -= 1;
 
+    this.checkIfTwoInvited();
+  }
+
+  /*
+    sees how many friends have been invited and updates twoFriends accordingly
+  */
+  checkIfTwoInvited(){
     if(this.numInvited == 2){
       this.twoFriends = true;
     } else {
@@ -118,25 +137,21 @@ export class ChooseFriendsPage {
   inviteUser(matchInfo){
     if(this.numInvited < 2){
       var found = false;
-      //if the match was in friends, remove from friends list
-      for (var i = 0; i < this.friends.length; i++) {
-        if(!found && this.friends[i]['username'] == matchInfo['username']){
+      //remove from matches
+      for (var i = 0; i < this.matches.length; i++) {
+        if(!found && this.matches[i]['username'] == matchInfo['username']){
           found = true;
-          this.friends.splice(i, 1);
+          this.matches.splice(i, 1);
         }
       }
 
       this.invites.push(matchInfo);
-      this.matches = this.friends;
       this.searchbar.clearInput(null);
       this.numInvited += 1;
 
-      if(this.numInvited == 2){
-        this.twoFriends = true;
-      } else {
-        this.twoFriends = false;
-      }
+      this.checkIfTwoInvited()
     } else {
+      // if there are already 2 users invited, don't allow more to be invited
       this.presentTwoUsers();
     }
 
@@ -145,10 +160,9 @@ export class ChooseFriendsPage {
 
   }
 
-  onCancel(event){
-    this.matches = [];
-  }
-
+  /*
+    When they hit submit, add the friends in invited to the drawing
+  */
   addFriends(){
     this.imageStorage.createGroup(this.imgUrl, this.invites, this.currUserName);
     this.presentInfo();
@@ -203,7 +217,6 @@ export class ChooseFriendsPage {
         {
           text: 'Yes',
           handler: () => {
-            // this.imageStorage.cancelDrawing();
             this.navCtrl.setRoot(HomePage);
           }
         },

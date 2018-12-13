@@ -28,31 +28,21 @@ import { GroupManagerProvider } from '../../providers/group-manager/group-manage
 })
 export class DrawingModesPage {
 
-  passAroundDetailsVisible = false;
-  randomDetailsVisible = false;
-  friendsDetailsVisible = false;
-
   constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public popoverCtrl: PopoverController, private groupManager: GroupManagerProvider) {
     this.screenOrientation.unlock();
   }
 
-  togglePassAroundDetails() {
-    this.passAroundDetailsVisible = !this.passAroundDetailsVisible;
-  }
-
-  toggleRandomDetails() {
-    this.randomDetailsVisible = !this.randomDetailsVisible;
-  }
-
-  toggleFriendsDetails() {
-    this.friendsDetailsVisible = !this.friendsDetailsVisible;
-  }
-
+  /*
+    Start a pass around drawing
+  */
   goToPassAround(){
     var imageStorage = new PassAroundStorageProvider();
     this.navCtrl.push(DrawingPage, {imageStorage: imageStorage}, {animate:false});
   }
 
+  /*
+    If user is logged in and connected to internet, send to Random drawing
+  */
   goToRandom(){
     var userID = firebase.auth().currentUser;
 
@@ -66,13 +56,15 @@ export class DrawingModesPage {
     }
   }
 
+  /*
+    If user is logged in and connected to the internet, send to Friends page
+  */
   goToFriends(){
     var userID = firebase.auth().currentUser;
 
     if(userID == null){ //user isn't signed in, but wants to do a random drawing --> popup telling them to sign in!!!
       this.presentErrorSignIn(" draw with Friends");
     } else if (this.groupManager.connected){
-      var imageStorage = new RandomStorageProvider();
       this.navCtrl.push(FriendsPage, {animate:false});
     } else {
       this.presentErrorConnect(" Friends mode");
@@ -84,7 +76,7 @@ export class DrawingModesPage {
   }
 
   /*
-  * Causes an alert to popup asking the user to cancel, signup, or login
+   Causes an alert to popup asking the user to cancel, signup, or login
   */
   presentErrorSignIn(actionString) {
     let alert = this.alertCtrl.create({
@@ -127,7 +119,7 @@ export class DrawingModesPage {
   }
 
   /*
-  *Presents the login menu with logout / reset password
+    Presents the login menu with logout / reset password
   */
   presentUserPopover(myEvent) {
     let popover = this.popoverCtrl.create(UserPopoverPage);
@@ -137,8 +129,8 @@ export class DrawingModesPage {
   }
 
   /*
-  * sends the user to login page (also signs out if already signed in,
-  * even though you shouldn't be, just in case)
+   sends the user to login page (also signs out if already signed in,
+   even though you shouldn't be, just in case)
   */
   login() {
     this.auth.signOut();
@@ -146,13 +138,12 @@ export class DrawingModesPage {
   }
 
   /*
-  * signs you out; this automatically removes the logout button and user/email
-  * header, since the html checks if you are logged in or not
+   signs you out; this automatically removes the logout button and user/email
+   header, since the html checks if you are logged in or not
   */
   logout() {
     this.auth.signOut();
   }
-
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DrawingModesPage');

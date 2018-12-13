@@ -24,8 +24,7 @@
     [showCancelButton]="shouldShowCancel"
     [type]="email"
     [placeholder]="'Search by Username'"
-    (ionInput)="onInput($event)"
-    (ionCancel)="onCancel($event)">
+    (ionInput)="onInput($event)">
   </ion-searchbar>
   <ion-list>
     <ion-item #items *ngFor="let match of matches" >
