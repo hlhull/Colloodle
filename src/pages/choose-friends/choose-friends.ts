@@ -175,7 +175,7 @@ export class ChooseFriendsPage {
   presentTwoUsers(){
     let alert = this.alertCtrl.create({
       title: 'Only Invite 2 Friends',
-      message: "To invite another friend, remove one of the currently selected friends by clicking the minus sign.",
+      message: "To invite another friend, remove one of the currently selected friends by tapping the minus sign.",
       buttons: [
         {
           text: 'Ok',
