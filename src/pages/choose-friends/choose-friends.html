@@ -27,16 +27,17 @@
     (ionInput)="onInput($event)">
   </ion-searchbar>
   <ion-list>
-    <ion-item #items *ngFor="let match of matches" >
-      {{ match['username'] }}
-      <button ion-button icon-only clear item-end [large]="true" (click)="inviteUser(match)">
-        <ion-icon name="add-circle"></ion-icon>
-      </button>
-    </ion-item>
+    <ion-list-header color="primary">Previously Invited Friends:</ion-list-header>
     <ion-item *ngFor="let invited of invites">
       <h2>{{ invited['username'] }}</h2>
       <button ion-button icon-only clear item-end [large]="true" (click)="uninviteUser(invited)">
         <ion-icon name="remove-circle"></ion-icon>
+      </button>
+    </ion-item>
+    <ion-item #items *ngFor="let match of matches" >
+      {{ match['username'] }}
+      <button ion-button icon-only clear item-end [large]="true" (click)="inviteUser(match)">
+        <ion-icon name="add-circle"></ion-icon>
       </button>
     </ion-item>
   </ion-list>
