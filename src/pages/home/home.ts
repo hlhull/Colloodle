@@ -22,7 +22,6 @@ export class HomePage {
   constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public groupManager: GroupManagerProvider, private statusBar: StatusBar) {
     this.screenOrientation.lock('portrait');
     this.statusBar.show();
-    this.statusBar.backgroundColorByName("white");
   }
 
   goToInfoPage(){
