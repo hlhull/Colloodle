@@ -4,6 +4,7 @@ import { HomePage} from '../home/home';
 import { ImageStorageProvider } from '../../providers/image-storage/image-storage';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
+import { StatusBar } from '@ionic-native/status-bar';
 
 /**
  * Class for the FinalPage page.
@@ -24,9 +25,10 @@ export class FinalPage {
   picHeight: number;
   numImages = 3;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public renderer: Renderer, public imageStorage: ImageStorageProvider, private screenOrientation: ScreenOrientation, public groupManager: GroupManagerProvider, private alertCtrl: AlertController, private statusBar: StatusBar) {
     this.imageStorage = navParams.get('imageStorage');
     this.screenOrientation.lock('portrait');
+    this.statusBar.show();
   }
 
   goHome(): void {

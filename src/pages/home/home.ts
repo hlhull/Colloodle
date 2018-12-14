@@ -11,6 +11,7 @@ import * as firebase from 'firebase';
 import { InfoPage } from '../info/info';
 import { GroupsPage } from '../groups/groups';
 import { GroupManagerProvider } from '../../providers/group-manager/group-manager';
+import { StatusBar } from '@ionic-native/status-bar';
 
 @Component({
   selector: 'page-home',
@@ -18,8 +19,9 @@ import { GroupManagerProvider } from '../../providers/group-manager/group-manage
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public groupManager: GroupManagerProvider) {
+  constructor(public navCtrl: NavController, private auth: AuthService, public popoverCtrl: PopoverController, private screenOrientation: ScreenOrientation, private alertCtrl: AlertController, public groupManager: GroupManagerProvider, private statusBar: StatusBar) {
     this.screenOrientation.lock('portrait');
+    this.statusBar.show();
   }
 
   goToInfoPage(){
