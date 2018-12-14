@@ -1,4 +1,4 @@
-import { ViewController } from 'ionic-angular';
+import { ViewController, AlertController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
@@ -21,7 +21,7 @@ import { AuthService } from '../../services/auth.service';
         </button>
       </ion-item>
       <ion-item>
-        <button ion-button clear (click)="this.resetPassword()">
+        <button ion-button clear (click)="this.presentConfirmResetPassword()">
           Reset Password
         </button>
       </ion-item>
@@ -30,7 +30,7 @@ import { AuthService } from '../../services/auth.service';
 })
 
 export class UserPopoverPage {
-  constructor(public viewCtrl: ViewController, private auth: AuthService) {}
+  constructor(public viewCtrl: ViewController, private auth: AuthService, private alertCtrl: AlertController) {}
 
   close() {
     this.viewCtrl.dismiss();
@@ -43,6 +43,27 @@ export class UserPopoverPage {
   logout() {
     this.auth.signOut();
     this.close();
+  }
+
+  presentConfirmResetPassword() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to reset your password? If yes, tap yes and follow the directions sent to the email associated with this account.',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.resetPassword();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 
   /*
