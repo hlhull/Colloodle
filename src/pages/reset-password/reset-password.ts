@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 // import { HomePage } from '../home/home.page'; //replaced this with the line below
 import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +19,8 @@ export class ResetPasswordPage {
 		fb: FormBuilder,
 		private navCtrl: NavController,
     private auth: AuthService,
-		private screenOrientation: ScreenOrientation
+		private screenOrientation: ScreenOrientation,
+		private alertCtrl: AlertController
 	) {
 		this.form = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])]
@@ -58,6 +59,8 @@ export class ResetPasswordPage {
   	}
 
     this.auth.resetPassword(data.email);
+
+		this.presentResetPasswordPopup();
   }
 
 	/*
@@ -72,6 +75,20 @@ export class ResetPasswordPage {
   */
   goBackToLogin(): void {
     this.navCtrl.setRoot(LoginPage);
+  }
+
+	presentResetPasswordPopup(){
+    let alert = this.alertCtrl.create({
+      title: 'Alert:',
+      message: "If this email address is signed up with Colloodle, an email has been sent with directions to reset your password.",
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {}
+        }
+      ]
+    });
+    alert.present();
   }
 
   // TODO:

@@ -35,7 +35,7 @@
 
   <ion-list id="invites">
     <ion-list-header *ngIf="this.groupManager.invited.length > 0" color="primary">Or, accept invites from friends!</ion-list-header>
-    <ion-list-header *ngIf="this.groupManager.invited.length == 0" color="primary">No invites from friends!</ion-list-header>
+    <ion-list-header *ngIf="this.groupManager.invited.length == 0" color="primary">No current invites from friends</ion-list-header>
 
 
     <ion-item *ngFor="let group of this.groupManager.invited" (click)="drawGroup(group['group'], group['conflict'])">
