@@ -458,7 +458,7 @@ export class DrawingPage {
   * presents helpful info if user is lost
   */
   help() {
-    this.presentWhichSection(this.imageStorage.sectionNumber);
+    this.presentHelp(this.imageStorage.sectionNumber);
   }
 
   /*
@@ -471,12 +471,12 @@ export class DrawingPage {
     });
   }
 
-  presentWhichSection(section){
+  presentHelp(section){
     var bodyPart = ["head", "torso", "legs"];
     var edges = ["bottom edge", "top and bottom edges", "top edge"];
     let alert = this.alertCtrl.create({
       title: 'Instructions:',
-      message: 'You are drawing the ' + bodyPart[section] + ". Make sure to draw all the way to the " + edges[section] + "!",
+      message: 'You are drawing the ' + bodyPart[section] + ". Make sure to draw all the way to the " + edges[section] + "!\n\nTap the brush icon to change brush color and size.",
       buttons: [
         {
           text: 'OK',
