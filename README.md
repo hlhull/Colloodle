@@ -65,7 +65,8 @@ Be sure to recognize developer in Settings.
 - Implement save and share for completed drawings. Saving the image was more difficult than expected.
 - Have drawing groups work for 2 or 4 people, not just 3.
 - Add a color picker and eyedropper tool.
-- Have the chosen color checked or pressed on the popover menu.
+- Have the chosen color checked or pressed on the brush menu.
+- Add an eraser icon of our own.
 - Show the full drawings on the Completed section of the gallery page, not just the one segment.
 - Add badges for being added to a drawing.
 - Display which user did which part of the drawing. (Maybe, and only for Friends Mode drawings).
