@@ -58,6 +58,7 @@ Be sure to recognize developer in Settings.
 - Notifications and badges sometimes display and sometimes don’t. One phone in the group did not get badges or the completed drawing notifications. (This phone still got invitation notifications).
 - The status bar is squished on iOS.
 - The app’s UI is not optimized for tablets. However, it still can be used on a tablet.
+- If someone closes the app while they were working on a random drawing, that drawing will be stuck waiting for them until they go back into the app and either finish the drawing or navigate back to the home page. Possible fix: implement some kind of timer that automatically moves the drawing back into the next() list and the user back to the homepage after x time? As it is now, that drawing can never be completed if that user does not go back on the app.
 
 
 ## Next steps:
