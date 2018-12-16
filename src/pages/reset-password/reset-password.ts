@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, AlertController } from 'ionic-angular';
-// import { HomePage } from '../home/home.page'; //replaced this with the line below
 import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
@@ -28,25 +27,6 @@ export class ResetPasswordPage {
 
 		this.screenOrientation.unlock();
   }
-
-	// /*
-	// * Signs the user up with the given email and password, sending info to firebase
-	// *
-	// * Then sends the user to the home page
-	// */
-  // ResetPassword() {
-		// let data = this.form.value;
-		// let credentials = {
-		// 	email: data.email,
-		// 	password: data.password
-		// };
-		// this.auth.signUp(credentials).then(
-		// 	() => this.navCtrl.setRoot(HomePage),
-		// 	error => this.signupError = error.message
-		// );
-  // }
-
-  // TODO: figure out how to check if the email is one of our users! if not, return and have an error message of some sort
 
   /*
   * if the email entered is an email, reset the password
@@ -90,10 +70,5 @@ export class ResetPasswordPage {
     });
     alert.present();
   }
-
-  // TODO:
-  // add popup when error occurs/catch errors better (in auth service)
-  // add popup when reset password button is clicked, tell user email was sent
-  // check that user is actually a user?
 
 }

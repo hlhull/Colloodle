@@ -15,13 +15,6 @@ import { BrushProvider } from '../../providers/brush/brush'
 export class PopoverPage {
   constructor(public viewCtrl: ViewController, public brushService: BrushProvider) {}
 
-  // ionViewDidLoad() {
-  //   let element = document.getElementById('id')
-  //   let parent=element.parentElement
-  //   let parent2 = parent.parentElement //popover-content
-  //   parent2.parentElement.style['width'] = "92px"
-  // }
-
   close() {
     this.viewCtrl.dismiss();
   }

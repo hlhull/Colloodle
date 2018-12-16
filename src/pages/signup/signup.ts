@@ -4,7 +4,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController } from 'ionic-angular';
-// import { HomePage } from '../home/home.page'; //replaced this with the line below
 import { HomePage } from '../home/home';
 import { AuthService } from '../../services/auth.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';

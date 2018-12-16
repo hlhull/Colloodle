@@ -115,19 +115,16 @@ export class DrawingPage {
       this.numStrokes = 0;
 
       if (this.imageStorage instanceof PassAroundStorageProvider) {
-        // this.presentWhichSection(this.imageStorage.sectionNumber);
         this.sectionNum = this.imageStorage.sectionNumber;
         this.showInitialInstructions();
       } else if (this.imageStorage instanceof RandomStorageProvider){
         var self = this;
         this.imageStorage.assignGroup().then(() => {
           self.drawOverlap(null);
-          // this.presentWhichSection(this.imageStorage.sectionNumber);
           this.sectionNum = this.imageStorage.sectionNumber;
           this.showInitialInstructions();
         });
       } else {
-        // this.presentWhichSection(this.imageStorage.sectionNumber);
         this.sectionNum = this.imageStorage.sectionNumber;
         this.showInitialInstructions();
         this.drawOverlap(null);
@@ -141,8 +138,6 @@ export class DrawingPage {
   * and canvasWidth, taking in the effective landscape width and height
   */
   setCanvasDimensions(landscapeWidth, landscapeHeight) {
-    // new, overlap = 10% canvas height:
-
     this.combinedCanvasHeight = landscapeHeight;
 
     var usableWidth = landscapeWidth *.9 - 4;
@@ -154,7 +149,6 @@ export class DrawingPage {
       this.combinedCanvasHeight = this.canvasWidth * (10/16);
     }
 
-    // this.canvasLeft = (landscapeWidth - this.canvasWidth)/2;   // could not get this to actually be set in ngAfterViewInit
     this.overlapHeight = this.combinedCanvasHeight * (1/10);
     this.canvasHeight = this.combinedCanvasHeight * (9/10);
   }
@@ -232,7 +226,6 @@ export class DrawingPage {
       } else {
         this.resetPage();
         this.drawOverlap(img);
-        // this.presentWhichSection(this.imageStorage.sectionNumber);
         this.sectionNum = this.imageStorage.sectionNumber;
         this.showInitialInstructions();
       }
@@ -289,7 +282,7 @@ export class DrawingPage {
     this.clearCanvas(this.infoCanvasElement);
     this.numStrokes = 0;
 
-    //reset undo/redo stacks:
+    // reset undo/redo stacks:
     // push current image to undoStack
     var img = this.saveCurrentImage();
     this.undoStack = [img];
@@ -477,13 +470,6 @@ export class DrawingPage {
       ev: myEvent
     });
   }
-
-  //TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-  // condense the code below, ideally we should have a single (main, not including
-  // the helpers in count) function that takes in the section and then causes the
-  // help popup to be displayed and include the body part and the edge/BOTH THE EDGES
-  // (both edges=torso section) so the user gets all the info at once, rather than
-  // being told to draw to the bottom, then later oh you didn't draw to the top, etc
 
   presentWhichSection(section){
     var bodyPart = ["head", "torso", "legs"];

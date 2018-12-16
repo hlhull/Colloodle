@@ -13,7 +13,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { GroupManagerProvider } from '../providers/group-manager/group-manager';
 import * as firebase from 'firebase/app';
-// import firebase from '../firebase';
 import AuthProvider = firebase.auth.AuthProvider;
 
 @Injectable()
@@ -69,33 +68,12 @@ export class AuthService {
 		return this.user && this.user.email;
 	}
 
-// TODO: refine resetPassword				(tasks listed in order of priority)
-// - maybe send them to a new page instead of being lazy/quick and just checking
-//   current user, make it more intuitive
-// - handle errors if the email entered is invalid
-// - make the email say Colloodle, instead of Project(some large number)
-// - if we have time, check to see how firebase handles suspicious activity; I
-//   know if I reset a password a bunch of times in one day it stops letting me
-//   do this for some unknown period of time
 
 	/*
 	* sends email to the user allowing password reset (handled by firebase)
 	*/
 	resetPassword(email) {
     this.afAuth.auth.sendPasswordResetEmail(email)
-			// .catch(function(error) {
-			// 	// Handle Errors here.
-			//   var errorCode = error.code;
-			//   var errorMessage = error.message;
-			//
-			// 	if (errorCode == 'auth/invalid-email') {
-    	// 		alert('Wrong password.');
-			// 	} else {
-			// 		alert('errorMessage');
-			// 	}
-			//
-			// 	console.log(error);
-			// })
 	    .then(() => {
 	      console.log('email sent');
 	    });
