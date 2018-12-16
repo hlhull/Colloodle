@@ -19,6 +19,9 @@ import { StatusBar } from '@ionic-native/status-bar';
  * Class for the DrawingPage page.
  *
  * Where the user draws their piece of the picture
+ *
+ * Created with help from: https://www.joshmorony.com/creating-a-drawing-application-in-ionic/,
+ *                a tutorial for drawing apps with html5 canvas and ionic
  */
 @IonicPage()
 @Component({
